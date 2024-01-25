@@ -128,7 +128,7 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
 void WindowBase::initWindow()
 {
     static int num = 0;
-    std::wstring className = std::format(L"ScreenCapture{}", num++);
+    std::wstring className = std::format(L"FileManager{}", num++);
     auto hinstance = GetModuleHandle(NULL);
     WNDCLASSEX wcx{};
     wcx.cbSize = sizeof(wcx);
@@ -160,57 +160,4 @@ void WindowBase::initWindow()
 
     hwndToolTip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hwnd, NULL, hinstance, NULL);
-}
-
-void WindowBase::setClipboardText(const std::wstring& text) {
-    if (!OpenClipboard(hwnd)) {
-        MessageBox(NULL, L"Failed to open clipboard.", L"Error", MB_OK | MB_ICONERROR);
-        return;
-    }
-    EmptyClipboard();
-    size_t len = (text.size() + 1) * sizeof(wchar_t);
-    HANDLE copyHandle = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, len);
-    if (copyHandle == NULL)
-    {
-        MessageBox(NULL, L"Failed to alloc clipboard memory.", L"Error", MB_OK | MB_ICONERROR);
-        CloseClipboard();
-        return; // ¥¶¿Ì¥ÌŒÛ
-    }
-    byte* copyData = reinterpret_cast<byte*>(GlobalLock(copyHandle));
-    if (copyData) {
-        memcpy(copyData, text.data(), len);
-    }
-    GlobalUnlock(copyHandle);
-    HANDLE h = SetClipboardData(CF_UNICODETEXT, copyHandle);
-    if (!h) {
-        GlobalFree(copyHandle);
-    }
-    CloseClipboard();
-}
-
-std::wstring WindowBase::getPixelRgb()
-{
-    POINT pos;
-    GetCursorPos(&pos);
-    ScreenToClient(hwnd, &pos); //∂§Õº
-    auto color = pixBase->getColor4f(pos.x, pos.y);
-    int R{ (int)(color.fR * 255) }, G{ (int)(color.fG * 255) }, B{ (int)(color.fB * 255) };
-    return std::format(L"{},{},{}", std::to_wstring(R), std::to_wstring(G), std::to_wstring(B));
-}
-std::wstring WindowBase::getPixelHex()
-{
-    POINT pos;
-    GetCursorPos(&pos);
-    ScreenToClient(hwnd, &pos); //∂§Õº
-    auto color = pixBase->getColor4f(pos.x, pos.y);
-    int R{ (int)(color.fR * 255) }, G{ (int)(color.fG * 255) }, B{ (int)(color.fB * 255) };
-    std::wstringstream ss;
-    ss << std::hex << (R << 16 | G << 8 | B);
-    std::wstring hex = ss.str();
-    size_t str_length = hex.length();
-    for (size_t i = 0; i < 6 - str_length; i++) {
-        hex = L"0" + hex;
-    }
-    std::transform(hex.begin(), hex.end(), hex.begin(), toupper);
-    return std::format(L"#{}", hex);
 }
