@@ -2,4 +2,4 @@ set(RES
     res.h
     res.rc
 )
-target_sources(ScreenCapture PRIVATE ${RES})
+target_sources(FileManager PRIVATE ${RES})

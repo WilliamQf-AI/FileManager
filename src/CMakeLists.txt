@@ -2,31 +2,7 @@ set(SRC
     main.cpp
     App.cpp
     App.h
-    State.h
-    Icon.h
-    Cursor.h
     WindowBase.cpp
     WindowBase.h
-    WindowMain.cpp
-    WindowMain.h
-    WindowPin.cpp
-    WindowPin.h
-    PixelInfo.cpp
-    PixelInfo.h
-    CutMask.cpp
-    CutMask.h
-    Recorder.cpp
-    Recorder.h
-    ToolBase.cpp
-    ToolBase.h
-    ToolBtn.cpp
-    ToolBtn.h
-    ToolMain.cpp
-    ToolMain.h
-    ToolSub.cpp
-    ToolSub.h
-    ColorBlender.h
-    ColorBlender.cpp
 )
-target_sources(ScreenCapture PRIVATE ${SRC})
-add_subdirectory(Shape)
+target_sources(FileManager PRIVATE ${SRC})
