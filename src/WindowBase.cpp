@@ -14,7 +14,6 @@ WindowBase::WindowBase()
 
 WindowBase::~WindowBase()
 {
-    delete pixSrc;
     delete pixBase;
     DeleteDC(hCompatibleDC);
     DeleteObject(bottomHbitmap);
@@ -38,7 +37,7 @@ void WindowBase::Close(const int &exitCode)
 }
 
 void WindowBase::refresh()
-{
+{    
     paintCanvas();
     HDC hdc = GetDC(hwnd);
     BITMAPINFO info = { sizeof(BITMAPINFOHEADER), w, 0 - h, 1, 32, BI_RGB, w * 4 * h, 0, 0, 0, 0 };
@@ -88,35 +87,7 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
         case WM_SETCURSOR:
         {
             return true;
-        }
-        case WM_KEYDOWN:
-        {
-            switch (wParam)
-            {
-            case 82: { //R
-                if (GetKeyState(VK_CONTROL) < 0)
-                {
-                    obj->setClipboardText(obj->getPixelRgb());
-                    App::Quit(4);
-                    return false;
-                }
-                [[fallthrough]];
-            }
-            case 72: { //H
-                if (GetKeyState(VK_CONTROL) < 0)
-                {
-                    obj->setClipboardText(obj->getPixelHex());
-                    App::Quit(5);
-                    return false;
-                }
-                [[fallthrough]];
-            }
-            default: {
-                break;
-            }
-            }
-            [[fallthrough]];
-        }
+        }        
         default:
         {
             return obj->wndProc(hWnd, msg, wParam, lParam);
@@ -156,7 +127,10 @@ void WindowBase::initWindow()
     DeleteObject(SelectObject(hCompatibleDC, bottomHbitmap));
     ReleaseDC(hwnd, hdc);
 
-    initCanvas();
+    SkImageInfo imgInfo = SkImageInfo::MakeN32Premul(w, h);
+    surfaceBase = SkSurfaces::Raster(imgInfo);
+    pixBase = new SkPixmap();
+    surfaceBase->peekPixels(pixBase);
 
     hwndToolTip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hwnd, NULL, hinstance, NULL);

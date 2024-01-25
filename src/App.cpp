@@ -3,11 +3,14 @@
 #include "include/core/SkFontStyle.h"
 #include "include/core/SkData.h"
 #include "include/core/SkGraphics.h"
+#include "WindowBase.h"
+#include "WindowMain.h"
 
 
 HINSTANCE hinstance;
 std::shared_ptr<SkFont> fontIcon{ nullptr };
 std::shared_ptr<SkFont> fontText{ nullptr };
+std::vector<std::shared_ptr<WindowBase>> windows;
 
 App::~App()
 {
@@ -25,6 +28,9 @@ bool App::Init(HINSTANCE hins)
     }
     initFontText();
     initFontIcon();
+    auto win = std::make_shared<WindowMain>();
+    win->Show();
+    windows.push_back(std::move(win));
     return true;
 }
 
