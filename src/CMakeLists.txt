@@ -4,7 +4,21 @@ set(SRC
     App.h
     WindowBase.cpp
     WindowBase.h
+    ControlBase.cpp
+    ControlBase.h
     WindowMain.cpp
     WindowMain.h
+    TitleBar.cpp
+    TitleBar.h
+    TitleTab.cpp
+    TitleTab.h
+    ToolBar.cpp
+    ToolBar.h
+    LeftPanel.cpp
+    LeftPanel.h
+    ContentPanel.cpp
+    ContentPanel.h
+    BottomBar.cpp
+    BottomBar.h
 )
 target_sources(FileManager PRIVATE ${SRC})

@@ -19,13 +19,19 @@ WindowMain::~WindowMain()
 {
 }
 
+void WindowMain::init()
+{
+    titleBar = std::make_shared<TitleBar>();
+    titleBar->init(this);
+}
+
 LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
     case WM_LBUTTONDOWN:
     {
-        IsMouseDown = true;
+        isMouseDown = true;
         auto x = GET_X_LPARAM(lparam);
         auto y = GET_Y_LPARAM(lparam); 
         break;
@@ -38,7 +44,7 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
     }
     case WM_LBUTTONUP:
     {
-        IsMouseDown = false;
+        isMouseDown = false;
         auto x = GET_X_LPARAM(lparam);
         auto y = GET_Y_LPARAM(lparam);
         break;
@@ -47,7 +53,7 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
     {
         auto x = GET_X_LPARAM(lparam);
         auto y = GET_Y_LPARAM(lparam);
-        if (IsMouseDown) {
+        if (isMouseDown) {
         }
         else {
         }
@@ -78,7 +84,7 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
     return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-void WindowMain::paintCanvas(SkCanvas* canvas)
+void WindowMain::paint(SkCanvas* canvas)
 {
     SkPaint paint;
     paint.setColor(SK_ColorRED);

@@ -11,35 +11,34 @@
 #include "App.h"
 
 
-WindowBase::WindowBase()
+WindowBase::WindowBase():layout{ YGNodeNew() }
 {
+
 }
 
 WindowBase::~WindowBase()
 {
-    delete pixBase;
-    DeleteDC(hCompatibleDC);
-    DeleteObject(bottomHbitmap);
+    YGNodeFreeRecursive(layout);
 }
 
-void WindowBase::Show()
+void WindowBase::show()
 {
     ShowWindow(hwnd, SW_SHOW);
     UpdateWindow(hwnd);
     SetCursor(LoadCursor(nullptr, IDC_ARROW));
 }
 
-void WindowBase::Close(const int &exitCode)
+void WindowBase::close(const int &exitCode)
 {
     SendMessage(hwnd, WM_CLOSE, NULL, NULL);    
 }
 
-void WindowBase::SetTimeout(const unsigned int& id,const unsigned int& ms)
+void WindowBase::setTimeout(const unsigned int& id,const unsigned int& ms)
 {
     SetTimer(hwnd, id, ms, (TIMERPROC)NULL);
 }
 
-void WindowBase::ClearTimeout(const unsigned int& id)
+void WindowBase::clearTimeout(const unsigned int& id)
 {
     KillTimer(hwnd, id);
 }
@@ -54,8 +53,7 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
     }
     auto obj = reinterpret_cast<WindowBase *>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
     if (obj)
-    {
-        
+    {        
         switch (msg)
         {
         case WM_NCCALCSIZE:
@@ -69,12 +67,12 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
         case WM_PAINT: {
             PAINTSTRUCT ps;
             auto dc = BeginPaint(hWnd, &ps);
-            obj->paint();
+            obj->paintWindow();
             BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(obj->surfaceMemory.get());
             StretchDIBits(dc, 0, 0, obj->w, obj->h, 0, 0, obj->w, obj->h, bmpInfo->bmiColors, bmpInfo, DIB_RGB_COLORS, SRCCOPY);
             ReleaseDC(hWnd, dc);
             EndPaint(hWnd, &ps);
-            obj->surfaceMemory.reset(0);
+            obj->surfaceMemory.reset(0); //实践证明这样即节省内存，速度也不会慢
             return true;
         }
         case WM_NCHITTEST: {
@@ -101,17 +99,6 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
         }
     }
     return DefWindowProc(hWnd, msg, wParam, lParam);
-}
-void WindowBase::paint()
-{
-    initSurface();
-    SkCanvas* canvas = surface->getCanvas();
-    SkPaint paint;
-    paint.setColor(SK_ColorRED);
-    paint.setStyle(SkPaint::kFill_Style);
-    canvas->clear(SK_ColorBLACK);
-    canvas->drawRect(SkRect::MakeLTRB(w - 150, h - 150, w - 10, h - 10), paint);
-    paintCanvas(canvas);
 }
 int WindowBase::nctest(const int& x, const int& y)
 {
@@ -174,7 +161,7 @@ void WindowBase::initWindow()
         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hwnd, NULL, hinstance, NULL);
 }
 
-void WindowBase::initSurface()
+void WindowBase::paintWindow()
 {
     surface.reset();
     size_t bmpSize = sizeof(BITMAPINFOHEADER) + w * h * sizeof(uint32_t);
@@ -190,4 +177,6 @@ void WindowBase::initSurface()
     void* pixels = bmpInfo->bmiColors;
     SkImageInfo info = SkImageInfo::MakeN32Premul(w, h);
     surface = SkSurfaces::WrapPixels(info, pixels, sizeof(uint32_t) * w);
+    SkCanvas* canvas = surface->getCanvas();
+    paint(canvas);
 }

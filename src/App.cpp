@@ -29,7 +29,8 @@ bool App::Init(HINSTANCE hins)
     initFontText();
     initFontIcon();
     auto win = std::make_shared<WindowMain>();
-    win->Show();
+    win->show();
+    win->init();
     windows.push_back(std::move(win));
     return true;
 }
