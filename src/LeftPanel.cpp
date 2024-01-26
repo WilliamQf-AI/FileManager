@@ -1,11 +1,11 @@
-#include "TitleBar.h"
+#include "LeftPanel.h"
 #include "WindowMain.h"
 
-TitleBar::TitleBar()
+LeftPanel::LeftPanel()
 {
 	
 }
 
-TitleBar::~TitleBar()
+LeftPanel::~LeftPanel()
 {
 }

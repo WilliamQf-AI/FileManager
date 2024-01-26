@@ -7,6 +7,10 @@
 #include "include/core/SkCanvas.h"
 #include "WindowBase.h"
 #include "TitleBar.h"
+#include "ToolBar.h"
+#include "LeftPanel.h"
+#include "ContentPanel.h"
+#include "BottomBar.h"
 
 class WindowMain : public WindowBase
 {
@@ -15,6 +19,10 @@ public:
     ~WindowMain();
     void init();
     std::shared_ptr<TitleBar> titleBar;
+    std::shared_ptr<ToolBar> toolBar;
+    std::shared_ptr<LeftPanel> leftPanel;
+    std::shared_ptr<ContentPanel> contentPanel;
+    std::shared_ptr<BottomBar> bottomBar;
 private:
     LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
     void paint(SkCanvas* canvas) override;

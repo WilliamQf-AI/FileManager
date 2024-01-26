@@ -1,11 +1,11 @@
-#include "TitleBar.h"
+#include "ToolBar.h"
 #include "WindowMain.h"
 
-TitleBar::TitleBar()
+ToolBar::ToolBar()
 {
 	
 }
 
-TitleBar::~TitleBar()
+ToolBar::~ToolBar()
 {
 }

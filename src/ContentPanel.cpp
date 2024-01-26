@@ -1,10 +1,10 @@
 #include "TitleBar.h"
 #include "WindowMain.h"
 
-TitleBar::TitleBar()
+ContentPanel::ContentPanel()
 {
 }
 
-TitleBar::~TitleBar()
+ContentPanel::~ContentPanel()
 {
 }

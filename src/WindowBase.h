@@ -5,7 +5,7 @@
 #include <vector>
 #include "include/core/SkSurface.h"
 #include "src/base/SkAutoMalloc.h"
-#include "yoga/YGNode.h"
+#include "yoga/Yoga.h"
 
 #define WM_FLASH_CURSOR (WM_APP+4)
 
@@ -29,7 +29,7 @@ protected:
     virtual void paint(SkCanvas* canvas) = 0;
     void initWindow();
     void paintWindow();
-
+    void resize(const int& w, const int& h);
 private:
     static LRESULT CALLBACK RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
     SkAutoMalloc surfaceMemory;

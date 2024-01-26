@@ -6,7 +6,7 @@
 #include "include/core/SkCanvas.h"
 #include "include/core/SkStream.h"
 #include "include/encode/SkPngEncoder.h"
-
+#include "yoga/YGNode.h"
 #include "App.h"
 
 WindowMain::WindowMain()
@@ -23,6 +23,14 @@ void WindowMain::init()
 {
     titleBar = std::make_shared<TitleBar>();
     titleBar->init(this);
+    toolBar = std::make_shared<ToolBar>();
+    toolBar->init(this);
+    leftPanel = std::make_shared<LeftPanel>();
+    leftPanel->init(this);
+    contentPanel = std::make_shared<ContentPanel>();
+    contentPanel->init(this);
+    bottomBar = std::make_shared<BottomBar>();
+    bottomBar->init(this);
 }
 
 LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

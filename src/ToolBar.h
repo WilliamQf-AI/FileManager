@@ -6,11 +6,11 @@
 #include "include/core/SkCanvas.h"
 #include "ControlBase.h"
 
-class TitleBar:public ControlBase
+class ToolBar :public ControlBase
 {
 public:
-    TitleBar();
-    ~TitleBar();
+    ToolBar();
+    ~ToolBar();
 
 private:
 };

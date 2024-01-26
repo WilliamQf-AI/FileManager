@@ -4,14 +4,12 @@
 #include <format>
 #include <vector>
 #include "include/core/SkCanvas.h"
-
-class WindowMain
+#include "ControlBase.h"
+class BottomBar:public ControlBase
 {
 public:
-    WindowMain();
-    ~WindowMain();
+    BottomBar();
+    ~BottomBar();
 
 private:
-    void paintCanvas(SkCanvas *canvas) override;
-    void initSize();
 };
