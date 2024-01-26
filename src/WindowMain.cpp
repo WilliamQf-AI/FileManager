@@ -78,13 +78,12 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
     return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-void WindowMain::paintCanvas()
+void WindowMain::paintCanvas(SkCanvas* canvas)
 {
-    auto canvas = surfaceBase->getCanvas();
     SkPaint paint;
     paint.setColor(SK_ColorRED);
     paint.setStyle(SkPaint::kFill_Style);
-    canvas->clear(SK_ColorBLACK);
+    canvas->clear(SK_ColorWHITE);
     canvas->drawRect(SkRect::MakeLTRB(w - 150, h - 150, w - 10, h - 10), paint);
 }
 
