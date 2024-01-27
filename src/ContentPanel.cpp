@@ -10,3 +10,7 @@ ContentPanel::ContentPanel()
 ContentPanel::~ContentPanel()
 {
 }
+
+void ContentPanel::paint(SkCanvas* canvas)
+{
+}

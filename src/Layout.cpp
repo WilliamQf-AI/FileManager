@@ -7,6 +7,11 @@ Layout::~Layout()
     //todo 这里可能有问题
     YGNodeFreeRecursive(layout);
 }
+void Layout::setSize(float w, float h)
+{
+    YGNodeStyleSetWidth(layout, w);
+    YGNodeStyleSetHeight(layout, h);
+}
 void Layout::setLayoutPadding(float padding)
 {
     YGNodeStyleSetPadding(layout, YGEdgeAll, padding);
@@ -33,6 +38,20 @@ void Layout::addLayoutChild(Layout *target)
 {
     auto index = YGNodeGetChildCount(layout);
     YGNodeInsertChild(layout, target->layout, index);
+}
+SkPoint Layout::getOffset()
+{
+    auto x = YGNodeLayoutGetLeft(layout);
+    auto y = YGNodeLayoutGetTop(layout);
+    return SkPoint(x,y);
+}
+SkRect Layout::getOffsetRect()
+{
+    auto x = YGNodeLayoutGetLeft(layout);
+    auto y = YGNodeLayoutGetTop(layout);
+    auto w = YGNodeLayoutGetWidth(layout);
+    auto h = YGNodeLayoutGetHeight(layout);
+    return SkRect::MakeXYWH(x,y,w,h);
 }
 float Layout::getWidth()
 {

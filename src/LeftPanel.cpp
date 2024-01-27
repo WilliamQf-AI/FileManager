@@ -3,8 +3,10 @@
 
 LeftPanel::LeftPanel()
 {
+	
 	YGNodeStyleSetHeightAuto(layout);
 	YGNodeStyleSetWidth(layout, 450.f);
+
 }
 
 LeftPanel::~LeftPanel()

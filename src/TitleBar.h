@@ -12,5 +12,6 @@ public:
     TitleBar();
     ~TitleBar();
     void paint(SkCanvas* canvas);
+    std::shared_ptr<Layout> minimizeBtn;
 private:
 };

@@ -85,8 +85,7 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
         case WM_SIZE: {
             obj->w = LOWORD(lParam);
             obj->h = HIWORD(lParam);
-            YGNodeStyleSetWidth(obj->layout, obj->w);
-            YGNodeStyleSetHeight(obj->layout, obj->h);
+            obj->setSize(obj->w, obj->h);
             YGNodeCalculateLayout(obj->layout,YGUndefined, YGUndefined, YGDirectionLTR);            
             return true;
         }

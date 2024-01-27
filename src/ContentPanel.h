@@ -11,6 +11,6 @@ class ContentPanel:public ControlBase
 public:
     ContentPanel();
     ~ContentPanel();
-
+    void paint(SkCanvas* canvas);
 private:
 };
