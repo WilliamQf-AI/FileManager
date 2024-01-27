@@ -11,6 +11,6 @@ class TitleBar:public ControlBase
 public:
     TitleBar();
     ~TitleBar();
-
+    void paint(SkCanvas* canvas);
 private:
 };

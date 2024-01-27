@@ -30,7 +30,6 @@ bool App::Init(HINSTANCE hins)
     initFontIcon();
     auto win = std::make_shared<WindowMain>();
     win->show();
-    win->init();
     windows.push_back(std::move(win));
     return true;
 }

@@ -5,16 +5,14 @@
 #include <vector>
 #include "include/core/SkCanvas.h"
 #include "yoga/Yoga.h"
+#include "Layout.h"
 
 class WindowMain;
-class ControlBase
+class ControlBase:public Layout
 {
 public:
     ControlBase();
     ~ControlBase();
-    void init(WindowMain* win);
-    WindowMain* win{ nullptr };
-    YGNode* layout;
 
 private:
 };

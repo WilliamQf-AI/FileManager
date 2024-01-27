@@ -2,6 +2,8 @@ set(SRC
     main.cpp
     App.cpp
     App.h
+    Layout.cpp
+    Layout.h
     WindowBase.cpp
     WindowBase.h
     ControlBase.cpp

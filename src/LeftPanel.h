@@ -11,6 +11,6 @@ class LeftPanel :public ControlBase
 public:
     LeftPanel();
     ~LeftPanel();
-
+    void paint(SkCanvas* canvas);
 private:
 };

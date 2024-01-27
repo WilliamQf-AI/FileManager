@@ -11,10 +11,9 @@
 #include "App.h"
 
 
-WindowBase::WindowBase():layout{ YGNodeNew() }
+WindowBase::WindowBase()
 {
-    YGNodeStyleSetAlignItems(layout, YGAlign::YGAlignStretch);
-    YGNodeStyleSetFlexDirection(layout, YGFlexDirection::YGFlexDirectionColumn);
+
 }
 
 WindowBase::~WindowBase()
@@ -84,7 +83,11 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             return obj->nctest(pt.x, pt.y);           
         }
         case WM_SIZE: {
-            obj->resize(LOWORD(lParam), HIWORD(lParam));
+            obj->w = LOWORD(lParam);
+            obj->h = HIWORD(lParam);
+            YGNodeStyleSetWidth(obj->layout, obj->w);
+            YGNodeStyleSetHeight(obj->layout, obj->h);
+            YGNodeCalculateLayout(obj->layout,YGUndefined, YGUndefined, YGDirectionLTR);            
             return true;
         }
         case WM_MOVE: {
@@ -159,14 +162,6 @@ void WindowBase::initWindow()
 
     hwndToolTip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hwnd, NULL, hinstance, NULL);
-}
-
-void WindowBase::resize(const int& w, const int& h)
-{
-    this->w = w;
-    this->h = h;
-    YGNodeStyleSetWidth(layout, w);
-    YGNodeStyleSetHeight(layout, h);
 }
 
 void WindowBase::paintWindow()

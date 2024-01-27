@@ -21,16 +21,7 @@ WindowMain::~WindowMain()
 
 void WindowMain::init()
 {
-    titleBar = std::make_shared<TitleBar>();
-    titleBar->init(this);
-    toolBar = std::make_shared<ToolBar>();
-    toolBar->init(this);
-    leftPanel = std::make_shared<LeftPanel>();
-    leftPanel->init(this);
-    contentPanel = std::make_shared<ContentPanel>();
-    contentPanel->init(this);
-    bottomBar = std::make_shared<BottomBar>();
-    bottomBar->init(this);
+
 }
 
 LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -94,11 +85,9 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 void WindowMain::paint(SkCanvas* canvas)
 {
-    SkPaint paint;
-    paint.setColor(SK_ColorRED);
-    paint.setStyle(SkPaint::kFill_Style);
     canvas->clear(SK_ColorWHITE);
-    canvas->drawRect(SkRect::MakeLTRB(w - 150, h - 150, w - 10, h - 10), paint);
+    titleBar->paint(canvas);
+    leftPanel->paint(canvas);
 }
 
 void WindowMain::initSize()
@@ -107,4 +96,23 @@ void WindowMain::initSize()
     y = 200;
     w = 800;
     h = 600;
+   
+    YGNodeStyleSetFlexDirection(layout, YGFlexDirectionColumn);
+    titleBar = std::make_shared<TitleBar>();
+    this->addLayoutChild(titleBar.get());
+    toolBar = std::make_shared<ToolBar>();
+    this->addLayoutChild(toolBar.get());
+
+    auto contentLayout = new Layout();
+    YGNodeStyleSetFlexDirection(contentLayout->layout, YGFlexDirectionRow);
+    YGNodeStyleSetWidthAuto(contentLayout->layout);
+    YGNodeStyleSetFlexGrow(contentLayout->layout, 1.f);
+
+    leftPanel = std::make_shared<LeftPanel>();
+    contentLayout->addLayoutChild(leftPanel.get());
+
+    contentPanel = std::make_shared<ContentPanel>();
+    contentLayout->addLayoutChild(contentPanel.get());
+
+    this->addLayoutChild(contentLayout);
 }
