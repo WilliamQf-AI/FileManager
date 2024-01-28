@@ -24,6 +24,11 @@ void WindowMain::init()
 
 }
 
+void WindowMain::mousemove(const int& x, const int& y)
+{
+    titleBar->mousemove(x, y);
+}
+
 LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -50,11 +55,15 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
     }
     case WM_MOUSEMOVE:
     {
+        SetCursor(LoadCursor(NULL, IDC_ARROW));
         auto x = GET_X_LPARAM(lparam);
         auto y = GET_Y_LPARAM(lparam);
+
         if (isMouseDown) {
         }
         else {
+
+            mousemove(x, y);
         }
         break;
     }

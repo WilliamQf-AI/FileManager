@@ -27,3 +27,7 @@ void LeftPanel::paint(SkCanvas* canvas)
 	paint.setStyle(SkPaint::kFill_Style);
 	canvas->drawRect(SkRect::MakeXYWH(pos.fX, pos.fY, w, h), paint);
 }
+
+void LeftPanel::mousemove(const int& x, const int& y)
+{
+}

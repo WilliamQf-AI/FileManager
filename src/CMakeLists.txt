@@ -12,8 +12,10 @@ set(SRC
     WindowMain.h
     TitleBar.cpp
     TitleBar.h
-    TitleTab.cpp
-    TitleTab.h
+    TitleBarTab.cpp
+    TitleBarTab.h
+    TitleBarBtns.cpp
+    TitleBarBtns.h
     ToolBar.cpp
     ToolBar.h
     LeftPanel.cpp

@@ -6,12 +6,13 @@
 #include "include/core/SkCanvas.h"
 #include "ControlBase.h"
 
-class LeftPanel :public ControlBase
+class TitleBarBtns : public ControlBase
 {
 public:
-    LeftPanel();
-    ~LeftPanel();
-    void paint(SkCanvas* canvas);
+    TitleBarBtns();
+    ~TitleBarBtns();
+    void paint(SkCanvas *canvas);
     void mousemove(const int& x, const int& y);
+    int hoverIndex{ -1 };
 private:
 };

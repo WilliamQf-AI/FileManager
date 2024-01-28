@@ -18,6 +18,7 @@ public:
     WindowMain();
     ~WindowMain();
     void init();
+    void mousemove(const int& x, const int& y);
     std::shared_ptr<TitleBar> titleBar;
     std::shared_ptr<ToolBar> toolBar;
     std::shared_ptr<LeftPanel> leftPanel;
