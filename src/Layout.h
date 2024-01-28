@@ -14,6 +14,7 @@ public:
     SkPoint getOffset();
     SkRect getOffsetRect();
     SkPoint getPos();
+    
 
     void setLayoutPadding(float padding);
     void setLayoutPadding(float left, float top, float right, float bottom);

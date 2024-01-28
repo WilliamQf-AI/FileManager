@@ -53,16 +53,32 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
         auto y = GET_Y_LPARAM(lparam);
         break;
     }
+    case WM_MOUSELEAVE: {
+        TRACKMOUSEEVENT tme = {};
+        tme.cbSize = sizeof(TRACKMOUSEEVENT);
+        tme.dwFlags = TME_CANCEL | TME_HOVER | TME_LEAVE;
+        tme.hwndTrack = hwnd;
+        TrackMouseEvent(&tme);
+        isTrackMouseEvent = false;
+        mousemove(-1, -1);
+        return true;
+    }
     case WM_MOUSEMOVE:
     {
+        if (!isTrackMouseEvent) {
+            TRACKMOUSEEVENT tme = {};
+            tme.cbSize = sizeof(TRACKMOUSEEVENT);
+            tme.dwFlags = TME_HOVER | TME_LEAVE;
+            tme.hwndTrack = hwnd;
+            tme.dwHoverTime = 1;
+            isTrackMouseEvent = TrackMouseEvent(&tme);
+        }
         SetCursor(LoadCursor(NULL, IDC_ARROW));
         auto x = GET_X_LPARAM(lparam);
         auto y = GET_Y_LPARAM(lparam);
-
         if (isMouseDown) {
         }
         else {
-
             mousemove(x, y);
         }
         break;

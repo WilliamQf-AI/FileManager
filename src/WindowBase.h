@@ -21,7 +21,8 @@ public:
     void close(const int& exitCode);
     HWND hwnd{nullptr};
     HWND hwndToolTip{nullptr};
-    bool isMouseDown;
+    bool isMouseDown{false};
+    bool isTrackMouseEvent{ false };
     int x{ 0 }, y{ 0 }, w{ 0 }, h{0};
 
 protected:

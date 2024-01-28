@@ -78,16 +78,6 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             ScreenToClient(hWnd, &pt);
             return obj->nctest(pt.x, pt.y);           
         }
-
-        //case WM_SETCURSOR: {
-        //    if (LOWORD(lParam) == HTCLIENT) {
-        //        SetCursor(LoadCursor(nullptr, IDC_ARROW));
-        //        return true;
-        //    }
-        //    else {
-        //        return false;
-        //    }
-        //}
         case WM_SIZE: {
             obj->w = LOWORD(lParam);
             obj->h = HIWORD(lParam);
@@ -110,38 +100,7 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
 }
 int WindowBase::nctest(const int& x, const int& y)
 {
-    /*const POINT border{
-         ::GetSystemMetrics(SM_CXFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER),
-         ::GetSystemMetrics(SM_CYFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER)
-    };
-    RECT winRect;
-    if (!::GetWindowRect(hwnd, &winRect)) return HTNOWHERE;
-    enum region_mask {
-        client = 0b0000,
-        left = 0b0001,
-        right = 0b0010,
-        top = 0b0100,
-        bottom = 0b1000,
-    };
-    const auto result = left * (x < (winRect.left + border.x)) |
-        right * (x >= (winRect.right - border.x)) |
-        top * (y < (winRect.top + border.y)) |
-        bottom * (y >= (winRect.bottom - border.y));
-    switch (result) {
-    case left: return HTLEFT;
-    case right: return HTRIGHT;
-    case top: return HTTOP;
-    case bottom: return HTBOTTOM;
-    case top | left: return HTTOPLEFT;
-    case top | right: return HTTOPRIGHT;
-    case bottom | left: return HTBOTTOMLEFT;
-    case bottom | right: return HTBOTTOMRIGHT;
-    case client: return HTCAPTION;
-    default: return HTNOWHERE;
-    }*/
-
-
-    int size{ 8 };
+    int size{ 6 };
     if (x < size && y < size) {
         return HTTOPLEFT;
     }

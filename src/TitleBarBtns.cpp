@@ -1,4 +1,5 @@
 ﻿#include "TitleBarBtns.h"
+#include <Windows.h>
 #include "WindowMain.h"
 #include "App.h"
 #include "include/core/SkFontMetrics.h"
@@ -52,6 +53,13 @@ void TitleBarBtns::mousemove(const int& x, const int& y)
 {
 	auto rect = getOffsetRect();
 	if (!rect.contains(x, y)) {
+		if (hoverIndex >= 0) {
+			hoverIndex = -1;
+			POINT mousePoint;
+			GetCursorPos(&mousePoint);
+			HWND hwnd = WindowFromPoint(mousePoint);
+			InvalidateRect(hwnd, nullptr, false);
+		}
 		return;
 	}
 	if (x < rect.fLeft + 66) {
@@ -63,5 +71,9 @@ void TitleBarBtns::mousemove(const int& x, const int& y)
 	else {
 		hoverIndex = 2;
 	}
-	auto ptr = YGNodeGetOwner(layout);
+	POINT mousePoint;
+	GetCursorPos(&mousePoint);
+	HWND hwnd = WindowFromPoint(mousePoint);
+	InvalidateRect(hwnd, nullptr, false);
+
 }
