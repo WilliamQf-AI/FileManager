@@ -1,8 +1,11 @@
 ﻿#include "App.h"
 #include "../res/res.h"
+#include "include/core/SkFont.h"
+#include "include/core//SkFontMgr.h"
 #include "include/core/SkFontStyle.h"
 #include "include/core/SkData.h"
 #include "include/core/SkGraphics.h"
+#include "include/ports/SkTypeface_win.h"
 #include "WindowBase.h"
 #include "WindowMain.h"
 
@@ -11,6 +14,7 @@ HINSTANCE hinstance;
 std::shared_ptr<SkFont> fontIcon{ nullptr };
 std::shared_ptr<SkFont> fontText{ nullptr };
 std::vector<std::shared_ptr<WindowBase>> windows;
+sk_sp<SkFontMgr> fontMgr;
 
 App::~App()
 {
@@ -26,6 +30,7 @@ bool App::Init(HINSTANCE hins)
         MessageBox(NULL, L"Failed to initialize COM library.", L"Error", MB_OK | MB_ICONERROR);
         return false;
     }
+    fontMgr = SkFontMgr_New_GDI();
     initFontText();
     initFontIcon();
     auto win = std::make_shared<WindowMain>();
@@ -73,14 +78,13 @@ void App::initFontIcon()
     }
     LPVOID resData = LockResource(res);
     auto fontData = SkData::MakeWithoutCopy(resData, resSize);
-    auto iconFace = SkTypeface::MakeFromData(fontData);
-    fontIcon = std::make_shared<SkFont>(iconFace);
+    fontIcon = std::make_shared<SkFont>(fontMgr->makeFromData(fontData));
+    auto c = fontMgr->countFamilies();
 }
 
 void App::initFontText()
 {
-	auto fontFace = SkTypeface::MakeFromName("Microsoft YaHei", SkFontStyle::Normal());
-    fontText = std::make_shared<SkFont>(fontFace);
+    fontText = std::make_shared<SkFont>(fontMgr->matchFamilyStyle("Microsoft YaHei", {}));
 }
 
 void App::Log(std::string&& info) {
