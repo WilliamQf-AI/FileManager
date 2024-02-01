@@ -18,7 +18,6 @@ WindowBase::WindowBase()
 
 WindowBase::~WindowBase()
 {
-    YGNodeFreeRecursive(layout);
 }
 
 void WindowBase::show()
@@ -26,11 +25,6 @@ void WindowBase::show()
     ShowWindow(hwnd, SW_SHOW);
     UpdateWindow(hwnd);
     SetCursor(LoadCursor(nullptr, IDC_ARROW));
-}
-
-void WindowBase::close(const int &exitCode)
-{
-    SendMessage(hwnd, WM_CLOSE, NULL, NULL);    
 }
 
 void WindowBase::setTimeout(const unsigned int& id,const unsigned int& ms)
@@ -90,15 +84,22 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             obj->y = static_cast<int>(HIWORD(lParam));
             return true;
         }
+        case WM_LBUTTONDOWN:
+        {            
+            obj->mouseDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+            break;
+        }
         case WM_MOUSEMOVE:
         {
-            auto x = GET_X_LPARAM(lParam);
-            auto y = GET_Y_LPARAM(lParam);
-            obj->mouseMove(x, y);
+            obj->mouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
             break;
         }
         case WM_MOUSELEAVE: {
             obj->mouseLeave();
+            return true;
+        }
+        case WM_CLOSE: {
+            App::removeWindow(hWnd);
             return true;
         }
         default:
@@ -177,6 +178,17 @@ void WindowBase::mouseLeave()
     {
         func(-888, -888);
     }
+}
+void WindowBase::mouseDown(const int& x, const int& y)
+{
+    for (auto& func : mouseDownHandlers)
+    {
+        func(x, y);
+    }
+}
+void WindowBase::onClose()
+{
+
 }
 void WindowBase::initWindow()
 {

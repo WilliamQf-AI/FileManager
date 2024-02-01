@@ -13,7 +13,8 @@ public:
     TitleBarBtns(WindowBase* root);
     ~TitleBarBtns();
     void paint(SkCanvas *canvas);
-    void mousemove(const int& x, const int& y);
+    void mouseMove(const int& x, const int& y);
+    void mouseDown(const int& x, const int& y);
     int hoverIndex{ -1 };
 private:
 };

@@ -28,7 +28,7 @@ public:
     int x{ 0 }, y{ 0 }, w{ 0 }, h{0};
     std::vector<std::function<void(const int&, const int&)>> mouseMoveHandlers;
     std::vector<std::function<void(const int&, const int&)>> mouseDragHandlers;
-    std::vector<std::function<void(const int&, const int&)>> mouseClickHandlers;
+    std::vector<std::function<void(const int&, const int&)>> mouseDownHandlers;
     std::vector<std::function<void(const int&, const int&)>> mouseDBClickHandlers;
 
 protected:
@@ -43,4 +43,6 @@ private:
     int nctest(const int& x,const int& y);
     void mouseMove(const int& x, const int& y);
     void mouseLeave();
+    void mouseDown(const int& x, const int& y);
+    void onClose();
 };

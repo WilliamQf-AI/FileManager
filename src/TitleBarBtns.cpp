@@ -11,8 +11,12 @@ TitleBarBtns::TitleBarBtns(WindowBase* root):Layout(root)
 	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionRow);
 	YGNodeStyleSetHeight(layout, 60.f);
 	YGNodeStyleSetWidth(layout, 198.f);
-	auto func = std::bind(&TitleBarBtns::mousemove, this, std::placeholders::_1, std::placeholders::_2);
-	root->mouseMoveHandlers.push_back(func);
+	root->mouseMoveHandlers.push_back(
+		std::bind(&TitleBarBtns::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
+	);
+	root->mouseDownHandlers.push_back(
+		std::bind(&TitleBarBtns::mouseDown, this, std::placeholders::_1, std::placeholders::_2)
+	);
 }
 
 TitleBarBtns::~TitleBarBtns()
@@ -52,7 +56,20 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 	canvas->drawString(iconCode, x1 + 132, y1, *font, paint);
 }
 
-void TitleBarBtns::mousemove(const int& x, const int& y)
+void TitleBarBtns::mouseDown(const int& x, const int& y)
+{
+	if (hoverIndex == 0) {
+
+	}
+	else if (hoverIndex == 1) {
+
+	}
+	else if (hoverIndex == 2) {
+		PostMessage(root->hwnd, WM_CLOSE, 0, 0); //PostMessage异步，SendMessage同步
+	}
+}
+
+void TitleBarBtns::mouseMove(const int& x, const int& y)
 {
 	auto rect = getOffsetRect();
 	if (!rect.contains(x, y)) {
@@ -75,5 +92,4 @@ void TitleBarBtns::mousemove(const int& x, const int& y)
 		hoverIndex = 2;
 	}
 	InvalidateRect(root->hwnd, nullptr, false);
-
 }

@@ -5,7 +5,9 @@ class App
 {
 public:
     ~App();
-    static bool Init(HINSTANCE hins);
+    static bool init(HINSTANCE hins);
+    static HINSTANCE getInstance();
+    static void removeWindow(HWND hwnd);
     static void Dispose();
     static void Quit(const int& code);
     static std::shared_ptr<SkFont> GetFontIcon();
@@ -14,5 +16,4 @@ public:
 private:
     App() {};
     static void initFontIcon();
-    static void initFontText();
 };

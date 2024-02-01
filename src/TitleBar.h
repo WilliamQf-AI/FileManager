@@ -14,7 +14,6 @@ public:
     TitleBar(WindowBase* root);
     ~TitleBar();
     void paint(SkCanvas* canvas);
-    void mousemove(const int& x, const int& y);
     std::shared_ptr<TitleBarBtns> btns;
 private:
 };

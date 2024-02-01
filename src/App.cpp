@@ -20,7 +20,7 @@ App::~App()
 {
 }
 
-bool App::Init(HINSTANCE hins)
+bool App::init(HINSTANCE hins)
 {
     hinstance = hins;
     SkGraphics::Init();
@@ -31,12 +31,28 @@ bool App::Init(HINSTANCE hins)
         return false;
     }
     fontMgr = SkFontMgr_New_GDI();
-    initFontText();
+    fontText = std::make_shared<SkFont>(fontMgr->matchFamilyStyle("Microsoft YaHei", {}));
     initFontIcon();
     auto win = std::make_shared<WindowMain>();
     win->show();
     windows.push_back(std::move(win));
     return true;
+}
+
+HINSTANCE App::getInstance()
+{
+    return hinstance;
+}
+
+void App::removeWindow(HWND hwnd)
+{
+    auto iter = std::remove_if(windows.begin(), windows.end(), [&hwnd](auto& item) {
+        return item->hwnd = hwnd;
+        });
+    windows.erase(iter, windows.end());
+    if (windows.empty()) {
+        PostQuitMessage(0);
+    }
 }
 
 void App::Dispose()
@@ -79,11 +95,6 @@ void App::initFontIcon()
     LPVOID resData = LockResource(res);
     auto fontData = SkData::MakeWithoutCopy(resData, resSize);
     fontIcon = std::make_shared<SkFont>(fontMgr->makeFromData(fontData));
-}
-
-void App::initFontText()
-{
-    fontText = std::make_shared<SkFont>(fontMgr->matchFamilyStyle("Microsoft YaHei", {}));
 }
 
 void App::Log(std::string&& info) {

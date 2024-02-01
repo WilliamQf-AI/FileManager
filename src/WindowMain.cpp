@@ -28,22 +28,8 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case WM_LBUTTONDOWN:
-    {
-        isMouseDown = true;
-        auto x = GET_X_LPARAM(lparam);
-        auto y = GET_Y_LPARAM(lparam); 
-        break;
-    }
     case WM_LBUTTONDBLCLK:
     {
-        auto x = GET_X_LPARAM(lparam);
-        auto y = GET_Y_LPARAM(lparam);
-        break;
-    }
-    case WM_LBUTTONUP:
-    {
-        isMouseDown = false;
         auto x = GET_X_LPARAM(lparam);
         auto y = GET_Y_LPARAM(lparam);
         break;

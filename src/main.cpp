@@ -3,7 +3,7 @@
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPTSTR lpCmdLine, _In_ int nCmdShow)
 {    
-    if (!App::Init(hInstance)) {
+    if (!App::init(hInstance)) {
         return -1;
     }
     MSG msg;

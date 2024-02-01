@@ -32,8 +32,3 @@ void TitleBar::paint(SkCanvas* canvas)
 	canvas->drawRect(rect, paint);
 	btns->paint(canvas);
 }
-
-void TitleBar::mousemove(const int& x, const int& y)
-{
-	btns->mousemove(x, y);
-}
