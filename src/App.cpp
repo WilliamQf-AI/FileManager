@@ -79,7 +79,6 @@ void App::initFontIcon()
     LPVOID resData = LockResource(res);
     auto fontData = SkData::MakeWithoutCopy(resData, resSize);
     fontIcon = std::make_shared<SkFont>(fontMgr->makeFromData(fontData));
-    auto c = fontMgr->countFamilies();
 }
 
 void App::initFontText()
