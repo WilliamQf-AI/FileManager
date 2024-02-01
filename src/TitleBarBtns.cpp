@@ -9,7 +9,6 @@
 TitleBarBtns::TitleBarBtns(WindowBase* root):Layout(root)
 {
 	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionRow);
-	YGNodeStyleSetHeight(layout, 60.f);
 	YGNodeStyleSetWidth(layout, 198.f);
 	root->mouseMoveHandlers.push_back(
 		std::bind(&TitleBarBtns::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
@@ -25,17 +24,20 @@ TitleBarBtns::~TitleBarBtns()
 
 void TitleBarBtns::paint(SkCanvas *canvas)
 {
+	auto h = YGNodeLayoutGetHeight(layout);
 	auto rect = getOffsetRect();
 	SkPaint paint;
-	paint.setColor(0xAAFFFFFF);
 	if (hoverIndex == 0) {
-		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft, rect.fTop, 66, 60),paint);
+		paint.setColor(0xAAFFFFFF);
+		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft, rect.fTop, 66, h),paint);
 	}
 	else if (hoverIndex == 1) {
-		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft+66, rect.fTop, 66, 60), paint);
+		paint.setColor(0xAAFFFFFF);
+		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft+66, rect.fTop, 66, h), paint);
 	}
 	else if (hoverIndex == 2) {
-		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft + 132, rect.fTop, 66, 60), paint);
+		paint.setColor(SK_ColorRED);
+		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft + 132, rect.fTop, 66, h), paint);
 	}
 	rect.fRight = rect.fLeft + 66;
 	auto font = App::GetFontIcon();
@@ -53,6 +55,9 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 	iconCode = (const char*)u8"\ue6e5"; //最大化
 	canvas->drawString(iconCode, x1+66, y1, *font, paint);
 	iconCode = (const char*)u8"\ue6e7"; // 关闭
+	if (hoverIndex == 2) {
+		paint.setColor(SK_ColorWHITE);
+	}
 	canvas->drawString(iconCode, x1 + 132, y1, *font, paint);
 }
 

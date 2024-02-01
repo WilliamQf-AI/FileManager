@@ -75,9 +75,9 @@ void WindowMain::initSize()
    
     YGNodeStyleSetFlexDirection(layout, YGFlexDirectionColumn);
     titleBar = std::make_shared<TitleBar>(this);
-    this->addLayoutChild(titleBar.get());
+    this->addChild(titleBar.get());
     toolBar = std::make_shared<ToolBar>(this);
-    this->addLayoutChild(toolBar.get());
+    this->addChild(toolBar.get());
 
     auto contentLayout = new Layout();
     YGNodeStyleSetFlexDirection(contentLayout->layout, YGFlexDirectionRow);
@@ -85,10 +85,10 @@ void WindowMain::initSize()
     YGNodeStyleSetFlexGrow(contentLayout->layout, 1.f);
 
     leftPanel = std::make_shared<LeftPanel>(this);
-    contentLayout->addLayoutChild(leftPanel.get());
+    contentLayout->addChild(leftPanel.get());
 
     contentPanel = std::make_shared<ContentPanel>(this);
-    contentLayout->addLayoutChild(contentPanel.get());
+    contentLayout->addChild(contentPanel.get());
 
-    this->addLayoutChild(contentLayout);
+    this->addChild(contentLayout);
 }

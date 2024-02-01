@@ -89,14 +89,14 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             obj->mouseDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
             break;
         }
+        case WM_MOUSELEAVE: {
+            obj->mouseLeave();
+            return true;
+        }
         case WM_MOUSEMOVE:
         {
             obj->mouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
             break;
-        }
-        case WM_MOUSELEAVE: {
-            obj->mouseLeave();
-            return true;
         }
         case WM_CLOSE: {
             App::removeWindow(hWnd);

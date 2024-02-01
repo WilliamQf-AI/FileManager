@@ -12,6 +12,5 @@ class ToolBar :public Layout
 public:
     ToolBar(WindowBase* root);
     ~ToolBar();
-
 private:
 };

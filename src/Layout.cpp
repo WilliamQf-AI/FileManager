@@ -7,7 +7,6 @@ Layout::Layout(WindowBase* root) : layout{YGNodeNew()},root{root}
 }
 Layout::~Layout()
 {
-    //todo 这里可能有问题
     YGNodeFreeRecursive(layout);
 }
 void Layout::setSize(float w, float h)
@@ -37,7 +36,7 @@ void Layout::setLayoutMargin(float left, float top, float right, float bottom)
     YGNodeStyleSetMargin(layout, YGEdgeRight, right);
     YGNodeStyleSetMargin(layout, YGEdgeBottom, bottom);
 }
-void Layout::addLayoutChild(Layout *target)
+void Layout::addChild(Layout *target)
 {
     auto index = YGNodeGetChildCount(layout);
     YGNodeInsertChild(layout, target->layout, index);

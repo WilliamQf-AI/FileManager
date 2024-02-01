@@ -11,7 +11,7 @@ public:
     Layout(WindowBase* root=nullptr);
     ~Layout();
     void setSize(float w, float h);
-    void addLayoutChild(Layout* target);
+    void addChild(Layout* target);
     SkPoint getOffset();
     SkRect getOffsetRect();
     SkPoint getPos(); 

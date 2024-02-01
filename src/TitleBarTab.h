@@ -12,4 +12,6 @@ class TitleBarTab : public Layout
 public:
     TitleBarTab(WindowBase* root);
     ~TitleBarTab();
+    void paint(SkCanvas* canvas);
+    bool isSelected{ true };
 };
