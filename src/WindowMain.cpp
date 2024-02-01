@@ -24,11 +24,6 @@ void WindowMain::init()
 
 }
 
-void WindowMain::mousemove(const int& x, const int& y)
-{
-    titleBar->mousemove(x, y);
-}
-
 LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -51,36 +46,6 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
         isMouseDown = false;
         auto x = GET_X_LPARAM(lparam);
         auto y = GET_Y_LPARAM(lparam);
-        break;
-    }
-    case WM_MOUSELEAVE: {
-        TRACKMOUSEEVENT tme = {};
-        tme.cbSize = sizeof(TRACKMOUSEEVENT);
-        tme.dwFlags = TME_CANCEL | TME_HOVER | TME_LEAVE;
-        tme.hwndTrack = hwnd;
-        TrackMouseEvent(&tme);
-        isTrackMouseEvent = false;
-        mousemove(-1, -1);
-        return true;
-    }
-    case WM_MOUSEMOVE:
-    {
-        if (!isTrackMouseEvent) {
-            TRACKMOUSEEVENT tme = {};
-            tme.cbSize = sizeof(TRACKMOUSEEVENT);
-            tme.dwFlags = TME_HOVER | TME_LEAVE;
-            tme.hwndTrack = hwnd;
-            tme.dwHoverTime = 1;
-            isTrackMouseEvent = TrackMouseEvent(&tme);
-        }
-        SetCursor(LoadCursor(NULL, IDC_ARROW));
-        auto x = GET_X_LPARAM(lparam);
-        auto y = GET_Y_LPARAM(lparam);
-        if (isMouseDown) {
-        }
-        else {
-            mousemove(x, y);
-        }
         break;
     }
     case WM_RBUTTONDOWN:
@@ -123,9 +88,9 @@ void WindowMain::initSize()
     h = 600;
    
     YGNodeStyleSetFlexDirection(layout, YGFlexDirectionColumn);
-    titleBar = std::make_shared<TitleBar>();
+    titleBar = std::make_shared<TitleBar>(this);
     this->addLayoutChild(titleBar.get());
-    toolBar = std::make_shared<ToolBar>();
+    toolBar = std::make_shared<ToolBar>(this);
     this->addLayoutChild(toolBar.get());
 
     auto contentLayout = new Layout();
@@ -133,10 +98,10 @@ void WindowMain::initSize()
     YGNodeStyleSetWidthAuto(contentLayout->layout);
     YGNodeStyleSetFlexGrow(contentLayout->layout, 1.f);
 
-    leftPanel = std::make_shared<LeftPanel>();
+    leftPanel = std::make_shared<LeftPanel>(this);
     contentLayout->addLayoutChild(leftPanel.get());
 
-    contentPanel = std::make_shared<ContentPanel>();
+    contentPanel = std::make_shared<ContentPanel>(this);
     contentLayout->addLayoutChild(contentPanel.get());
 
     this->addLayoutChild(contentLayout);

@@ -3,12 +3,14 @@
 #include <string>
 #include <format>
 #include <vector>
+#include <functional>
 #include "include/core/SkSurface.h"
 #include "src/base/SkAutoMalloc.h"
 #include "yoga/Yoga.h"
 #include "Layout.h"
 
 #define WM_FLASH_CURSOR (WM_APP+4)
+using EventHandlerType = void(*)(const int&, const int&);
 
 class WindowBase:public Layout
 {
@@ -24,6 +26,10 @@ public:
     bool isMouseDown{false};
     bool isTrackMouseEvent{ false };
     int x{ 0 }, y{ 0 }, w{ 0 }, h{0};
+    std::vector<std::function<void(const int&, const int&)>> mouseMoveHandlers;
+    std::vector<std::function<void(const int&, const int&)>> mouseDragHandlers;
+    std::vector<std::function<void(const int&, const int&)>> mouseClickHandlers;
+    std::vector<std::function<void(const int&, const int&)>> mouseDBClickHandlers;
 
 protected:
     virtual LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) = 0;
@@ -35,4 +41,6 @@ private:
     SkAutoMalloc surfaceMemory;
     sk_sp<SkSurface> surface;
     int nctest(const int& x,const int& y);
+    void mouseMove(const int& x, const int& y);
+    void mouseLeave();
 };

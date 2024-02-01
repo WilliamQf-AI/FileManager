@@ -1,7 +1,7 @@
 #include "TitleBar.h"
 #include "WindowMain.h"
 
-ContentPanel::ContentPanel()
+ContentPanel::ContentPanel(WindowBase* root) :Layout(root)
 {
 	YGNodeStyleSetFlexGrow(layout, 1.f);
 	YGNodeStyleSetHeightAuto(layout);

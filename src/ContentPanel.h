@@ -4,12 +4,13 @@
 #include <format>
 #include <vector>
 #include "include/core/SkCanvas.h"
-#include "ControlBase.h"
+#include "Layout.h"
 
-class ContentPanel:public ControlBase
+class WindowBase;
+class ContentPanel:public Layout
 {
 public:
-    ContentPanel();
+    ContentPanel(WindowBase* root);
     ~ContentPanel();
     void paint(SkCanvas* canvas);
 private:

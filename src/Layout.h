@@ -4,33 +4,31 @@
 #include "include/core/SkPoint.h"
 #include "include/core/SkRect.h"
 
+class WindowBase;
 class Layout
 {
 public:
-    Layout();
+    Layout(WindowBase* root=nullptr);
     ~Layout();
     void setSize(float w, float h);
     void addLayoutChild(Layout* target);
     SkPoint getOffset();
     SkRect getOffsetRect();
-    SkPoint getPos();
-    
-
+    SkPoint getPos(); 
+    Layout* getRoot();
     void setLayoutPadding(float padding);
     void setLayoutPadding(float left, float top, float right, float bottom);
     void setLayoutMargin(float margin);
-    void setLayoutMargin(float left, float top, float right, float bottom);
-    
+    void setLayoutMargin(float left, float top, float right, float bottom);    
     float getWidth();
     float getHeight();
     float getXOffset();
-    float getYOffset();
-    
+    float getYOffset();    
     void setAlignSelf(YGAlign align);
     void setFlexDirection(YGDirection direction);
     void setJustifyContent(YGJustify justifyContent);
     YGNodeRef layout;
-
+    WindowBase* root;
 protected:
     float xAbsolute = 0;
     float yAbsolute = 0;

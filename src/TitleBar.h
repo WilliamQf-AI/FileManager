@@ -4,13 +4,14 @@
 #include <format>
 #include <vector>
 #include "include/core/SkCanvas.h"
-#include "ControlBase.h"
+#include "Layout.h"
 #include "TitleBarBtns.h"
 
-class TitleBar:public ControlBase
+class WindowBase;
+class TitleBar:public Layout
 {
 public:
-    TitleBar();
+    TitleBar(WindowBase* root);
     ~TitleBar();
     void paint(SkCanvas* canvas);
     void mousemove(const int& x, const int& y);

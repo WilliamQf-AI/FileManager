@@ -4,8 +4,8 @@
 #include "include/core/SkFontMetrics.h"
 #include "TitleBarBtns.h"
 
-
-TitleBar::TitleBar()
+class WindowBase;
+TitleBar::TitleBar(WindowBase* root):Layout(root)
 {
 	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionRow);
 	YGNodeStyleSetWidthAuto(layout);
@@ -15,7 +15,7 @@ TitleBar::TitleBar()
 	YGNodeStyleSetFlexGrow(tabLayout->layout, 1.f);
 	this->addLayoutChild(tabLayout);
 
-	btns = std::make_shared<TitleBarBtns>();
+	btns = std::make_shared<TitleBarBtns>(root);
 	this->addLayoutChild(btns.get());
 }
 

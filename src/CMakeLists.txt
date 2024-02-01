@@ -6,8 +6,6 @@ set(SRC
     Layout.h
     WindowBase.cpp
     WindowBase.h
-    ControlBase.cpp
-    ControlBase.h
     WindowMain.cpp
     WindowMain.h
     TitleBar.cpp

@@ -90,6 +90,17 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             obj->y = static_cast<int>(HIWORD(lParam));
             return true;
         }
+        case WM_MOUSEMOVE:
+        {
+            auto x = GET_X_LPARAM(lParam);
+            auto y = GET_Y_LPARAM(lParam);
+            obj->mouseMove(x, y);
+            break;
+        }
+        case WM_MOUSELEAVE: {
+            obj->mouseLeave();
+            return true;
+        }
         default:
         {
             return obj->wndProc(hWnd, msg, wParam, lParam);
@@ -128,6 +139,43 @@ int WindowBase::nctest(const int& x, const int& y)
     else {
 
         return HTCLIENT;
+    }
+}
+void WindowBase::mouseMove(const int& x, const int& y)
+{
+    if (!isTrackMouseEvent) {
+        TRACKMOUSEEVENT tme = {};
+        tme.cbSize = sizeof(TRACKMOUSEEVENT);
+        tme.dwFlags = TME_HOVER | TME_LEAVE;
+        tme.hwndTrack = hwnd;
+        tme.dwHoverTime = 1;
+        isTrackMouseEvent = TrackMouseEvent(&tme);
+    }
+    SetCursor(LoadCursor(NULL, IDC_ARROW));
+    if (isMouseDown) {
+        for (auto& func : mouseDragHandlers)
+        {
+            func(x, y);
+        }
+    }
+    else {
+        for (auto& func : mouseMoveHandlers)
+        {
+            func(x, y);
+        }
+    }
+}
+void WindowBase::mouseLeave()
+{
+    TRACKMOUSEEVENT tme = {};
+    tme.cbSize = sizeof(TRACKMOUSEEVENT);
+    tme.dwFlags = TME_CANCEL | TME_HOVER | TME_LEAVE;
+    tme.hwndTrack = hwnd;
+    TrackMouseEvent(&tme);    
+    isTrackMouseEvent = false;
+    for (auto& func : mouseMoveHandlers)
+    {
+        func(-888, -888);
     }
 }
 void WindowBase::initWindow()

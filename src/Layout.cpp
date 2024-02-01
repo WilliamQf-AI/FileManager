@@ -1,6 +1,9 @@
 #include "Layout.h"
-Layout::Layout() : layout{YGNodeNew()}
+#include <stack>
+#include "WindowBase.h"
+Layout::Layout(WindowBase* root) : layout{YGNodeNew()},root{root}
 {
+    YGNodeSetContext(layout, this);
 }
 Layout::~Layout()
 {
@@ -93,4 +96,18 @@ SkPoint Layout::getPos()
         currentNode = YGNodeGetParent(currentNode);
     }
     return SkPoint(x, y);
+}
+
+Layout* Layout::getRoot()
+{
+    Layout* currentNode = this;
+    while (true) {
+        auto temp = YGNodeGetParent(currentNode->layout);
+        if (temp) {
+            currentNode = static_cast<Layout*>(YGNodeGetContext(temp));
+        }
+        else {
+            return static_cast<Layout*>(YGNodeGetContext(currentNode->layout));
+        }
+    }
 }

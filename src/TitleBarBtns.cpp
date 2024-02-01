@@ -1,15 +1,18 @@
 ﻿#include "TitleBarBtns.h"
 #include <Windows.h>
-#include "WindowMain.h"
-#include "App.h"
+#include <functional>
 #include "include/core/SkFontMetrics.h"
+#include "App.h"
+#include "WindowBase.h"
 
-TitleBarBtns::TitleBarBtns()
+
+TitleBarBtns::TitleBarBtns(WindowBase* root):Layout(root)
 {
 	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionRow);
 	YGNodeStyleSetHeight(layout, 60.f);
 	YGNodeStyleSetWidth(layout, 198.f);
-	
+	auto func = std::bind(&TitleBarBtns::mousemove, this, std::placeholders::_1, std::placeholders::_2);
+	root->mouseMoveHandlers.push_back(func);
 }
 
 TitleBarBtns::~TitleBarBtns()
@@ -71,9 +74,6 @@ void TitleBarBtns::mousemove(const int& x, const int& y)
 	else {
 		hoverIndex = 2;
 	}
-	POINT mousePoint;
-	GetCursorPos(&mousePoint);
-	HWND hwnd = WindowFromPoint(mousePoint);
-	InvalidateRect(hwnd, nullptr, false);
+	InvalidateRect(root->hwnd, nullptr, false);
 
 }

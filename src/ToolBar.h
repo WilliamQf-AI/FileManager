@@ -4,12 +4,13 @@
 #include <format>
 #include <vector>
 #include "include/core/SkCanvas.h"
-#include "ControlBase.h"
+#include "Layout.h"
 
-class ToolBar :public ControlBase
+class WindowBase;
+class ToolBar :public Layout
 {
 public:
-    ToolBar();
+    ToolBar(WindowBase* root);
     ~ToolBar();
 
 private:
