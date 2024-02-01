@@ -1,4 +1,6 @@
 set(SRC
+    SystemIcon.cpp
+    SystemIcon.h
     main.cpp
     App.cpp
     App.h

@@ -9,7 +9,8 @@
 #include "yoga/Yoga.h"
 #include "Layout.h"
 
-#define WM_FLASH_CURSOR (WM_APP+4)
+#define WM_FLASH_CURSOR (WM_APP+8)
+#define WM_DEBUG_MESSAGE (WM_APP+9)
 using EventHandlerType = void(*)(const int&, const int&);
 
 class WindowBase:public Layout

@@ -102,6 +102,9 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             App::removeWindow(hWnd);
             return true;
         }
+        case WM_DEBUG_MESSAGE: {
+            return true;
+        }
         default:
         {
             return obj->wndProc(hWnd, msg, wParam, lParam);
