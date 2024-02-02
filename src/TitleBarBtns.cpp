@@ -41,24 +41,18 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 	}
 	rect.fRight = rect.fLeft + 66;
 	auto font = App::GetFontIcon();
-	font->setSize(18.f);
-	SkFontMetrics metrics;
-	font->getMetrics(&metrics);
+	font->setSize(24.f);
 	auto iconCode = (const char *)u8"\ue6e8"; //最小化
-	SkRect textBounds;
-	font->measureText(iconCode, 3, SkTextEncoding::kUTF8, &textBounds);
-	SkScalar x1 = rect.centerX() - textBounds.width() / 2;
-	SkScalar y1 = rect.centerY() + (metrics.fDescent - metrics.fAscent) / 2 - metrics.fDescent;
-	
-	paint.setColor(0xAA000000);
-	canvas->drawString(iconCode, x1, y1, *font, paint);
+	auto pos = getStartPosOfIconAtCenterOfRect(iconCode, rect, font.get());	
+	paint.setColor(0xFF666666);
+	canvas->drawString(iconCode, pos.fX, pos.fY, *font, paint);
 	iconCode = (const char*)u8"\ue6e5"; //最大化
-	canvas->drawString(iconCode, x1+66, y1, *font, paint);
+	canvas->drawString(iconCode, pos.fX +66, pos.fY, *font, paint);
 	iconCode = (const char*)u8"\ue6e7"; // 关闭
 	if (hoverIndex == 2) {
 		paint.setColor(SK_ColorWHITE);
 	}
-	canvas->drawString(iconCode, x1 + 132, y1, *font, paint);
+	canvas->drawString(iconCode, pos.fX + 132, pos.fY, *font, paint);
 }
 
 void TitleBarBtns::mouseDown(const int& x, const int& y)

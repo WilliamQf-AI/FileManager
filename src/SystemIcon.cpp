@@ -28,7 +28,7 @@ sk_sp<SkImage> SystemIcon::getIcon(SHSTOCKICONID id)
 		return nullptr;
 	}
 	HICON icon = sii.hIcon;
-	auto size = 28;
+	auto size = 26;
 	HDC hdcScreen = GetDC(NULL);
 	HDC hdcMemory = CreateCompatibleDC(hdcScreen);
 	auto hBmp = CreateCompatibleBitmap(hdcScreen, size, size);

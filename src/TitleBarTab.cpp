@@ -7,15 +7,36 @@
 #include "include/core/SkBitmap.h"
 #include "WindowBase.h"
 #include "SystemIcon.h"
+#include "App.h"
 
 TitleBarTab::TitleBarTab(WindowBase* root) :ControlBase(root)
 {
 	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionRow);
 	YGNodeStyleSetWidthAuto(layout);
+	YGNodeStyleSetFlexGrow(layout, 1.f);
 	YGNodeStyleSetMaxWidth(layout, 260.f);
 	YGNodeStyleSetHeight(layout, 46.f);
 	YGNodeStyleSetMargin(layout, YGEdgeTop, 10.f);
 	YGNodeStyleSetAlignItems(layout, YGAlignCenter);
+
+	auto iconLayout = YGNodeNew();
+	YGNodeStyleSetMargin(iconLayout, YGEdgeLeft, 6.f);
+	YGNodeStyleSetHeight(iconLayout, 26.f);
+	YGNodeStyleSetWidth(iconLayout, 26.f);
+	YGNodeInsertChild(layout, iconLayout, 0);
+
+
+	auto titleLayout = YGNodeNew();
+	YGNodeStyleSetWidthAuto(titleLayout);
+	YGNodeStyleSetHeight(titleLayout, 26.f);
+	YGNodeStyleSetFlexGrow(titleLayout, 1.f);
+	YGNodeInsertChild(layout, titleLayout, 1);
+
+	auto closeLayout = YGNodeNew();
+	YGNodeStyleSetMargin(closeLayout, YGEdgeRight, 6.f);
+	YGNodeStyleSetHeight(closeLayout, 26.f);
+	YGNodeStyleSetWidth(closeLayout, 26.f);
+	YGNodeInsertChild(layout, closeLayout, 2);
 }
 
 TitleBarTab::~TitleBarTab()
@@ -30,16 +51,43 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	paint.setAntiAlias(true);
 	if (isSelected) {
 		paint.setColor(0xFFFFFFFF);
+		paint.setStyle(SkPaint::kFill_Style);
+		SkVector radii[4] = { {6, 6}, {6, 6}, {0, 0}, {0, 0} };
+		auto rr = SkRRect::MakeEmpty();
+		rr.setRectRadii(rect, radii);
+		canvas->drawRRect(rr, paint);
 	}
-	paint.setStyle(SkPaint::kFill_Style);
-	SkVector radii[4] = { {6, 6}, {6, 6}, {0, 0}, {0, 0} };
-	auto rr = SkRRect::MakeEmpty();
-	rr.setRectRadii(rect, radii);
-	canvas->drawRRect(rr, paint);
-
+	auto iconLayout = YGNodeGetChild(layout, 0);
+	auto iconRect = getRect(iconLayout);
+	iconRect.offsetTo(rect.fLeft+iconRect.fLeft,rect.fTop+iconRect.fTop);
 
 	auto img = SystemIcon::getIcon(SIID_FOLDER);
-	canvas->drawImage(img, 8, 22);
+	canvas->drawImage(img, iconRect.centerX() - img->width()/2, iconRect.centerY() - img->height() / 2);
+
+	paint.setColor(0xFF333333);
+	auto titleLayout = YGNodeGetChild(layout, 1);
+	auto titleRect = getRect(titleLayout);
+	titleRect.offsetTo(rect.fLeft + titleRect.fLeft, rect.fTop + titleRect.fTop);
+	std::wstring str = L"ÎÄ¼þ¼ÐÃû³Æ";
+	auto textLength = wcslen(str.data()) * 2;
+	auto fontText = App::GetFontText();
+	fontText->setSize(16.f);
+	auto posText = getStartPosOfIconAtCenterOfRect(str, titleRect, fontText.get());
+	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, titleRect.fLeft, posText.fY, *fontText, paint);
+
+	paint.setColor(0xFF888888);
+	auto closeLayout = YGNodeGetChild(layout, 2);
+	auto closeRect = getRect(closeLayout);
+	closeRect.offsetTo(rect.fLeft + closeRect.fLeft, rect.fTop + closeRect.fTop);
+	auto font = App::GetFontIcon();
+	font->setSize(20.f);
+	paint.setAntiAlias(false);	
+	auto iconCode = (const char*)u8"\ue6e7"; 
+	auto pos = getStartPosOfIconAtCenterOfRect(iconCode, closeRect, font.get());
+	canvas->drawString(iconCode, pos.fX, pos.fY, *font, paint);
+
+	//canvas->drawSimpleText(iconCode, 3, SkTextEncoding::kUTF8,0, 0, *font,paint);
+
 	//SystemIcon::reset();
 	//PostMessage(root->hwnd, WM_DEBUG_MESSAGE, 0, 0);
 }
