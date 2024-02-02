@@ -73,10 +73,7 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             return obj->nctest(pt.x, pt.y);           
         }
         case WM_SIZE: {
-            obj->w = LOWORD(lParam);
-            obj->h = HIWORD(lParam);
-            obj->setSize(obj->w, obj->h);
-            YGNodeCalculateLayout(obj->layout,YGUndefined, YGUndefined, YGDirectionLTR);            
+            obj->onSize(LOWORD(lParam), HIWORD(lParam));
             return true;
         }
         case WM_MOVE: {
@@ -192,6 +189,14 @@ void WindowBase::mouseDown(const int& x, const int& y)
 void WindowBase::onClose()
 {
 
+}
+void WindowBase::onSize(const int& w, const int& h)
+{
+    this->w = w;
+    this->h = h;
+    YGNodeStyleSetWidth(layout, w);
+    YGNodeStyleSetHeight(layout, h);
+    YGNodeCalculateLayout(layout, YGUndefined, YGUndefined, YGDirectionLTR);
 }
 void WindowBase::initWindow()
 {

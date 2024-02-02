@@ -8,7 +8,7 @@
 #include "WindowBase.h"
 #include "SystemIcon.h"
 
-TitleBarTab::TitleBarTab(WindowBase* root) :Layout(root)
+TitleBarTab::TitleBarTab(WindowBase* root) :ControlBase(root)
 {
 	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionRow);
 	YGNodeStyleSetWidthAuto(layout);
@@ -20,11 +20,12 @@ TitleBarTab::TitleBarTab(WindowBase* root) :Layout(root)
 
 TitleBarTab::~TitleBarTab()
 {
+	//todo ÒÆ³ýÔªËØÊ±£¬ÊÍ·Ålayout
 }
 
 void TitleBarTab::paint(SkCanvas* canvas)
 {	
-	auto rect = getOffsetRect();
+	auto rect = getRect();
 	SkPaint paint;
 	paint.setAntiAlias(true);
 	if (isSelected) {

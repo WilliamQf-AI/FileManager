@@ -7,13 +7,12 @@
 #include "include/core/SkSurface.h"
 #include "src/base/SkAutoMalloc.h"
 #include "yoga/Yoga.h"
-#include "Layout.h"
 
 #define WM_FLASH_CURSOR (WM_APP+8)
 #define WM_DEBUG_MESSAGE (WM_APP+9)
 using EventHandlerType = void(*)(const int&, const int&);
 
-class WindowBase:public Layout
+class WindowBase
 {
 public:
     WindowBase();
@@ -21,7 +20,6 @@ public:
     void show();
     void clearTimeout(const unsigned int& id);
     void setTimeout(const unsigned int& id, const unsigned int& ms);
-    void close(const int& exitCode);
     HWND hwnd{nullptr};
     HWND hwndToolTip{nullptr};
     bool isMouseDown{false};
@@ -31,6 +29,7 @@ public:
     std::vector<std::function<void(const int&, const int&)>> mouseDragHandlers;
     std::vector<std::function<void(const int&, const int&)>> mouseDownHandlers;
     std::vector<std::function<void(const int&, const int&)>> mouseDBClickHandlers;
+    YGNodeRef layout;
 
 protected:
     virtual LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) = 0;
@@ -46,4 +45,5 @@ private:
     void mouseLeave();
     void mouseDown(const int& x, const int& y);
     void onClose();
+    void onSize(const int& w, const int& h);
 };

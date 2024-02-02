@@ -11,6 +11,7 @@
 #include "LeftPanel.h"
 #include "ContentPanel.h"
 #include "BottomBar.h"
+#include "yoga/Yoga.h"
 
 class WindowMain : public WindowBase
 {

@@ -5,23 +5,24 @@
 #include "TitleBarBtns.h"
 
 class WindowBase;
-TitleBar::TitleBar(WindowBase* root):Layout(root)
+TitleBar::TitleBar(WindowBase* root) :ControlBase(root)
 {
+	auto tab1 = std::make_shared<TitleBarTab>(root);
+	tabs.push_back(tab1);
+	btns = std::make_shared<TitleBarBtns>(root);
+
+
 	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionRow);
 	YGNodeStyleSetWidthAuto(layout);
 	YGNodeStyleSetHeight(layout, 56.f);
 	YGNodeStyleSetPadding(layout, YGEdgeLeft, 12.f);
 	
+	auto tabLayout = YGNodeNew();
+	YGNodeStyleSetFlexGrow(tabLayout, 1.f);
+	YGNodeInsertChild(tabLayout, tab1->layout, 0);
 
-	auto tabLayout = new Layout();
-	YGNodeStyleSetFlexGrow(tabLayout->layout, 1.f);
-	auto tab1 = std::make_shared<TitleBarTab>(root);
-	tabLayout->addChild(tab1.get());
-	tabs.push_back(std::move(tab1));
-	this->addChild(tabLayout);
-
-	btns = std::make_shared<TitleBarBtns>(root);
-	this->addChild(btns.get());
+	YGNodeInsertChild(layout, tabLayout, 0);
+	YGNodeInsertChild(layout, btns->layout, 1);
 }
 
 TitleBar::~TitleBar()
@@ -31,7 +32,7 @@ TitleBar::~TitleBar()
 void TitleBar::paint(SkCanvas* canvas)
 {	
 	auto left = YGNodeLayoutGetPadding(layout, YGEdgeLeft);
-	auto rect = getOffsetRect();
+	auto rect = getRect();
 	SkPaint paint;
 	paint.setColor(0xFFD3E3FD);
 	paint.setStyle(SkPaint::kFill_Style);

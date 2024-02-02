@@ -4,10 +4,10 @@
 #include <format>
 #include <vector>
 #include "include/core/SkCanvas.h"
-#include "Layout.h"
+#include "ControlBase.h"
 
 class WindowBase;
-class ContentPanel:public Layout
+class ContentPanel : public ControlBase
 {
 public:
     ContentPanel(WindowBase* root);

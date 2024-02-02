@@ -1,13 +1,15 @@
 set(SRC
     SystemIcon.cpp
     SystemIcon.h
+    WindowBase.cpp
+    WindowBase.h
+    ControlBase.cpp
+    ControlBase.h
     main.cpp
     App.cpp
     App.h
     Layout.cpp
     Layout.h
-    WindowBase.cpp
-    WindowBase.h
     WindowMain.cpp
     WindowMain.h
     TitleBar.cpp

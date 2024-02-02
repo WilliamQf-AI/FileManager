@@ -1,12 +1,10 @@
 #include "LeftPanel.h"
 #include "WindowMain.h"
 
-LeftPanel::LeftPanel(WindowBase* root) :Layout(root)
+LeftPanel::LeftPanel(WindowBase* root) :ControlBase(root)
 {
-	
 	YGNodeStyleSetHeightAuto(layout);
 	YGNodeStyleSetWidth(layout, 450.f);
-
 }
 
 LeftPanel::~LeftPanel()
@@ -15,17 +13,13 @@ LeftPanel::~LeftPanel()
 
 void LeftPanel::paint(SkCanvas* canvas)
 {
-	auto p = YGNodeGetParent(layout);
-	auto h1 = YGNodeLayoutGetHeight(p);
-
-
-	auto w = YGNodeLayoutGetWidth(layout);
-	auto h = YGNodeLayoutGetHeight(layout);
-	auto pos = getPos();
+	auto parent = YGNodeGetParent(layout);	
+	auto rect = getRect();
+	rect.offsetTo(rect.fLeft, YGNodeLayoutGetTop(parent));
 	SkPaint paint;
 	paint.setColor(0xFFECEFF7);
 	paint.setStyle(SkPaint::kFill_Style);
-	canvas->drawRect(SkRect::MakeXYWH(pos.fX, pos.fY, w, h), paint);
+	canvas->drawRect(rect, paint);
 }
 
 void LeftPanel::mousemove(const int& x, const int& y)

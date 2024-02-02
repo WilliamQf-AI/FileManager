@@ -6,7 +6,7 @@
 #include "WindowBase.h"
 
 
-TitleBarBtns::TitleBarBtns(WindowBase* root):Layout(root)
+TitleBarBtns::TitleBarBtns(WindowBase* root) :ControlBase(root)
 {
 	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionRow);
 	YGNodeStyleSetWidth(layout, 198.f);
@@ -25,7 +25,7 @@ TitleBarBtns::~TitleBarBtns()
 void TitleBarBtns::paint(SkCanvas *canvas)
 {
 	auto h = YGNodeLayoutGetHeight(layout);
-	auto rect = getOffsetRect();
+	auto rect = getRect();
 	SkPaint paint;
 	if (hoverIndex == 0) {
 		paint.setColor(0xAAFFFFFF);
@@ -76,7 +76,7 @@ void TitleBarBtns::mouseDown(const int& x, const int& y)
 
 void TitleBarBtns::mouseMove(const int& x, const int& y)
 {
-	auto rect = getOffsetRect();
+	auto rect = getRect();
 	if (!rect.contains(x, y)) {
 		if (hoverIndex >= 0) {
 			hoverIndex = -1;

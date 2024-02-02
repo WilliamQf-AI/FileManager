@@ -17,6 +17,7 @@ WindowMain::WindowMain()
 
 WindowMain::~WindowMain()
 {
+    YGNodeFreeRecursive(layout);
 }
 
 void WindowMain::init()
@@ -73,22 +74,23 @@ void WindowMain::initSize()
     w = 800;
     h = 600;
    
+    layout = YGNodeNew();
     YGNodeStyleSetFlexDirection(layout, YGFlexDirectionColumn);
+
+    auto contentLayout = YGNodeNew();
+    YGNodeStyleSetFlexDirection(contentLayout, YGFlexDirectionRow);
+    YGNodeStyleSetWidthAuto(contentLayout);
+    YGNodeStyleSetFlexGrow(contentLayout, 1.f);
+
     titleBar = std::make_shared<TitleBar>(this);
-    this->addChild(titleBar.get());
     toolBar = std::make_shared<ToolBar>(this);
-    this->addChild(toolBar.get());
-
-    auto contentLayout = new Layout();
-    YGNodeStyleSetFlexDirection(contentLayout->layout, YGFlexDirectionRow);
-    YGNodeStyleSetWidthAuto(contentLayout->layout);
-    YGNodeStyleSetFlexGrow(contentLayout->layout, 1.f);
-
     leftPanel = std::make_shared<LeftPanel>(this);
-    contentLayout->addChild(leftPanel.get());
-
     contentPanel = std::make_shared<ContentPanel>(this);
-    contentLayout->addChild(contentPanel.get());
 
-    this->addChild(contentLayout);
+    YGNodeInsertChild(layout, titleBar->layout, 0);
+    YGNodeInsertChild(layout, toolBar->layout, 1);
+    YGNodeInsertChild(layout, contentLayout, 2);
+    
+    YGNodeInsertChild(contentLayout, leftPanel->layout, 0);
+    YGNodeInsertChild(contentLayout, contentPanel->layout, 1);
 }

@@ -4,12 +4,12 @@
 #include <format>
 #include <vector>
 #include "include/core/SkCanvas.h"
-#include "Layout.h"
+#include "ControlBase.h"
 #include "TitleBarBtns.h"
 #include "TitleBarTab.h"
 
 class WindowBase;
-class TitleBar:public Layout
+class TitleBar : public ControlBase
 {
 public:
     TitleBar(WindowBase* root);

@@ -3,12 +3,12 @@
 #include <string>
 #include <format>
 #include <vector>
-#include "include/core/SkCanvas.h"
-#include "Layout.h"
+#include <include/core/SkCanvas.h>
+#include "ControlBase.h"
 
 
 class WindowBase;
-class BottomBar:public Layout
+class BottomBar : public ControlBase
 {
 public:
     BottomBar(WindowBase* root);
