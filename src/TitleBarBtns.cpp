@@ -26,6 +26,7 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 {
 	auto h = YGNodeLayoutGetHeight(layout);
 	auto rect = getRect();
+	auto isMaximized = IsZoomed(root->hwnd) != 0;
 	SkPaint paint;
 	if (hoverIndex == 0) {
 		paint.setColor(0xAAFFFFFF);
@@ -46,7 +47,7 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 	auto pos = getStartPosOfIconAtCenterOfRect(iconCode, rect, font.get());	
 	paint.setColor(0xFF666666);
 	canvas->drawString(iconCode, pos.fX, pos.fY, *font, paint);
-	iconCode = (const char*)u8"\ue6e5"; //最大化
+	iconCode = isMaximized? (const char*)u8"\ue6e9" : (const char*)u8"\ue6e5"; //最大化
 	canvas->drawString(iconCode, pos.fX +66, pos.fY, *font, paint);
 	iconCode = (const char*)u8"\ue6e7"; // 关闭
 	if (hoverIndex == 2) {
@@ -58,14 +59,21 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 void TitleBarBtns::mouseDown(const int& x, const int& y)
 {
 	if (hoverIndex == 0) {
-
+		PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
 	}
 	else if (hoverIndex == 1) {
-
+		auto isMaximized = IsZoomed(root->hwnd) != 0;
+		if (isMaximized) {
+			PostMessage(root->hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+		}
+		else {
+			PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+		}		
 	}
 	else if (hoverIndex == 2) {
 		PostMessage(root->hwnd, WM_CLOSE, 0, 0); //PostMessage异步，SendMessage同步
 	}
+	hoverIndex = -1;
 }
 
 void TitleBarBtns::mouseMove(const int& x, const int& y)

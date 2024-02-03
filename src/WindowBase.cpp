@@ -72,6 +72,12 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             ScreenToClient(hWnd, &pt);
             return obj->nctest(pt.x, pt.y);           
         }
+        case WM_GETMINMAXINFO:
+        {
+            obj->onGetMaxMinMizeInfo((PMINMAXINFO)lParam);
+            return true;
+        }
+
         case WM_SIZE: {
             obj->onSize(LOWORD(lParam), HIWORD(lParam));
             return true;
@@ -197,6 +203,17 @@ void WindowBase::onSize(const int& w, const int& h)
     YGNodeStyleSetWidth(layout, w);
     YGNodeStyleSetHeight(layout, h);
     YGNodeCalculateLayout(layout, YGUndefined, YGUndefined, YGDirectionLTR);
+}
+void WindowBase::onGetMaxMinMizeInfo(MINMAXINFO* mminfo)
+{
+    RECT workArea;
+    SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);    
+    mminfo->ptMinTrackSize.x = 800;
+    mminfo->ptMinTrackSize.y = 600;
+    mminfo->ptMaxSize.x = workArea.right - workArea.left;
+    mminfo->ptMaxSize.y = workArea.bottom - workArea.top;
+    mminfo->ptMaxPosition.x = 0;
+    mminfo->ptMaxPosition.y = 0;
 }
 void WindowBase::initWindow()
 {

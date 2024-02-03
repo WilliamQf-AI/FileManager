@@ -46,4 +46,5 @@ private:
     void mouseDown(const int& x, const int& y);
     void onClose();
     void onSize(const int& w, const int& h);
+    void onGetMaxMinMizeInfo(MINMAXINFO* mminfo);
 };
