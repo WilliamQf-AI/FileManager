@@ -45,7 +45,7 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 	font->setSize(24.f);
 	auto iconCode = (const char *)u8"\ue6e8"; //最小化
 	auto pos = getStartPosOfIconAtCenterOfRect(iconCode, rect, font.get());	
-	paint.setColor(0xFF666666);
+	paint.setColor(0xFF888888);
 	canvas->drawString(iconCode, pos.fX, pos.fY, *font, paint);
 	iconCode = isMaximized? (const char*)u8"\ue6e9" : (const char*)u8"\ue6e5"; //最大化
 	canvas->drawString(iconCode, pos.fX +66, pos.fY, *font, paint);
@@ -60,6 +60,7 @@ void TitleBarBtns::mouseDown(const int& x, const int& y)
 {
 	if (hoverIndex == 0) {
 		PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		root->isMouseDown = false;
 	}
 	else if (hoverIndex == 1) {
 		auto isMaximized = IsZoomed(root->hwnd) != 0;
@@ -68,10 +69,12 @@ void TitleBarBtns::mouseDown(const int& x, const int& y)
 		}
 		else {
 			PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
-		}		
+		}
+		root->isMouseDown = false;
 	}
 	else if (hoverIndex == 2) {
 		PostMessage(root->hwnd, WM_CLOSE, 0, 0); //PostMessage异步，SendMessage同步
+		root->isMouseDown = false;
 	}
 	hoverIndex = -1;
 }
@@ -82,10 +85,7 @@ void TitleBarBtns::mouseMove(const int& x, const int& y)
 	if (!rect.contains(x, y)) {
 		if (hoverIndex >= 0) {
 			hoverIndex = -1;
-			POINT mousePoint;
-			GetCursorPos(&mousePoint);
-			HWND hwnd = WindowFromPoint(mousePoint);
-			InvalidateRect(hwnd, nullptr, false);
+			InvalidateRect(root->hwnd, nullptr, false);
 		}
 		return;
 	}

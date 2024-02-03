@@ -33,8 +33,8 @@ SkPoint ControlBase::getStartPosOfIconAtCenterOfRect(const char* text, SkRect& r
     SkFontMetrics metrics;
     font->getMetrics(&metrics);
     SkRect textBounds;
-    font->measureText(text, 3, SkTextEncoding::kUTF8, &textBounds);
-    SkScalar x = rect.centerX() - textBounds.width() / 2;
+    font->measureText(text, 4, SkTextEncoding::kUTF8, &textBounds);
+    SkScalar x = rect.centerX() - textBounds.width() / 2 - textBounds.fLeft/2;
     SkScalar y = rect.centerY() + (metrics.fDescent - metrics.fAscent) / 2 - metrics.fDescent;
     return SkPoint(x, y);
 }

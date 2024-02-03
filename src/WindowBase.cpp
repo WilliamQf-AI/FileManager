@@ -54,6 +54,9 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
         {
             return false;
         }
+        case WM_ERASEBKGND: {
+            return false;
+        }
         case WM_PAINT: {
             PAINTSTRUCT ps;
             auto dc = BeginPaint(hWnd, &ps);
@@ -77,19 +80,18 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             obj->onGetMaxMinMizeInfo((PMINMAXINFO)lParam);
             return true;
         }
-
         case WM_SIZE: {
             obj->onSize(LOWORD(lParam), HIWORD(lParam));
-            return true;
-        }
-        case WM_MOVE: {
-            obj->x = static_cast<int>(LOWORD(lParam));
-            obj->y = static_cast<int>(HIWORD(lParam));
             return true;
         }
         case WM_LBUTTONDOWN:
         {            
             obj->mouseDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+            break;
+        }
+        case WM_LBUTTONUP:
+        {
+            obj->mouseUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
             break;
         }
         case WM_MOUSELEAVE: {
@@ -187,7 +189,16 @@ void WindowBase::mouseLeave()
 }
 void WindowBase::mouseDown(const int& x, const int& y)
 {
+    isMouseDown = true;
     for (auto& func : mouseDownHandlers)
+    {
+        func(x, y);
+    }
+}
+void WindowBase::mouseUp(const int& x, const int& y)
+{
+    isMouseDown = false;
+    for (auto& func : mouseUpHandlers)
     {
         func(x, y);
     }
@@ -234,13 +245,16 @@ void WindowBase::initWindow()
     {
         return;
     }
-    this->hwnd = CreateWindowEx(WS_EX_APPWINDOW | WS_EX_WINDOWEDGE, className.c_str(), className.c_str(), WS_POPUP | WS_VISIBLE,
+    RECT screenRect;
+    SystemParametersInfo(SPI_GETWORKAREA, 0, &screenRect, 0);
+    auto x = (screenRect.right - w) / 2;
+    auto y = (screenRect.bottom - h) / 2;
+    this->hwnd = CreateWindowEx(WS_EX_APPWINDOW, className.c_str(), className.c_str(), WS_VISIBLE,
                                 x, y, w, h, NULL, NULL, hinstance, static_cast<LPVOID>(this));    
     DWMNCRENDERINGPOLICY policy = DWMNCRP_ENABLED;
     DwmSetWindowAttribute(hwnd, DWMWA_NCRENDERING_POLICY, &policy, sizeof(policy));
     MARGINS margins = { 1,1,1,1 };
     DwmExtendFrameIntoClientArea(hwnd, &margins);
-    SetWindowPos(hwnd, nullptr, 110, 110, 0, 0, SWP_FRAMECHANGED | SWP_NOSIZE);
     hwndToolTip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hwnd, NULL, hinstance, NULL);
 }

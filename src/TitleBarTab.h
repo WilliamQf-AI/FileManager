@@ -14,4 +14,6 @@ public:
     ~TitleBarTab();
     void paint(SkCanvas* canvas);
     bool isSelected{ true };
+    bool isHovered{ false };
+    bool isHoverCloseBtn{ false };
 };

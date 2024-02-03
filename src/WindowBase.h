@@ -24,10 +24,11 @@ public:
     HWND hwndToolTip{nullptr};
     bool isMouseDown{false};
     bool isTrackMouseEvent{ false };
-    int x{ 0 }, y{ 0 }, w{ 0 }, h{0};
+    int w{ 0 }, h{0};
     std::vector<std::function<void(const int&, const int&)>> mouseMoveHandlers;
     std::vector<std::function<void(const int&, const int&)>> mouseDragHandlers;
     std::vector<std::function<void(const int&, const int&)>> mouseDownHandlers;
+    std::vector<std::function<void(const int&, const int&)>> mouseUpHandlers;
     std::vector<std::function<void(const int&, const int&)>> mouseDBClickHandlers;
     YGNodeRef layout;
 
@@ -44,6 +45,7 @@ private:
     void mouseMove(const int& x, const int& y);
     void mouseLeave();
     void mouseDown(const int& x, const int& y);
+    void mouseUp(const int& x, const int& y);
     void onClose();
     void onSize(const int& w, const int& h);
     void onGetMaxMinMizeInfo(MINMAXINFO* mminfo);

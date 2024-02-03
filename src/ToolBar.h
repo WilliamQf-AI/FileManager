@@ -12,5 +12,6 @@ class ToolBar : public ControlBase
 public:
     ToolBar(WindowBase* root);
     ~ToolBar();
+    void paint(SkCanvas* canvas);
 private:
 };
