@@ -67,6 +67,13 @@ void ToolBar::paint(SkCanvas* canvas)
 	canvas->drawRoundRect(searchRect, radio, radio, paint);
 
 	paint.setColor(0xFF999999);
+
+	iconCode = (const char*)u8"\ue611";
+	canvas->drawString(iconCode, addressRect.fRight - 68, pos.fY, *font, paint);
+
+	iconCode = (const char*)u8"\ue764";
+	canvas->drawString(iconCode, addressRect.fRight - 34, pos.fY, *font, paint);
+
 	iconCode = (const char*)u8"\ue6a6";
 	canvas->drawString(iconCode, searchRect.fLeft+8, pos.fY, *font, paint);
 
@@ -75,4 +82,7 @@ void ToolBar::paint(SkCanvas* canvas)
 	std::wstring str = L"Powered by Everything";
 	auto textLength = wcslen(str.data()) * 2;
 	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, searchRect.fLeft + 38, pos.fY-4, *fontText, paint);
+
+	paint.setColor(0xFFE8E8E8);
+	canvas->drawLine(0.f, rect.fBottom, root->w, rect.fBottom, paint);
 }

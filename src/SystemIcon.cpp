@@ -1,7 +1,4 @@
 #include "SystemIcon.h"
-#include <Windows.h>
-#include <shellapi.h>
-#include <shlobj.h>
 #include "include/core/SkPixmap.h"
 #include "include/core/SkBitmap.h"
 #include <map>
@@ -17,7 +14,7 @@ SystemIcon::~SystemIcon()
 {
 }
 
-sk_sp<SkImage> SystemIcon::getIcon(SHSTOCKICONID id)
+sk_sp<SkImage> SystemIcon::getIcon(SHSTOCKICONID id, const int& size)
 {
 	if (iconCache.contains(id)) {
 		return iconCache[id];
@@ -27,8 +24,47 @@ sk_sp<SkImage> SystemIcon::getIcon(SHSTOCKICONID id)
 	if (FAILED(hr) || !sii.hIcon) {
 		return nullptr;
 	}
-	HICON icon = sii.hIcon;
-	auto size = 26;
+	auto img = iconToImg(sii.hIcon,size);
+	iconCache.insert({id, img});
+	return img;
+}
+
+sk_sp<SkImage> SystemIcon::getIcon(KNOWNFOLDERID id, const int& size)
+{
+	PWSTR pszPath;
+	HRESULT hr = SHGetKnownFolderPath(id, 0, NULL, &pszPath);
+	if (FAILED(hr)) {
+		return nullptr;
+	}
+	SHFILEINFO sfi{ 0 };
+	SHGetFileInfo(pszPath, 0, &sfi, sizeof(SHFILEINFO),  SHGFI_ICON | SHGFI_SMALLICON);
+	if (!sfi.hIcon) {
+		return nullptr;
+	}
+	auto img = iconToImg(sfi.hIcon, size);
+	return img;
+}
+
+sk_sp<SkImage> SystemIcon::getIcon(std::wstring path, const int& size)
+{
+	SHFILEINFO sfi;
+	ZeroMemory(&sfi, sizeof(SHFILEINFO));
+	HICON hIcon = NULL;
+	if (SHGetFileInfo(path.data(), 0, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_SMALLICON))
+	{
+		hIcon = sfi.hIcon;
+	}
+	auto img = iconToImg(sfi.hIcon, size);
+	return img;
+}
+
+void SystemIcon::reset()
+{
+	std::map<int, sk_sp<SkImage>>().swap(iconCache);
+}
+
+sk_sp<SkImage> SystemIcon::iconToImg(HICON icon, const int& size)
+{
 	HDC hdcScreen = GetDC(NULL);
 	HDC hdcMemory = CreateCompatibleDC(hdcScreen);
 	auto hBmp = CreateCompatibleBitmap(hdcScreen, size, size);
@@ -49,11 +85,5 @@ sk_sp<SkImage> SystemIcon::getIcon(SHSTOCKICONID id)
 	SkBitmap bitmap;
 	bitmap.installPixels(pixmap);
 	auto img = bitmap.asImage();
-	iconCache.insert({id, img});
 	return img;
-}
-
-void SystemIcon::reset()
-{
-	std::map<int, sk_sp<SkImage>>().swap(iconCache);
 }

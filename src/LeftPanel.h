@@ -3,6 +3,7 @@
 #include <string>
 #include <format>
 #include <vector>
+#include <tuple>
 #include "include/core/SkCanvas.h"
 #include "ControlBase.h"
 
@@ -15,4 +16,5 @@ public:
     void paint(SkCanvas* canvas);
     void mousemove(const int& x, const int& y);
 private:
+    std::vector<std::tuple<char, double, double,bool>> driveInfo;
 };

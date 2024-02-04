@@ -69,7 +69,7 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	auto iconRect = getRect(iconLayout);
 	iconRect.offsetTo(rect.fLeft+iconRect.fLeft,rect.fTop+iconRect.fTop);
 
-	auto img = SystemIcon::getIcon(SIID_FOLDER);
+	auto img = SystemIcon::getIcon(SIID_FOLDER,26); //CSIDL_QUICKACCESS
 	canvas->drawImage(img, iconRect.centerX() - img->width()/2, iconRect.centerY() - img->height() / 2);
 
 	paint.setColor(0xFF333333);
