@@ -71,9 +71,9 @@ LeftPanel::~LeftPanel()
 
 void LeftPanel::paint(SkCanvas* canvas)
 {
-	auto parent = YGNodeGetParent(layout);	
+	canvas->save();
+	canvas->translate(0, YGNodeLayoutGetTop(YGNodeGetParent(layout)));
 	auto rect = getRect();
-	rect.offsetTo(rect.fLeft, YGNodeLayoutGetTop(parent));
 	SkPaint paint;
 	paint.setColor(0xFFE8E8E8);
 	canvas->drawLine(rect.fRight, rect.fTop, rect.fRight, rect.fBottom, paint);
@@ -92,7 +92,7 @@ void LeftPanel::paint(SkCanvas* canvas)
 		auto img = SystemIcon::getIcon(ids[i], 24);
 		auto itemLayout = YGNodeGetChild(quickLayout, i);
 		auto itemRect = getRect(itemLayout);
-		itemRect.offsetTo(itemRect.fLeft, rect.fTop+itemRect.fTop);
+		itemRect.offsetTo(itemRect.fLeft, itemRect.fTop);
 		canvas->drawImage(img, itemRect.centerX()-12, itemRect.centerY()-24);
 
 		auto textLength = wcslen(names[i].data()) * 2;
@@ -111,7 +111,7 @@ void LeftPanel::paint(SkCanvas* canvas)
 	{
 		auto itemLayout = YGNodeGetChild(layout, index);
 		auto itemRect = getRect(itemLayout);
-		itemRect.offsetTo(rect.fLeft+itemRect.fLeft, rect.fTop+itemRect.fTop);
+		itemRect.offsetTo(itemRect.fLeft, itemRect.fTop);
 		auto str1 = std::format(L"{}:\\", std::get<0>(drive));
 		auto img = SystemIcon::getIcon(str1, 24);
 		paint.setColor(0x101677ff);
@@ -132,7 +132,7 @@ void LeftPanel::paint(SkCanvas* canvas)
 	{
 		auto itemLayout = YGNodeGetChild(layout, index+i);
 		auto itemRect = getRect(itemLayout);
-		itemRect.offsetTo(rect.fLeft + itemRect.fLeft, rect.fTop + itemRect.fTop);
+		itemRect.offsetTo(itemRect.fLeft, itemRect.fTop);
 
 		auto img = SystemIcon::getIcon(SIID_FOLDER, 26); //CSIDL_QUICKACCESS
 		canvas->drawImage(img, itemRect.fLeft, itemRect.fTop + 8);
@@ -143,8 +143,9 @@ void LeftPanel::paint(SkCanvas* canvas)
 		auto fontText = App::GetFontText();
 		fontText->setSize(16.6f);
 		paint.setColor(0xFF333333);
-		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, itemRect.fLeft+30, itemRect.fTop + 26, *fontText, paint);
+		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, 42, itemRect.fTop + 26, *fontText, paint);
 	}
+	canvas->restore();
 }
 
 void LeftPanel::mousemove(const int& x, const int& y)
