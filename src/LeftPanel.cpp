@@ -1,4 +1,4 @@
-#include "LeftPanel.h"
+ï»¿#include "LeftPanel.h"
 #include "WindowMain.h"
 #include "SystemIcon.h"
 #include "App.h"
@@ -84,7 +84,7 @@ void LeftPanel::paint(SkCanvas* canvas)
 	YGNodeRef quickLayout = YGNodeGetChild(layout, 0);
 	
 
-	std::vector<std::wstring> names{ L"×ÀÃæ",L"ÒôÀÖ",L"ÊÓÆµ",L"ÏÂÔØ",L"Í¼Æ¬",L"ÎÄµµ" };
+	std::vector<std::wstring> names{ L"æ¡Œé¢",L"éŸ³ä¹",L"è§†é¢‘",L"ä¸‹è½½",L"å›¾ç‰‡",L"æ–‡æ¡£" };
 	std::vector<GUID> ids{ FOLDERID_Desktop,FOLDERID_Music,FOLDERID_Videos,
 						  FOLDERID_Downloads,FOLDERID_Pictures,FOLDERID_Documents };
 	for (size_t i = 0; i < 6; i++)
@@ -118,7 +118,7 @@ void LeftPanel::paint(SkCanvas* canvas)
 		canvas->drawRoundRect(itemRect,6,6, paint);
 		canvas->drawImage(img, itemRect.fLeft+12, itemRect.fTop+6);
 
-		std::wstring str = std::format(L"±¾µØ´ÅÅÌ({}:)", std::get<0>(drive));
+		std::wstring str = std::format(L"æœ¬åœ°ç£ç›˜({}:)", std::get<0>(drive));
 		auto textLength = wcslen(str.data()) * 2;
 		auto fontText = App::GetFontText();
 		fontText->setSize(16.6f);
@@ -138,7 +138,7 @@ void LeftPanel::paint(SkCanvas* canvas)
 		canvas->drawImage(img, itemRect.fLeft, itemRect.fTop + 8);
 
 
-		std::wstring str = std::format(L"ÕâÊÇÒ»ÌõÊÕ²ØµÄÂ·¾¶({}:)", i);
+		std::wstring str = std::format(L"è¿™æ˜¯ä¸€æ¡æ”¶è—çš„è·¯å¾„({}:)", i);
 		auto textLength = wcslen(str.data()) * 2;
 		auto fontText = App::GetFontText();
 		fontText->setSize(16.6f);
