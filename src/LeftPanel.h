@@ -6,6 +6,8 @@
 #include <tuple>
 #include "include/core/SkCanvas.h"
 #include "ControlBase.h"
+#include "FavoritePath.h"
+#include "SettingBar.h"
 
 class WindowBase;
 class LeftPanel : public ControlBase
@@ -17,4 +19,6 @@ public:
     void mousemove(const int& x, const int& y);
 private:
     std::vector<std::tuple<char, double, double,bool>> driveInfo;
+    std::shared_ptr<FavoritePath> favoritePath;
+    std::shared_ptr<SettingBar> settingBar;
 };

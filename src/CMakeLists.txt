@@ -22,6 +22,10 @@ set(SRC
     ToolBar.h
     LeftPanel.cpp
     LeftPanel.h
+    FavoritePath.cpp
+    FavoritePath.h
+    SettingBar.cpp
+    SettingBar.h
     ContentPanel.cpp
     ContentPanel.h
     BottomBar.cpp

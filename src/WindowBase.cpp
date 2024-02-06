@@ -65,7 +65,7 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             StretchDIBits(dc, 0, 0, obj->w, obj->h, 0, 0, obj->w, obj->h, bmpInfo->bmiColors, bmpInfo, DIB_RGB_COLORS, SRCCOPY);
             ReleaseDC(hWnd, dc);
             EndPaint(hWnd, &ps);
-            obj->surfaceMemory.reset(0); //实践证明这样即节省内存，速度也不会慢
+            //obj->surfaceMemory.reset(0); //实践证明这样即节省内存，速度也不会慢
             return true;
         }
         case WM_NCHITTEST: {
@@ -182,6 +182,7 @@ void WindowBase::mouseLeave()
     tme.hwndTrack = hwnd;
     TrackMouseEvent(&tme);    
     isTrackMouseEvent = false;
+    isMouseDown = false;
     for (auto& func : mouseMoveHandlers)
     {
         func(-888, -888);
@@ -213,6 +214,10 @@ void WindowBase::onSize(const int& w, const int& h)
     this->h = h;
     YGNodeStyleSetWidth(layout, w);
     YGNodeStyleSetHeight(layout, h);
+    YGNodeStyleSetMaxWidth(layout, w);
+    YGNodeStyleSetMaxHeight(layout, h);
+    YGNodeStyleSetMinWidth(layout, w);
+    YGNodeStyleSetMinHeight(layout, h);
     YGNodeCalculateLayout(layout, YGUndefined, YGUndefined, YGDirectionLTR);
 }
 void WindowBase::onGetMaxMinMizeInfo(MINMAXINFO* mminfo)
@@ -257,13 +262,15 @@ void WindowBase::initWindow()
     DwmExtendFrameIntoClientArea(hwnd, &margins);
     hwndToolTip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hwnd, NULL, hinstance, NULL);
+
+
+    surface.reset();
+    size_t bmpSize = sizeof(BITMAPINFOHEADER) + w * h * sizeof(uint32_t);
+    surfaceMemory.reset(bmpSize);
 }
 
 void WindowBase::paintWindow()
 {
-    surface.reset();
-    size_t bmpSize = sizeof(BITMAPINFOHEADER) + w * h * sizeof(uint32_t);
-    surfaceMemory.reset(bmpSize);
     BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(surfaceMemory.get());
     ZeroMemory(bmpInfo, sizeof(BITMAPINFO));
     bmpInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);

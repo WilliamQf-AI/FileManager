@@ -5,7 +5,7 @@
 
 LeftPanel::LeftPanel(WindowBase* root) :ControlBase(root)
 {
-	YGNodeStyleSetHeightAuto(layout);
+	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionColumn);
 	YGNodeStyleSetWidth(layout, 380.f);
 
 	auto quickLayout = YGNodeNew();
@@ -49,20 +49,10 @@ LeftPanel::LeftPanel(WindowBase* root) :ControlBase(root)
 			}
 		}
 	}
-
-	for (size_t i = 0; i < 26; i++)
-	{
-		auto driveLayout = YGNodeNew();
-		if (i == 0) {
-			YGNodeStyleSetMargin(driveLayout, YGEdgeTop, 20.f);
-		}
-		YGNodeStyleSetMargin(driveLayout, YGEdgeRight, 12.f);
-		YGNodeStyleSetMargin(driveLayout, YGEdgeLeft, 12.f);
-		YGNodeStyleSetHeight(driveLayout, 46);
-		YGNodeInsertChild(layout, driveLayout, index);
-		index += 1;
-	}
-	int a = 11;
+	favoritePath = std::make_shared<FavoritePath>(root);
+	YGNodeInsertChild(layout, favoritePath->layout, index);
+	settingBar = std::make_shared<SettingBar>(root);
+	YGNodeInsertChild(layout, settingBar->layout, index + 1);
 }
 
 LeftPanel::~LeftPanel()
@@ -127,24 +117,8 @@ void LeftPanel::paint(SkCanvas* canvas)
 
 		index += 1;
 	}
-
-	for (size_t i = 0; i < 26; i++)
-	{
-		auto itemLayout = YGNodeGetChild(layout, index+i);
-		auto itemRect = getRect(itemLayout);
-		itemRect.offsetTo(itemRect.fLeft, itemRect.fTop);
-
-		auto img = SystemIcon::getIcon(SIID_FOLDER, 26); //CSIDL_QUICKACCESS
-		canvas->drawImage(img, itemRect.fLeft, itemRect.fTop + 8);
-
-
-		std::wstring str = std::format(L"这是一条收藏的路径({}:)", i);
-		auto textLength = wcslen(str.data()) * 2;
-		auto fontText = App::GetFontText();
-		fontText->setSize(16.6f);
-		paint.setColor(0xFF333333);
-		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, 42, itemRect.fTop + 26, *fontText, paint);
-	}
+	favoritePath->paint(canvas);
+	settingBar->paint(canvas);
 	canvas->restore();
 }
 

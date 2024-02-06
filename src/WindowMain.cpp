@@ -51,9 +51,20 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 void WindowMain::paint(SkCanvas* canvas)
 {
     canvas->clear(SK_ColorWHITE);
+
+
     titleBar->paint(canvas);
     toolBar->paint(canvas);
     leftPanel->paint(canvas);
+    contentPanel->paint(canvas);
+
+    //SkPaint p;
+    //p.setColor(0xFF123456);
+    //canvas->save();
+    //SkRect clipRect = SkRect::MakeXYWH(50, 50, 150, 150);
+    //canvas->clipRect(clipRect);
+    //canvas->drawRect(SkRect::MakeXYWH(0, 0, 100, 100), p);
+    //canvas->restore();
 }
 
 void WindowMain::initSize()
