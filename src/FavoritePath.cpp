@@ -37,6 +37,7 @@ void FavoritePath::paint(SkCanvas* canvas)
 {
 	auto rectHeight = rect.height();
 	SkPaint paint;
+	canvas->save();
 	canvas->clipRect(rect);
 	auto top = 0 - (scrollerRect.fTop-rect.fTop) / rectHeight * totalHeight;
 	for (size_t i = 0; i < 26; i++)

@@ -13,5 +13,6 @@ public:
     ContentPanel(WindowBase* root);
     ~ContentPanel();
     void paint(SkCanvas* canvas) override;
+    void resize(const int& w, const int& h);
 private:
 };

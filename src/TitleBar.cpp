@@ -44,7 +44,6 @@ void TitleBar::paint(SkCanvas* canvas)
 	{
 		tab->paint(canvas);
 	}
-	canvas->restore();
 	btns->paint(canvas);
 }
 
