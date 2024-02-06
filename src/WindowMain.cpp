@@ -51,8 +51,6 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 void WindowMain::paint(SkCanvas* canvas)
 {
     canvas->clear(SK_ColorWHITE);
-
-
     titleBar->paint(canvas);
     toolBar->paint(canvas);
     leftPanel->paint(canvas);

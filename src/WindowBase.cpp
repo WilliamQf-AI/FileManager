@@ -212,6 +212,9 @@ void WindowBase::onSize(const int& w, const int& h)
 {
     this->w = w;
     this->h = h;
+    surface.reset();
+    size_t bmpSize = sizeof(BITMAPINFOHEADER) + w * h * sizeof(uint32_t);
+    surfaceMemory.reset(bmpSize);
     YGNodeStyleSetWidth(layout, w);
     YGNodeStyleSetHeight(layout, h);
     YGNodeStyleSetMaxWidth(layout, w);
@@ -262,11 +265,6 @@ void WindowBase::initWindow()
     DwmExtendFrameIntoClientArea(hwnd, &margins);
     hwndToolTip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hwnd, NULL, hinstance, NULL);
-
-
-    surface.reset();
-    size_t bmpSize = sizeof(BITMAPINFOHEADER) + w * h * sizeof(uint32_t);
-    surfaceMemory.reset(bmpSize);
 }
 
 void WindowBase::paintWindow()
