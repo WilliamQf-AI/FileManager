@@ -8,13 +8,15 @@
 
 TitleBarBtns::TitleBarBtns(WindowBase* root) :ControlBase(root)
 {
-	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionRow);
-	YGNodeStyleSetWidth(layout, 198.f);
+	
 	root->mouseMoveHandlers.push_back(
 		std::bind(&TitleBarBtns::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
 	);
 	root->mouseDownHandlers.push_back(
 		std::bind(&TitleBarBtns::mouseDown, this, std::placeholders::_1, std::placeholders::_2)
+	);
+	root->resizeHandlers.push_back(
+		std::bind(&TitleBarBtns::resize, this, std::placeholders::_1, std::placeholders::_2)
 	);
 }
 
@@ -24,27 +26,25 @@ TitleBarBtns::~TitleBarBtns()
 
 void TitleBarBtns::paint(SkCanvas *canvas)
 {
-	auto h = YGNodeLayoutGetHeight(layout);
-	auto rect = getRect();
 	auto isMaximized = IsZoomed(root->hwnd) != 0;
 	SkPaint paint;
 	if (hoverIndex == 0) {
 		paint.setColor(0xAAFFFFFF);
-		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft, rect.fTop, 66, h),paint);
+		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft, rect.fTop, 66, 56),paint);
 	}
 	else if (hoverIndex == 1) {
 		paint.setColor(0xAAFFFFFF);
-		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft+66, rect.fTop, 66, h), paint);
+		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft+66, rect.fTop, 66, 56), paint);
 	}
 	else if (hoverIndex == 2) {
 		paint.setColor(SK_ColorRED);
-		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft + 132, rect.fTop, 66, h), paint);
+		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft + 132, rect.fTop, 66, 56), paint);
 	}
-	rect.fRight = rect.fLeft + 66;
+	auto r = SkRect::MakeXYWH(rect.fLeft, 0, 66, 56);
 	auto font = App::GetFontIcon();
 	font->setSize(24.f);
 	auto iconCode = (const char *)u8"\ue6e8"; //最小化
-	auto pos = getStartPosOfIconAtCenterOfRect(iconCode, rect, font.get());	
+	auto pos = getStartPosOfIconAtCenterOfRect(iconCode, r, font.get());	
 	paint.setColor(0xFF888888);
 	canvas->drawString(iconCode, pos.fX, pos.fY, *font, paint);
 	iconCode = isMaximized? (const char*)u8"\ue6e9" : (const char*)u8"\ue6e5"; //最大化
@@ -65,10 +65,13 @@ void TitleBarBtns::mouseDown(const int& x, const int& y)
 	else if (hoverIndex == 1) {
 		auto isMaximized = IsZoomed(root->hwnd) != 0;
 		if (isMaximized) {
-			PostMessage(root->hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+			//PostMessage(root->hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+			SendMessage(root->hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
 		}
 		else {
-			PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+			//ShowWindow(root->hwnd, SW_MAXIMIZE);
+			//PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+			SendMessage(root->hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 		}
 		root->isMouseDown = false;
 	}
@@ -79,9 +82,13 @@ void TitleBarBtns::mouseDown(const int& x, const int& y)
 	hoverIndex = -1;
 }
 
+void TitleBarBtns::resize(const int& w, const int& h)
+{
+	rect.setXYWH(w - 198.f, 0.f, 198.f, 56.f);
+}
+
 void TitleBarBtns::mouseMove(const int& x, const int& y)
 {
-	auto rect = getRect();
 	if (!rect.contains(x, y)) {
 		if (hoverIndex >= 0) {
 			hoverIndex = -1;

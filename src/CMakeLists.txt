@@ -8,8 +8,6 @@ set(SRC
     main.cpp
     App.cpp
     App.h
-    Layout.cpp
-    Layout.h
     WindowMain.cpp
     WindowMain.h
     TitleBar.cpp

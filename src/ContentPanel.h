@@ -12,6 +12,6 @@ class ContentPanel : public ControlBase
 public:
     ContentPanel(WindowBase* root);
     ~ContentPanel();
-    void paint(SkCanvas* canvas);
+    void paint(SkCanvas* canvas) override;
 private:
 };

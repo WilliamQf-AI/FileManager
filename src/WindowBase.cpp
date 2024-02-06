@@ -9,6 +9,7 @@
 #include "include/core/SkPaint.h"
 #include "include/core/SkCanvas.h"
 #include "App.h"
+#include "ControlBase.h"
 
 
 WindowBase::WindowBase()
@@ -215,13 +216,10 @@ void WindowBase::onSize(const int& w, const int& h)
     surface.reset();
     size_t bmpSize = sizeof(BITMAPINFOHEADER) + w * h * sizeof(uint32_t);
     surfaceMemory.reset(bmpSize);
-    YGNodeStyleSetWidth(layout, w);
-    YGNodeStyleSetHeight(layout, h);
-    YGNodeStyleSetMaxWidth(layout, w);
-    YGNodeStyleSetMaxHeight(layout, h);
-    YGNodeStyleSetMinWidth(layout, w);
-    YGNodeStyleSetMinHeight(layout, h);
-    YGNodeCalculateLayout(layout, YGUndefined, YGUndefined, YGDirectionLTR);
+    for (auto& func : resizeHandlers)
+    {
+        func(w, h);
+    }
 }
 void WindowBase::onGetMaxMinMizeInfo(MINMAXINFO* mminfo)
 {
@@ -257,7 +255,7 @@ void WindowBase::initWindow()
     SystemParametersInfo(SPI_GETWORKAREA, 0, &screenRect, 0);
     auto x = (screenRect.right - w) / 2;
     auto y = (screenRect.bottom - h) / 2;
-    this->hwnd = CreateWindowEx(WS_EX_APPWINDOW, className.c_str(), className.c_str(), WS_VISIBLE,
+    this->hwnd = CreateWindowEx(WS_EX_APPWINDOW, className.c_str(), className.c_str(), WS_VISIBLE ,
                                 x, y, w, h, NULL, NULL, hinstance, static_cast<LPVOID>(this));    
     DWMNCRENDERINGPOLICY policy = DWMNCRP_ENABLED;
     DwmSetWindowAttribute(hwnd, DWMWA_NCRENDERING_POLICY, &policy, sizeof(policy));
@@ -281,5 +279,9 @@ void WindowBase::paintWindow()
     SkImageInfo info = SkImageInfo::MakeN32Premul(w, h);
     surface = SkSurfaces::WrapPixels(info, pixels, sizeof(uint32_t) * w);
     SkCanvas* canvas = surface->getCanvas();
-    paint(canvas);
+    canvas->clear(SK_ColorWHITE);
+    for (auto& ctrl:ctrls)
+    {
+        ctrl->paint(canvas);
+    }
 }

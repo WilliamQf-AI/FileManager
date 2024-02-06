@@ -1,5 +1,4 @@
 #pragma once
-#include "yoga/Yoga.h"
 #include "ControlBase.h"
 #include "include/core/SkCanvas.h"
 
@@ -9,11 +8,13 @@ class FavoritePath : public ControlBase
 public:
 	FavoritePath(WindowBase* root);
 	~FavoritePath();
-	void paint(SkCanvas* canvas);
+	void paint(SkCanvas* canvas) override;
 	void mouseMove(const int& x, const int& y);
 	void mouseDown(const int& x, const int& y);
 	void mouseUp(const int& x, const int& y);
 	void mouseDrag(const int& x, const int& y);
+	void resize(const int& w, const int& h);
+	float y;
 private:
 	float totalHeight{0};
 	SkRect rect;

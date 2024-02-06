@@ -11,7 +11,6 @@
 #include "LeftPanel.h"
 #include "ContentPanel.h"
 #include "BottomBar.h"
-#include "yoga/Yoga.h"
 
 class WindowMain : public WindowBase
 {
@@ -26,6 +25,5 @@ public:
     std::shared_ptr<BottomBar> bottomBar;
 private:
     LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
-    void paint(SkCanvas* canvas) override;
     void initSize();
 };

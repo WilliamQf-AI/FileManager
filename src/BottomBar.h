@@ -13,6 +13,6 @@ class BottomBar : public ControlBase
 public:
     BottomBar(WindowBase* root);
     ~BottomBar();
-
+    void paint(SkCanvas* canvas) override;
 private:
 };

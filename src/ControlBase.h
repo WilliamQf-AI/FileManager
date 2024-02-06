@@ -1,7 +1,7 @@
 #pragma once
-#include <yoga/Yoga.h>
 #include <include/core/SkRect.h>
 #include <include/core/SkFont.h>
+#include <include/core/SkCanvas.h>
 class WindowBase;
 
 class ControlBase
@@ -9,11 +9,11 @@ class ControlBase
 public:
 	ControlBase(WindowBase* root);
 	~ControlBase();
-	SkRect getRect();
-	SkRect getRect(YGNodeRef target);
 	SkPoint getStartPosOfIconAtCenterOfRect(const char* text,SkRect& rect,SkFont* font);
 	SkPoint getStartPosOfIconAtCenterOfRect(std::wstring& str,SkRect& rect, SkFont* font);
-	YGNodeRef layout;
+	float getTextVerticalVal(SkFont* font);
+	virtual void paint(SkCanvas* canvas) = 0;
+	SkRect rect;
 	WindowBase* root;
 private:
 

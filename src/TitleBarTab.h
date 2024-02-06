@@ -12,7 +12,7 @@ class TitleBarTab : public ControlBase
 public:
     TitleBarTab(WindowBase* root);
     ~TitleBarTab();
-    void paint(SkCanvas* canvas);
+    void paint(SkCanvas* canvas) override;
     bool isSelected{ true };
     bool isHovered{ false };
     bool isHoverCloseBtn{ false };

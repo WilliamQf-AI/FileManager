@@ -10,9 +10,6 @@
 
 FavoritePath::FavoritePath(WindowBase* root) :ControlBase(root)
 {
-	YGNodeStyleSetFlexGrow(layout, 1.f);
-	YGNodeStyleSetWidthAuto(layout);
-	YGNodeStyleSetMargin(layout, YGEdgeTop, 18.f);
 	totalHeight = 46 * 26;
 
 	root->mouseMoveHandlers.push_back(
@@ -27,6 +24,9 @@ FavoritePath::FavoritePath(WindowBase* root) :ControlBase(root)
 	root->mouseUpHandlers.push_back(
 		std::bind(&FavoritePath::mouseUp, this, std::placeholders::_1, std::placeholders::_2)
 	);
+	root->resizeHandlers.push_back(
+		std::bind(&FavoritePath::resize, this, std::placeholders::_1, std::placeholders::_2)
+	);
 }
 
 FavoritePath::~FavoritePath()
@@ -35,30 +35,23 @@ FavoritePath::~FavoritePath()
 
 void FavoritePath::paint(SkCanvas* canvas)
 {
-	
-	rect = getRect();
 	auto rectHeight = rect.height();
 	SkPaint paint;
 	canvas->clipRect(rect);
-	canvas->save();
-	canvas->translate(rect.fLeft, rect.fTop);
-	auto top = 0 - scrollerRect.fTop / rectHeight * totalHeight;
+	auto top = 0 - (scrollerRect.fTop-rect.fTop) / rectHeight * totalHeight;
 	for (size_t i = 0; i < 26; i++)
 	{
 		auto img = SystemIcon::getIcon(SIID_FOLDER, 26); //CSIDL_QUICKACCESS		
-		canvas->drawImage(img, 12, top+ i*46 + 8);
+		canvas->drawImage(img, 12, rect.fTop + top+ i*46 + 8);
 		std::wstring str = std::format(L"这是一条收藏的路径({}:)", i);
 		auto textLength = wcslen(str.data()) * 2;
 		auto fontText = App::GetFontText();
 		fontText->setSize(16.6f);
 		paint.setColor(0xFF333333);
-		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, 42, top+ i * 46 + 26, *fontText, paint);
+		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, 42, rect.fTop + top+ i * 46 + 26, *fontText, paint);
 	}
 
 	if (totalHeight > rectHeight) {
-		auto h = rectHeight * (rectHeight/totalHeight);
-		if (h < 40.f) h = 40.f;
-		scrollerRect.setXYWH(rect.fRight - 8, scrollerRect.fTop,8,h);
 		if (hoverScroller) {
 			paint.setColor(0xFFD3E3FD);
 		}
@@ -73,10 +66,7 @@ void FavoritePath::paint(SkCanvas* canvas)
 void FavoritePath::mouseMove(const int& x, const int& y)
 {
 	bool flag{ false };
-	auto parent = YGNodeGetParent(YGNodeGetParent(layout));
-	auto t = YGNodeLayoutGetTop(parent);
-	auto p = YGNodeStyleGetPosition(layout, YGEdgeTop);
-	if (x<rect.fRight && x>rect.fRight - 8 && y > rect.fTop+t && y < rect.fBottom+t) {
+	if (x<rect.fRight && x>rect.fRight - 8 && y > rect.fTop && y < rect.fBottom) {
 		flag = true;
 	}
 	if (flag != hoverScroller) {
@@ -102,16 +92,27 @@ void FavoritePath::mouseDrag(const int& x, const int& y)
 	if (hoverScroller) {
 		auto span = y - downY;
 		if (span > 0) {
-			if (scrollerRect.fBottom + span < rect.height()) {
+			if (scrollerRect.fBottom + span < rect.fBottom) {
 				scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + span);
 			}
 		}
 		else {
-			if (scrollerRect.fTop + span > 0) {
+			if (scrollerRect.fTop + span > rect.fTop) {
 				scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + span);
 			}
 		}		
 		downY = y;
 		InvalidateRect(root->hwnd, nullptr, false);
+	}
+}
+
+void FavoritePath::resize(const int& w, const int& h)
+{
+	auto yVal = root->ctrls[2]->rect.fTop + y;
+	rect.setXYWH(0, yVal, root->ctrls[2]->rect.width(), h - yVal - 50);
+	if (totalHeight > rect.height()) {
+		auto h = rect.height() * (rect.height() / totalHeight);
+		if (h < 40.f) h = 40.f;
+		scrollerRect.setXYWH(rect.fRight - 8, rect.fTop, 8, h);
 	}
 }

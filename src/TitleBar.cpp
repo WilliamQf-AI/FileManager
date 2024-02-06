@@ -13,23 +13,6 @@ TitleBar::TitleBar(WindowBase* root) :ControlBase(root)
 	auto tab2 = std::make_shared<TitleBarTab>(root);
 	tabs.push_back(tab2);
 	btns = std::make_shared<TitleBarBtns>(root);
-
-
-	YGNodeStyleSetFlexDirection(layout, YGFlexDirectionRow);
-	YGNodeStyleSetWidthAuto(layout);
-	YGNodeStyleSetHeight(layout, 56.f);
-	YGNodeStyleSetPadding(layout, YGEdgeLeft, 12.f);
-	
-	auto tabLayout = YGNodeNew();
-	YGNodeStyleSetFlexDirection(tabLayout, YGFlexDirectionRow);
-	YGNodeStyleSetFlexGrow(tabLayout, 1.f);
-	YGNodeStyleSetWidthAuto(tabLayout);
-	YGNodeInsertChild(tabLayout, tab1->layout, 0);
-	YGNodeInsertChild(tabLayout, tab2->layout, 1);
-
-	YGNodeInsertChild(layout, tabLayout, 0);
-	YGNodeInsertChild(layout, btns->layout, 1);
-
 	root->mouseMoveHandlers.push_back(
 		std::bind(&TitleBar::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
 	);
@@ -42,6 +25,9 @@ TitleBar::TitleBar(WindowBase* root) :ControlBase(root)
 	root->mouseUpHandlers.push_back(
 		std::bind(&TitleBar::mouseUp, this, std::placeholders::_1, std::placeholders::_2)
 	);
+	root->resizeHandlers.push_back(
+		std::bind(&TitleBar::resize, this, std::placeholders::_1, std::placeholders::_2)
+	);
 }
 
 TitleBar::~TitleBar()
@@ -50,14 +36,10 @@ TitleBar::~TitleBar()
 
 void TitleBar::paint(SkCanvas* canvas)
 {	
-	auto left = YGNodeLayoutGetPadding(layout, YGEdgeLeft);
-	auto rect = getRect();
 	SkPaint paint;
 	paint.setColor(0xFFD3E3FD);
 	paint.setStyle(SkPaint::kFill_Style);
 	canvas->drawRect(rect, paint);
-	canvas->save();
-	canvas->translate(left, 0);
 	for (auto& tab:tabs)
 	{
 		tab->paint(canvas);
@@ -71,14 +53,11 @@ void TitleBar::mouseMove(const int& x, const int& y)
 	bool flag{ false };
 	for (auto& tab:tabs)
 	{
-		auto rect = getRect(tab->layout);
-		auto hovered = rect.contains(x, y);
+		auto hovered = tab->rect.contains(x, y);
 		auto hoverClose{ false };
 		if (hovered) {
-			auto closeLayout = YGNodeGetChild(tab->layout, 2);
-			auto closeRect = getRect(closeLayout);
-			closeRect.offsetTo(rect.fLeft + closeRect.fLeft+12, rect.fTop + closeRect.fTop);
-			hoverClose = closeRect.contains(x, y);
+			SkRect r = SkRect::MakeXYWH(tab->rect.fRight - 8.f - 26.f, tab->rect.fTop + 10, 26.f, 26.f);
+			hoverClose = r.contains(x, y);
 		}
 		if (tab->isHovered != hovered) {
 			flag = true;
@@ -96,8 +75,6 @@ void TitleBar::mouseMove(const int& x, const int& y)
 
 void TitleBar::mouseDown(const int& x, const int& y)
 {
-	auto tabsLayout = YGNodeGetChild(layout, 0);
-	auto rect = getRect(tabsLayout);
 	if (!rect.contains(x, y)) {
 		return;
 	}
@@ -137,4 +114,13 @@ void TitleBar::mouseDrag(const int& x, const int& y)
 		int dy = windowRect.top + point.y - startPos.y;
 		SetWindowPos(root->hwnd, nullptr, dx, dy, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 	}
+}
+
+void TitleBar::resize(const int& w, const int& h)
+{
+	rect.setXYWH(0, 0, w, 56.f);
+	for (size_t i = 0; i < tabs.size(); i++)
+	{
+		tabs[i]->rect.setXYWH(12.f+i*200.f+i*3.f, 10.f, 200.f, 46.f);
+	}	
 }

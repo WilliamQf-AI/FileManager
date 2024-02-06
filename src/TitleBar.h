@@ -14,11 +14,12 @@ class TitleBar : public ControlBase
 public:
     TitleBar(WindowBase* root);
     ~TitleBar();
-    void paint(SkCanvas* canvas);
+    void paint(SkCanvas* canvas) override;
     void mouseMove(const int& x, const int& y);
     void mouseDown(const int& x, const int& y);
     void mouseUp(const int& x, const int& y);
     void mouseDrag(const int& x, const int& y);
+    void resize(const int& w, const int& h);
     std::shared_ptr<TitleBarBtns> btns;
     std::vector<std::shared_ptr<TitleBarTab>> tabs;
     POINT startPos;

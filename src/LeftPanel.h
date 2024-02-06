@@ -15,8 +15,10 @@ class LeftPanel : public ControlBase
 public:
     LeftPanel(WindowBase* root);
     ~LeftPanel();
-    void paint(SkCanvas* canvas);
+    void paint(SkCanvas* canvas) override;
     void mousemove(const int& x, const int& y);
+
+    void resize(const int& w, const int& h);
 private:
     std::vector<std::tuple<char, double, double,bool>> driveInfo;
     std::shared_ptr<FavoritePath> favoritePath;

@@ -1,5 +1,4 @@
 #pragma once
-#include "yoga/Yoga.h"
 #include "ControlBase.h"
 #include "include/core/SkCanvas.h"
 
@@ -9,7 +8,7 @@ class SettingBar : public ControlBase
 public:
 	SettingBar(WindowBase* root);
 	~SettingBar();
-	void paint(SkCanvas* canvas);
+	void paint(SkCanvas* canvas) override;
 private:
 
 };
