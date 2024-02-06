@@ -15,10 +15,13 @@ ContentPanel::~ContentPanel()
 
 void ContentPanel::paint(SkCanvas* canvas)
 {
+	auto leftRect = SkRect::MakeXYWH(rect.fLeft, rect.fTop, 300.f, 50.f);
+	auto rightRect = SkRect::MakeLTRB(rect.fLeft+300.f, rect.fTop, root->w, rect.fTop+50.f);
 	SkPaint paint;
 	paint.setColor(0xFFE8E8E8);
 	canvas->drawLine(rect.fLeft, rect.fTop + 50.f, rect.fRight, rect.fTop + 50.f,paint);
-	canvas->drawLine(rect.fLeft + 300, rect.fTop, rect.fLeft + 300, rect.fTop + 50.f, paint);
+	canvas->drawLine(rightRect.fLeft, rightRect.fTop, rightRect.fLeft, rightRect.fBottom, paint);
+
 
 	paint.setColor(0xFF888888);
 	std::wstring str = L"最近使用的文件";
@@ -33,6 +36,14 @@ void ContentPanel::paint(SkCanvas* canvas)
 	textLength = wcslen(str.data()) * 2;
 	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16,
 		rect.fLeft + 312.f, rect.fTop + 25 + verticalVal, *fontText, paint);
+
+	auto font = App::GetFontIcon();
+	font->setSize(24.f);
+	paint.setAntiAlias(false);
+	auto iconCode = (const char*)u8"\ue67d";
+	canvas->drawString(iconCode, leftRect.fRight-30, rect.fTop+ 34.f, *font, paint);
+
+	canvas->drawString(iconCode, rightRect.fRight - 30, rect.fTop + 34.f, *font, paint);
 }
 
 void ContentPanel::resize(const int& w, const int& h)
