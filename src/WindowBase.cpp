@@ -38,6 +38,33 @@ void WindowBase::clearTimeout(const unsigned int& id)
     KillTimer(hwnd, id);
 }
 
+
+void WindowBase::paintWindow()
+{
+    PAINTSTRUCT ps;
+    auto dc = BeginPaint(hwnd, &ps);
+    BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(surfaceMemory.get());
+    ZeroMemory(bmpInfo, sizeof(BITMAPINFO));
+    bmpInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bmpInfo->bmiHeader.biWidth = w;
+    bmpInfo->bmiHeader.biHeight = -h; // negative means top-down bitmap. Skia draws top-down.
+    bmpInfo->bmiHeader.biPlanes = 1;
+    bmpInfo->bmiHeader.biBitCount = 32;
+    bmpInfo->bmiHeader.biCompression = BI_RGB;
+    void* pixels = bmpInfo->bmiColors;
+    SkImageInfo info = SkImageInfo::MakeN32Premul(w, h);
+    auto canvas = SkCanvas::MakeRasterDirect(info, pixels, 4 * w);
+    canvas->clear(SK_ColorWHITE);
+    for (auto& ctrl : ctrls)
+    {
+        ctrl->paint(canvas.get());
+    }
+    StretchDIBits(dc, 0, 0, w, h, 0, 0, w, h, bmpInfo->bmiColors, bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+    ReleaseDC(hwnd, dc);
+    EndPaint(hwnd, &ps);
+    //surfaceMemory.reset(0); //实践证明这样即节省内存，速度也不会慢
+}
+
 LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     if (msg == WM_NCCREATE)
@@ -58,15 +85,8 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
         case WM_ERASEBKGND: {
             return false;
         }
-        case WM_PAINT: {
-            PAINTSTRUCT ps;
-            auto dc = BeginPaint(hWnd, &ps);
+        case WM_PAINT: {            
             obj->paintWindow();
-            BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(obj->surfaceMemory.get());
-            StretchDIBits(dc, 0, 0, obj->w, obj->h, 0, 0, obj->w, obj->h, bmpInfo->bmiColors, bmpInfo, DIB_RGB_COLORS, SRCCOPY);
-            ReleaseDC(hWnd, dc);
-            EndPaint(hWnd, &ps);
-            //obj->surfaceMemory.reset(0); //实践证明这样即节省内存，速度也不会慢
             return true;
         }
         case WM_NCHITTEST: {
@@ -263,25 +283,4 @@ void WindowBase::initWindow()
     DwmExtendFrameIntoClientArea(hwnd, &margins);
     hwndToolTip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hwnd, NULL, hinstance, NULL);
-}
-
-void WindowBase::paintWindow()
-{
-    BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(surfaceMemory.get());
-    ZeroMemory(bmpInfo, sizeof(BITMAPINFO));
-    bmpInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    bmpInfo->bmiHeader.biWidth = w;
-    bmpInfo->bmiHeader.biHeight = -h; // negative means top-down bitmap. Skia draws top-down.
-    bmpInfo->bmiHeader.biPlanes = 1;
-    bmpInfo->bmiHeader.biBitCount = 32;
-    bmpInfo->bmiHeader.biCompression = BI_RGB;
-    void* pixels = bmpInfo->bmiColors;
-    SkImageInfo info = SkImageInfo::MakeN32Premul(w, h);
-    surface = SkSurfaces::WrapPixels(info, pixels, sizeof(uint32_t) * w);
-    SkCanvas* canvas = surface->getCanvas();
-    canvas->clear(SK_ColorWHITE);
-    for (auto& ctrl:ctrls)
-    {
-        ctrl->paint(canvas);
-    }
 }

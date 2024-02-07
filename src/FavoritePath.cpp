@@ -84,7 +84,10 @@ void FavoritePath::mouseDown(const int& x, const int& y)
 void FavoritePath::mouseUp(const int& x, const int& y)
 {
 	if (!scrollerRect.contains(x,y)) {
-		hoverScroller = false;
+		if (hoverScroller) {
+			hoverScroller = false;
+		}
+		InvalidateRect(root->hwnd, nullptr, false);
 	}
 }
 
