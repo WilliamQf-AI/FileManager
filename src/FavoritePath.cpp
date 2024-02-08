@@ -27,6 +27,9 @@ FavoritePath::FavoritePath(WindowBase* root) :ControlBase(root)
 	root->resizeHandlers.push_back(
 		std::bind(&FavoritePath::resize, this, std::placeholders::_1, std::placeholders::_2)
 	);
+	root->mouseWheelHandlers.push_back(
+		std::bind(&FavoritePath::mouseWheel, this, std::placeholders::_1, std::placeholders::_2,std::placeholders::_3)
+	);
 }
 
 FavoritePath::~FavoritePath()
@@ -94,20 +97,44 @@ void FavoritePath::mouseUp(const int& x, const int& y)
 void FavoritePath::mouseDrag(const int& x, const int& y)
 {
 	if (hoverScroller) {
-		auto span = y - downY;
+		float span = y - downY;
 		if (span > 0) {
-			if (scrollerRect.fBottom + span < rect.fBottom) {
-				scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + span);
+			if (scrollerRect.fBottom < rect.fBottom) {
+				auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
+				scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + v- scrollerRect.fBottom);
+				InvalidateRect(root->hwnd, nullptr, false);
 			}
 		}
 		else {
-			if (scrollerRect.fTop + span > rect.fTop) {
-				scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + span);
+			if (scrollerRect.fTop > rect.fTop) {
+				auto v = std::max(scrollerRect.fTop + span, rect.fTop);
+				scrollerRect.offsetTo(rect.fRight - 8, v);
+				InvalidateRect(root->hwnd, nullptr, false);
 			}
 		}		
 		downY = y;
-		InvalidateRect(root->hwnd, nullptr, false);
 	}
+}
+
+void FavoritePath::mouseWheel(const int& x, const int& y,const int& delta)
+{
+	if (rect.contains(x, y)) {
+		auto span = 8.f;
+		if (delta > 0) {
+			if (scrollerRect.fTop > rect.fTop) {
+				auto v = std::max(scrollerRect.fTop - span, rect.fTop);
+				scrollerRect.offsetTo(rect.fRight - 8, v);
+				InvalidateRect(root->hwnd, nullptr, false);
+			}
+		}
+		else {
+			if (scrollerRect.fBottom < rect.fBottom) {
+				auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
+				scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + v - scrollerRect.fBottom);
+				InvalidateRect(root->hwnd, nullptr, false);
+			}
+		}
+	}	
 }
 
 void FavoritePath::resize(const int& w, const int& h)

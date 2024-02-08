@@ -31,6 +31,7 @@ public:
     std::vector<std::function<void(const int&, const int&)>> mouseUpHandlers;
     std::vector<std::function<void(const int&, const int&)>> mouseDBClickHandlers;
     std::vector<std::function<void(const int&, const int&)>> resizeHandlers;
+    std::vector<std::function<void(const int&, const int& ,const int&)>> mouseWheelHandlers;
     std::vector<std::shared_ptr<ControlBase>> ctrls;
 
 protected:
@@ -47,6 +48,7 @@ private:
     void mouseLeave();
     void mouseDown(const int& x, const int& y);
     void mouseUp(const int& x, const int& y);
+    void mouseWheel(const int& x, const int& y,const int& delta);
     void onClose();
     void onGetMaxMinMizeInfo(MINMAXINFO* mminfo);
 };

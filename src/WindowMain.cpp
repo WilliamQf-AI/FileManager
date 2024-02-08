@@ -33,10 +33,6 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
     }
     case WM_CHAR: {        
     }
-    case WM_MOUSEWHEEL: {
-        int delta = GET_WHEEL_DELTA_WPARAM(wparam);
-        break;
-    }
     case WM_TIMER: {
         break;
     }

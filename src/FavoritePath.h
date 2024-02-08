@@ -13,6 +13,7 @@ public:
 	void mouseDown(const int& x, const int& y);
 	void mouseUp(const int& x, const int& y);
 	void mouseDrag(const int& x, const int& y);
+	void mouseWheel(const int& x, const int& y,const int& delta);
 	void resize(const int& w, const int& h);
 	float y;
 private:

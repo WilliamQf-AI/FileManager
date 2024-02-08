@@ -128,6 +128,14 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             App::removeWindow(hWnd);
             return true;
         }
+        case WM_MOUSEWHEEL: {
+            POINT pt;
+            pt.x = GET_X_LPARAM(lParam);
+            pt.y = GET_Y_LPARAM(lParam);
+            ScreenToClient(hWnd, &pt);
+            obj->mouseWheel(pt.x, pt.y, GET_WHEEL_DELTA_WPARAM(wParam));
+            break;
+        }
         case WM_DEBUG_MESSAGE: {
             return true;
         }
@@ -223,6 +231,13 @@ void WindowBase::mouseUp(const int& x, const int& y)
     for (auto& func : mouseUpHandlers)
     {
         func(x, y);
+    }
+}
+void WindowBase::mouseWheel(const int& x, const int& y,const int& delta)
+{
+    for (auto& func : mouseWheelHandlers)
+    {
+        func(x,y,delta);
     }
 }
 void WindowBase::onClose()
