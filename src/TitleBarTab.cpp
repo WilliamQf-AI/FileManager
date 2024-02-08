@@ -1,4 +1,4 @@
-#include "TitleBarTab.h"
+ï»¿#include "TitleBarTab.h"
 
 #include "include/core/SkRRect.h"
 #include "include/core/SkPixmap.h"
@@ -9,11 +9,12 @@
 
 TitleBarTab::TitleBarTab(WindowBase* root) :ControlBase(root)
 {
+	title = L"æ–‡ä»¶å¤¹åç§°";
 }
 
 TitleBarTab::~TitleBarTab()
 {
-	//todo ÒÆ³ýÔªËØÊ±£¬ÊÍ·Ålayout
+	//todo ç§»é™¤å…ƒç´ æ—¶ï¼Œé‡Šæ”¾layout
 }
 
 void TitleBarTab::paint(SkCanvas* canvas)
@@ -38,18 +39,14 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	canvas->drawImage(img, rect.fLeft + 8.f, rect.centerY() - img->height() / 2);
 
 	paint.setColor(0xFF333333);
-	std::wstring str = L"ÎÄ¼þ¼ÐÃû³Æ";
-	auto textLength = wcslen(str.data()) * 2;
+	auto textLength = wcslen(title.data()) * 2;
 	auto fontText = App::GetFontText();
 	fontText->setSize(16.f);
-	auto verticalVal = getTextVerticalVal(fontText.get());
-	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, 
-		rect.fLeft+34.f, rect.centerY()+verticalVal, *fontText, paint);
-
-
-	SkRect closeRect = SkRect::MakeXYWH(rect.fRight - 8.f - 26.f, rect.fTop + 10, 26.f, 26.f);
+	canvas->drawSimpleText(title.data(), textLength, SkTextEncoding::kUTF16, 
+		rect.fLeft+34.f, rect.centerY()+4.5, *fontText, paint);
 	if (isHoverCloseBtn) {
 		paint.setColor(0x18000000);
+		SkRect closeRect = SkRect::MakeXYWH(rect.fRight - 8.f - 26.f, rect.fTop + 10.f, 26.f, 26.f);
 		canvas->drawRoundRect(closeRect, 6, 6, paint);
 		paint.setColor(0xFF333333);
 	}
@@ -61,8 +58,10 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	font->setSize(20.f);
 	paint.setAntiAlias(false);	
 	auto iconCode = (const char*)u8"\ue6e7"; 
-	auto pos = getStartPosOfIconAtCenterOfRect(iconCode, closeRect, font.get());
-	canvas->drawString(iconCode, pos.fX, pos.fY, *font, paint);
+	canvas->drawString(iconCode, 
+		rect.fRight - 8.f - 13.f-10.f,
+		rect.fTop + 10.f + 20.f,
+		*font, paint);
 
 	//canvas->drawSimpleText(iconCode, 3, SkTextEncoding::kUTF8,0, 0, *font,paint);
 	//SystemIcon::reset();

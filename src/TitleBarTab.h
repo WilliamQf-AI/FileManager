@@ -16,4 +16,5 @@ public:
     bool isSelected{ true };
     bool isHovered{ false };
     bool isHoverCloseBtn{ false };
+    std::wstring title;
 };

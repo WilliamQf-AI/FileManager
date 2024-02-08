@@ -1,4 +1,4 @@
-#include "SystemIcon.h"
+ï»¿#include "SystemIcon.h"
 #include "include/core/SkPixmap.h"
 #include "include/core/SkBitmap.h"
 #include <map>
@@ -82,7 +82,7 @@ sk_sp<SkImage> SystemIcon::iconToImg(HICON icon, const int& size)
 	DeleteDC(hdcMemory);
 	ReleaseDC(NULL, hdcScreen);
 	ReleaseDC(NULL, hdcMemory);
-	DestroyIcon(icon);  // ²»ÒªÍü¼ÇÊÍ·ÅÍ¼±ê×ÊÔ´
+	DestroyIcon(icon);  // ä¸è¦å¿˜è®°é‡Šæ”¾å›¾æ ‡èµ„æº
 	SkBitmap bitmap;
 	bitmap.installPixels(pixmap);
 	auto img = bitmap.asImage();
