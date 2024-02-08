@@ -70,7 +70,7 @@ void FavoritePath::paint(SkCanvas* canvas)
 void FavoritePath::mouseMove(const int& x, const int& y)
 {
 	bool flag{ false };
-	if (x<rect.fRight && x>rect.fRight - 8 && y > rect.fTop && y < rect.fBottom) {
+	if (scrollerRect.contains(x, y)) {
 		flag = true;
 	}
 	if (flag != hoverScroller) {
