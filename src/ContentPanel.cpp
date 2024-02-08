@@ -1,9 +1,13 @@
-#include "TitleBar.h"
-#include "WindowMain.h"
-#include "App.h"
+#include "ContentPanel.h"
 #include <filesystem>
 #include <fileapi.h>
 #include <thread>
+#include <Windows.h>
+#include <shellapi.h>
+#include <shlobj.h>
+#include "WindowMain.h"
+#include "App.h"
+
 
 
 ContentPanel::ContentPanel(WindowBase* root) :ControlBase(root)
@@ -11,8 +15,9 @@ ContentPanel::ContentPanel(WindowBase* root) :ControlBase(root)
 	root->resizeHandlers.push_back(
 		std::bind(&ContentPanel::resize, this, std::placeholders::_1, std::placeholders::_2)
 	);
-	std::jthread myThread(&ContentPanel::getRecentFiles, this);
-	myThread.detach();
+	//std::jthread myThread(&ContentPanel::getRecentFiles, this);
+	//myThread.detach();
+	getRecentFiles();
 }
 
 ContentPanel::~ContentPanel()
@@ -98,8 +103,13 @@ void ContentPanel::resize(const int& w, const int& h)
 
 void ContentPanel::getRecentFiles()
 {
+	PWSTR pszPath = nullptr;
+	HRESULT hr = SHGetKnownFolderPath(FOLDERID_Recent, 0, NULL, &pszPath);
+	std::wstring pathStr(pszPath);
+	CoTaskMemFree(pszPath);
+
 	auto zone = std::chrono::current_zone();
-	std::filesystem::path path(L"C:\\Users\\liuxiaolun\\AppData\\Roaming\\Microsoft\\Windows\\Recent");
+	std::filesystem::path path(pathStr);
 	for (const auto& entry : std::filesystem::directory_iterator(path)) {
 		auto fileName = entry.path().stem().wstring();
 		auto sysClock = std::chrono::clock_cast<std::chrono::system_clock>(entry.last_write_time());

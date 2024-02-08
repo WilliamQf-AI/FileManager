@@ -1,6 +1,5 @@
 #include <include/core/SkImage.h>
 #include <Windows.h>
-#include <Windows.h>
 #include <shellapi.h>
 #include <shlobj.h>
 #include <string>

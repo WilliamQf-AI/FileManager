@@ -41,6 +41,7 @@ sk_sp<SkImage> SystemIcon::getIcon(KNOWNFOLDERID id, const int& size)
 	if (!sfi.hIcon) {
 		return nullptr;
 	}
+	CoTaskMemFree(pszPath);
 	auto img = iconToImg(sfi.hIcon, size);
 	return img;
 }
