@@ -26,6 +26,8 @@ set(SRC
     SettingBar.h
     ContentPanel.cpp
     ContentPanel.h
+    QuickBtn.cpp
+    QuickBtn.h
     BottomBar.cpp
     BottomBar.h
 )

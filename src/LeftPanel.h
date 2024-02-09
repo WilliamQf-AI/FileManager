@@ -8,6 +8,7 @@
 #include "ControlBase.h"
 #include "FavoritePath.h"
 #include "SettingBar.h"
+#include "QuickBtn.h"
 
 class WindowBase;
 class LeftPanel : public ControlBase
@@ -23,4 +24,5 @@ private:
     std::vector<std::tuple<char, double, double,bool>> driveInfo;
     std::shared_ptr<FavoritePath> favoritePath;
     std::shared_ptr<SettingBar> settingBar;
+    std::shared_ptr<QuickBtn> quickBtn;
 };
