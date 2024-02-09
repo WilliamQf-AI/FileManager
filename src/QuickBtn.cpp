@@ -1,4 +1,4 @@
-#include "QuickBtn.h"
+ï»¿#include "QuickBtn.h"
 #include <Windows.h>
 #include "SystemIcon.h"
 #include "App.h"
@@ -27,10 +27,10 @@ void QuickBtn::paint(SkCanvas* canvas)
 	SkPaint paint;
 	if (hoverIndex > -1) {
 		paint.setColor(0x221677ff);
-		SkRect r = SkRect::MakeXYWH(8.f + 60 * hoverIndex, rect.fTop+22.f, 60.f,68.f);
+		SkRect r = SkRect::MakeXYWH(8.f + 60 * hoverIndex, rect.fTop+22.f, 60.f,63.f);
 		canvas->drawRoundRect(r, 6.f,6.f,paint);
 	}
-	std::vector<std::wstring> names{ L"×ÀÃæ",L"ÒôÀÖ",L"ÊÓÆµ",L"ÏÂÔØ",L"Í¼Æ¬",L"ÎÄµµ" };
+	std::vector<std::wstring> names{ L"æ¡Œé¢",L"éŸ³ä¹",L"è§†é¢‘",L"ä¸‹è½½",L"å›¾ç‰‡",L"æ–‡æ¡£" };
 	std::vector<GUID> ids{ FOLDERID_Desktop,FOLDERID_Music,FOLDERID_Videos,
 						  FOLDERID_Downloads,FOLDERID_Pictures,FOLDERID_Documents };
 	
@@ -50,7 +50,7 @@ void QuickBtn::paint(SkCanvas* canvas)
 		
 		canvas->drawSimpleText(names[i].data(), textLength, 
 			SkTextEncoding::kUTF16, 
-			10.f + 60 * i + 12.f, rect.fTop + 16.f + 62.f, *fontText, paint);
+			10.f + 60 * i + 12.f, rect.fTop + 12.f + 62.f, *fontText, paint);
 	}
 }
 

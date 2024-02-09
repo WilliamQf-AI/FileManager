@@ -59,7 +59,8 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 void TitleBarBtns::mouseDown(const int& x, const int& y)
 {
 	if (hoverIndex == 0) {
-		PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		//PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		SendMessage(root->hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
 		root->isMouseDown = false;
 	}
 	else if (hoverIndex == 1) {
