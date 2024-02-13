@@ -119,7 +119,7 @@ void FavoritePath::mouseDrag(const int& x, const int& y)
 void FavoritePath::mouseWheel(const int& x, const int& y,const int& delta)
 {
 	if (rect.contains(x, y)) {
-		auto span = 8.f;
+		auto span = 12.f;
 		if (delta > 0) {
 			if (scrollerRect.fTop > rect.fTop) {
 				auto v = std::max(scrollerRect.fTop - span, rect.fTop);

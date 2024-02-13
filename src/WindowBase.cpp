@@ -149,6 +149,9 @@ LRESULT CALLBACK WindowBase::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
 }
 int WindowBase::nctest(const int& x, const int& y)
 {
+    if (isMouseDown) {
+        return HTCLIENT;
+    }
     int size{ 6 };
     if (x < size && y < size) {
         return HTTOPLEFT;
