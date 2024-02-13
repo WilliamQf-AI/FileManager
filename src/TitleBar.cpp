@@ -7,8 +7,7 @@
 class WindowBase;
 TitleBar::TitleBar(WindowMain* root) :ControlBase(root)
 {
-	auto tab1 = std::make_shared<TitleBarTab>(root, std::wstring(L"最近使用的文件"));
-	tabs.push_back(tab1);
+	addTab(false);
 	btns = std::make_shared<TitleBarBtns>(root);
 	root->mouseMoveHandlers.push_back(
 		std::bind(&TitleBar::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
@@ -37,6 +36,7 @@ void TitleBar::paint(SkCanvas* canvas)
 	paint.setColor(0xFFD3E3FD);
 	paint.setStyle(SkPaint::kFill_Style);
 	canvas->drawRect(rect, paint);
+
 	for (auto& tab:tabs)
 	{
 		tab->paint(canvas);
@@ -119,4 +119,19 @@ void TitleBar::resize(const int& w, const int& h)
 	{
 		tabs[i]->rect.setXYWH(12.f+i*200.f+i*3.f, 10.f, 200.f, 46.f);
 	}	
+}
+
+void TitleBar::addTab(bool needRefresh)
+{
+	for (size_t i = 0; i < tabs.size(); i++)
+	{
+		tabs[i]->isSelected = false;
+	}
+	auto tab = std::make_shared<TitleBarTab>(root, std::wstring(L"最近使用的文件"));	
+	tab->rect.setXYWH(12.f + tabs.size() * 200.f + tabs.size() * 3.f, 10.f, 200.f, 46.f);
+	tabs.push_back(std::move(tab));
+	if (needRefresh) {
+		InvalidateRect(root->hwnd, nullptr, false);
+	}
+
 }

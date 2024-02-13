@@ -20,6 +20,7 @@ public:
     void mouseUp(const int& x, const int& y);
     void mouseDrag(const int& x, const int& y);
     void resize(const int& w, const int& h);
+    void addTab(bool needRefresh=true);
     std::shared_ptr<TitleBarBtns> btns;
     std::vector<std::shared_ptr<TitleBarTab>> tabs;
     POINT startPos;

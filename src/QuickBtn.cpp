@@ -5,6 +5,7 @@
 #include <include/core/SkPaint.h>
 #include "WindowMain.h"
 #include "LeftPanel.h"
+#include "TitleBar.h"
 
 QuickBtn::QuickBtn(WindowMain* root) :ControlBase(root)
 {
@@ -33,8 +34,7 @@ void QuickBtn::paint(SkCanvas* canvas)
 	}
 	std::vector<std::wstring> names{ L"桌面",L"音乐",L"视频",L"下载",L"图片",L"文档" };
 	std::vector<GUID> ids{ FOLDERID_Desktop,FOLDERID_Music,FOLDERID_Videos,
-						  FOLDERID_Downloads,FOLDERID_Pictures,FOLDERID_Documents };
-	
+						  FOLDERID_Downloads,FOLDERID_Pictures,FOLDERID_Documents };	
 	for (size_t i = 0; i < 6; i++)
 	{
 		auto img = SystemIcon::getIcon(ids[i], 24);
@@ -77,4 +77,7 @@ void QuickBtn::mouseMove(const int& x, const int& y)
 
 void QuickBtn::mouseDown(const int& x, const int& y)
 {
+	if (hoverIndex != -1) {
+		root->titleBar->addTab();
+	}
 }

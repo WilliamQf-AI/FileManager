@@ -13,7 +13,6 @@ TitleBarTab::TitleBarTab(WindowMain* root, std::wstring&& title) :ControlBase(ro
 
 TitleBarTab::~TitleBarTab()
 {
-	//todo 移除元素时，释放layout
 }
 
 void TitleBarTab::paint(SkCanvas* canvas)
