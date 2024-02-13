@@ -46,8 +46,7 @@ void QuickBtn::paint(SkCanvas* canvas)
 		}
 		else {
 			paint.setColor(0xFF666666);
-		}
-		
+		}		
 		canvas->drawSimpleText(names[i].data(), textLength, 
 			SkTextEncoding::kUTF16, 
 			10.f + 60 * i + 12.f, rect.fTop + 12.f + 62.f, *fontText, paint);

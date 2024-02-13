@@ -1,4 +1,4 @@
-#include "DiskList.h"
+Ôªø#include "DiskList.h"
 #include "WindowBase.h"
 #include "SystemIcon.h"
 #include "App.h"
@@ -42,14 +42,24 @@ void DiskList::paint(SkCanvas* canvas)
 	{
 		auto str1 = std::format(L"{}:\\", std::get<0>(driveInfo[i]));
 		auto img = SystemIcon::getIcon(str1, 24);
-		paint.setColor(0x101677ff);
+		if (hoverIndex == i) {
+			paint.setColor(0x221677ff);
+		}
+		else {
+			paint.setColor(0x101677ff);
+		}
 		canvas->drawRoundRect(itemRect, 6, 6, paint);
 		canvas->drawImage(img, itemRect.fLeft + 12, itemRect.fTop + 9.f);
-		std::wstring str = std::format(L"±æµÿ¥≈≈Ã({}:)", std::get<0>(driveInfo[i]));
+		std::wstring str = std::format(L"Êú¨Âú∞Á£ÅÁõò({}:)", std::get<0>(driveInfo[i]));
 		auto textLength = wcslen(str.data()) * 2;
 		auto fontText = App::GetFontText();
 		fontText->setSize(16.6f);
-		paint.setColor(0xFF333333);
+		if (hoverIndex == i) {
+			paint.setColor(0xFF000000);
+		}
+		else {
+			paint.setColor(0xFF666666);
+		}
 		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16,
 			itemRect.fLeft + 48.f, itemRect.fTop + 28.f, *fontText, paint);
 		itemRect.setXYWH(12.f, itemRect.fBottom + 8.f, rect.width() - 24.f, 46.f);
@@ -64,6 +74,21 @@ void DiskList::resize(const int& w, const int& h)
 
 void DiskList::mouseMove(const int& x, const int& y)
 {
+	if (rect.contains(x, y)&& x>12 && x<rect.fRight-12) {
+		auto index = -1;
+		for (size_t i = 0; i < driveInfo.size(); i++)
+		{
+			auto val = rect.fTop + i * (46.f + 8.f);
+			if (y > val && y < val + 46.f) {
+				index = i;
+				break;
+			}
+		}
+		if (index != hoverIndex) {
+			hoverIndex = index;
+			InvalidateRect(root->hwnd, nullptr, false);
+		}
+	}
 }
 
 void DiskList::mouseDown(const int& x, const int& y)
