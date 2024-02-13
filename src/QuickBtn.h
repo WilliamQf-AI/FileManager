@@ -1,11 +1,11 @@
 #pragma once
 #include "ControlBase.h"
 #include "include/core/SkCanvas.h"
-class WindowBase;
+class WindowMain;
 class QuickBtn : public ControlBase
 {
 public:
-	QuickBtn(WindowBase* root);
+	QuickBtn(WindowMain* root);
 	~QuickBtn();
 	void paint(SkCanvas* canvas) override;
 private:

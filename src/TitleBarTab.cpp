@@ -3,11 +3,11 @@
 #include "include/core/SkRRect.h"
 #include "include/core/SkPixmap.h"
 #include "include/core/SkBitmap.h"
-#include "WindowBase.h"
+#include "WindowMain.h"
 #include "SystemIcon.h"
 #include "App.h"
 
-TitleBarTab::TitleBarTab(WindowBase* root, std::wstring&& title) :ControlBase(root),title{title}
+TitleBarTab::TitleBarTab(WindowMain* root, std::wstring&& title) :ControlBase(root),title{title}
 {
 }
 

@@ -8,11 +8,11 @@
 #include "TitleBarBtns.h"
 #include "TitleBarTab.h"
 
-class WindowBase;
+class WindowMain;
 class TitleBar : public ControlBase
 {
 public:
-    TitleBar(WindowBase* root);
+    TitleBar(WindowMain* root);
     ~TitleBar();
     void paint(SkCanvas* canvas) override;
     void mouseMove(const int& x, const int& y);

@@ -1,8 +1,6 @@
 set(SRC
     SystemIcon.cpp
     SystemIcon.h
-    WindowBase.cpp
-    WindowBase.h
     ControlBase.cpp
     ControlBase.h
     main.cpp

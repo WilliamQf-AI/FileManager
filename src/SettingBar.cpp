@@ -1,6 +1,6 @@
 #include "SettingBar.h"
 
-SettingBar::SettingBar(WindowBase* root) :ControlBase(root)
+SettingBar::SettingBar(WindowMain* root) :ControlBase(root)
 {
 }
 

@@ -9,7 +9,7 @@
 #include <format>
 #include <ctime>
 
-ControlBase::ControlBase(WindowBase* root):root{root}
+ControlBase::ControlBase(WindowMain* root):root{root}
 {
 }
 

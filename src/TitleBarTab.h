@@ -6,11 +6,11 @@
 #include "include/core/SkCanvas.h"
 #include "ControlBase.h"
 
-class WindowBase;
+class WindowMain;
 class TitleBarTab : public ControlBase
 {
 public:
-    TitleBarTab(WindowBase* root,std::wstring&& title);
+    TitleBarTab(WindowMain* root,std::wstring&& title);
     ~TitleBarTab();
     void paint(SkCanvas* canvas) override;
     bool isSelected{ true };

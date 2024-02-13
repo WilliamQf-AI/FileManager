@@ -2,11 +2,11 @@
 #include "ControlBase.h"
 #include "include/core/SkCanvas.h"
 
-class WindowBase;
+class WindowMain;
 class FavoritePath : public ControlBase
 {
 public:
-	FavoritePath(WindowBase* root);
+	FavoritePath(WindowMain* root);
 	~FavoritePath();
 	void paint(SkCanvas* canvas) override;
 	void mouseMove(const int& x, const int& y);

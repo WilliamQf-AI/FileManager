@@ -2,11 +2,11 @@
 #include "ControlBase.h"
 #include "include/core/SkCanvas.h"
 
-class WindowBase;
+class WindowMain;
 class DiskList : public ControlBase
 {
 public:
-	DiskList(WindowBase* root);
+	DiskList(WindowMain* root);
 	~DiskList();
 	void paint(SkCanvas* canvas) override;
 	std::vector<std::tuple<char, double, double, bool>> driveInfo;

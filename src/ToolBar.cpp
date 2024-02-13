@@ -3,7 +3,7 @@
 #include "App.h"
 #include "TitleBar.h"
 
-ToolBar::ToolBar(WindowBase* root) :ControlBase(root)
+ToolBar::ToolBar(WindowMain* root) :ControlBase(root)
 {
 
 	root->resizeHandlers.push_back(

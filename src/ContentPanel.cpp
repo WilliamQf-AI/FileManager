@@ -13,7 +13,7 @@
 
 
 
-ContentPanel::ContentPanel(WindowBase* root) :ControlBase(root)
+ContentPanel::ContentPanel(WindowMain* root) :ControlBase(root)
 {
 	root->mouseMoveHandlers.push_back(
 		std::bind(&ContentPanel::mouseMove, this, std::placeholders::_1, std::placeholders::_2)

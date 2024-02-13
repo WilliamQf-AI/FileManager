@@ -11,11 +11,11 @@
 #include "QuickBtn.h"
 #include "DiskList.h"
 
-class WindowBase;
+class WindowMain;
 class LeftPanel : public ControlBase
 {
 public:
-    LeftPanel(WindowBase* root);
+    LeftPanel(WindowMain* root);
     ~LeftPanel();
     void paint(SkCanvas* canvas) override;
 

@@ -5,7 +5,7 @@
 #include "TitleBarBtns.h"
 
 class WindowBase;
-TitleBar::TitleBar(WindowBase* root) :ControlBase(root)
+TitleBar::TitleBar(WindowMain* root) :ControlBase(root)
 {
 	auto tab1 = std::make_shared<TitleBarTab>(root, std::wstring(L"最近使用的文件"));
 	tabs.push_back(tab1);

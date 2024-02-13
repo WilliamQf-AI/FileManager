@@ -6,11 +6,11 @@
 #include "include/core/SkCanvas.h"
 #include "ControlBase.h"
 
-class WindowBase;
+class WindowMain;
 class TitleBarBtns : public ControlBase
 {
 public:
-    TitleBarBtns(WindowBase* root);
+    TitleBarBtns(WindowMain* root);
     ~TitleBarBtns();
     void paint(SkCanvas *canvas) override;
     void mouseMove(const int& x, const int& y);

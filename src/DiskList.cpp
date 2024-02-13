@@ -1,9 +1,9 @@
 ﻿#include "DiskList.h"
-#include "WindowBase.h"
+#include "WindowMain.h"
 #include "SystemIcon.h"
 #include "App.h"
 
-DiskList::DiskList(WindowBase* root) :ControlBase(root)
+DiskList::DiskList(WindowMain* root) :ControlBase(root)
 {
 	DWORD drives = GetLogicalDrives();
 	for (char drive = 'A'; drive <= 'Z'; ++drive) {
@@ -74,8 +74,8 @@ void DiskList::resize(const int& w, const int& h)
 
 void DiskList::mouseMove(const int& x, const int& y)
 {
+	auto index = -1;
 	if (rect.contains(x, y)&& x>12 && x<rect.fRight-12) {
-		auto index = -1;
 		for (size_t i = 0; i < driveInfo.size(); i++)
 		{
 			auto val = rect.fTop + i * (46.f + 8.f);
@@ -84,10 +84,10 @@ void DiskList::mouseMove(const int& x, const int& y)
 				break;
 			}
 		}
-		if (index != hoverIndex) {
-			hoverIndex = index;
-			InvalidateRect(root->hwnd, nullptr, false);
-		}
+	}
+	if (index != hoverIndex) {
+		hoverIndex = index;
+		InvalidateRect(root->hwnd, nullptr, false);
 	}
 }
 

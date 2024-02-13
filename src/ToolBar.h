@@ -6,11 +6,11 @@
 #include "include/core/SkCanvas.h"
 #include "ControlBase.h"
 
-class WindowBase;
+class WindowMain;
 class ToolBar : public ControlBase
 {
 public:
-    ToolBar(WindowBase* root);
+    ToolBar(WindowMain* root);
     ~ToolBar();
     void paint(SkCanvas* canvas) override;
     void resize(const int& w, const int& h);

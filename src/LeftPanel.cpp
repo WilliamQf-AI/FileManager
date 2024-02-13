@@ -6,7 +6,7 @@
 #include "ToolBar.h"
 
 
-LeftPanel::LeftPanel(WindowBase* root) :ControlBase(root)
+LeftPanel::LeftPanel(WindowMain* root) :ControlBase(root)
 {
 	auto index = 1;	
 	root->resizeHandlers.push_back(

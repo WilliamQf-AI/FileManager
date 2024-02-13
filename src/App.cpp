@@ -6,14 +6,13 @@
 #include "include/core/SkData.h"
 #include "include/core/SkGraphics.h"
 #include "include/ports/SkTypeface_win.h"
-#include "WindowBase.h"
 #include "WindowMain.h"
 
 
 HINSTANCE hinstance;
 std::shared_ptr<SkFont> fontIcon{ nullptr };
 std::shared_ptr<SkFont> fontText{ nullptr };
-std::vector<std::shared_ptr<WindowBase>> windows;
+std::vector<std::shared_ptr<WindowMain>> windows;
 sk_sp<SkFontMgr> fontMgr;
 
 App::~App()

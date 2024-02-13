@@ -3,10 +3,10 @@
 #include <functional>
 #include "include/core/SkFontMetrics.h"
 #include "App.h"
-#include "WindowBase.h"
+#include "WindowMain.h"
 
 
-TitleBarBtns::TitleBarBtns(WindowBase* root) :ControlBase(root)
+TitleBarBtns::TitleBarBtns(WindowMain* root) :ControlBase(root)
 {
 	
 	root->mouseMoveHandlers.push_back(

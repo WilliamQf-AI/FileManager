@@ -3,10 +3,10 @@
 #include "SystemIcon.h"
 #include "App.h"
 #include <include/core/SkPaint.h>
-#include "WindowBase.h"
+#include "WindowMain.h"
 #include "LeftPanel.h"
 
-QuickBtn::QuickBtn(WindowBase* root) :ControlBase(root)
+QuickBtn::QuickBtn(WindowMain* root) :ControlBase(root)
 {
 	root->resizeHandlers.push_back(
 		std::bind(&QuickBtn::resize, this, std::placeholders::_1, std::placeholders::_2)

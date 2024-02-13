@@ -4,12 +4,12 @@
 #include <Windows.h>
 #include <include/core/SkPaint.h>
 
-#include "WindowBase.h"
+#include "WindowMain.h"
 #include "SystemIcon.h"
 #include "App.h"
 #include "LeftPanel.h"
 
-FavoritePath::FavoritePath(WindowBase* root) :ControlBase(root)
+FavoritePath::FavoritePath(WindowMain* root) :ControlBase(root)
 {
 	totalHeight = 46 * 26;
 

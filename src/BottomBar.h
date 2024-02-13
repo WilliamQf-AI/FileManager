@@ -7,11 +7,11 @@
 #include "ControlBase.h"
 
 
-class WindowBase;
+class WindowMain;
 class BottomBar : public ControlBase
 {
 public:
-    BottomBar(WindowBase* root);
+    BottomBar(WindowMain* root);
     ~BottomBar();
     void paint(SkCanvas* canvas) override;
 private:
