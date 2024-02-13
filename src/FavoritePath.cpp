@@ -139,8 +139,7 @@ void FavoritePath::mouseWheel(const int& x, const int& y,const int& delta)
 
 void FavoritePath::resize(const int& w, const int& h)
 {
-	auto yVal = root->ctrls[2]->rect.fTop + y;
-	rect.setXYWH(0, yVal, root->ctrls[2]->rect.width(), h - yVal - 50);
+	rect.setXYWH(0, y, root->ctrls[2]->rect.width(), h - y - 50);
 	if (totalHeight > rect.height()) {
 		auto h = rect.height() * (rect.height() / totalHeight);
 		if (h < 40.f) h = 40.f;

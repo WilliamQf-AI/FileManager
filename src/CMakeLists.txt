@@ -20,14 +20,16 @@ set(SRC
     ToolBar.h
     LeftPanel.cpp
     LeftPanel.h
+    QuickBtn.cpp
+    QuickBtn.h
+    DiskList.cpp
+    DiskList.h
     FavoritePath.cpp
     FavoritePath.h
     SettingBar.cpp
     SettingBar.h
     ContentPanel.cpp
     ContentPanel.h
-    QuickBtn.cpp
-    QuickBtn.h
     BottomBar.cpp
     BottomBar.h
 )

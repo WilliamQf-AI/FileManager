@@ -9,6 +9,7 @@
 #include "FavoritePath.h"
 #include "SettingBar.h"
 #include "QuickBtn.h"
+#include "DiskList.h"
 
 class WindowBase;
 class LeftPanel : public ControlBase
@@ -17,12 +18,11 @@ public:
     LeftPanel(WindowBase* root);
     ~LeftPanel();
     void paint(SkCanvas* canvas) override;
-    void mousemove(const int& x, const int& y);
 
     void resize(const int& w, const int& h);
 private:
-    std::vector<std::tuple<char, double, double,bool>> driveInfo;
     std::shared_ptr<FavoritePath> favoritePath;
     std::shared_ptr<SettingBar> settingBar;
     std::shared_ptr<QuickBtn> quickBtn;
+    std::shared_ptr<DiskList> diskList;
 };

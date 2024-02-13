@@ -73,9 +73,10 @@ sk_sp<SkImage> SystemIcon::iconToImg(HICON icon, const int& size)
 	DrawIconEx(hdcMemory, 0, 0, icon, size, size, 0, NULL, DI_NORMAL);
 	SkImageInfo imgInfo = SkImageInfo::MakeN32Premul(size, size);
 	std::vector<int32_t> pixSrcData;
-	pixSrcData.resize(size * size * 4);
+	double dataSize = size * 4 * size;
+	pixSrcData.resize(dataSize);
 	SkPixmap pixmap(imgInfo, &pixSrcData.front(), size * 4);
-	BITMAPINFO info = { sizeof(BITMAPINFOHEADER), size, 0 - size, 1, 32, BI_RGB, size * 4 * size, 0, 0, 0, 0 };
+	BITMAPINFO info = { sizeof(BITMAPINFOHEADER), size, 0 - size, 1, 32, BI_RGB, dataSize, 0, 0, 0, 0 };
 	GetDIBits(hdcMemory, hBmp, 0, size, &pixSrcData.front(), &info, DIB_RGB_COLORS);
 	DeleteObject(hBmp);
 	DeleteDC(hdcScreen);
