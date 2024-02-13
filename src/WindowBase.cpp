@@ -208,13 +208,14 @@ void WindowBase::mouseMove(const int& x, const int& y)
 }
 void WindowBase::mouseLeave()
 {
-    TRACKMOUSEEVENT tme = {};
-    tme.cbSize = sizeof(TRACKMOUSEEVENT);
-    tme.dwFlags = TME_CANCEL | TME_HOVER | TME_LEAVE;
-    tme.hwndTrack = hwnd;
-    TrackMouseEvent(&tme);    
-    isTrackMouseEvent = false;
-    isMouseDown = false;
+    if (!isMouseDown) {
+        TRACKMOUSEEVENT tme = {};
+        tme.cbSize = sizeof(TRACKMOUSEEVENT);
+        tme.dwFlags = TME_CANCEL | TME_HOVER | TME_LEAVE;
+        tme.hwndTrack = hwnd;
+        TrackMouseEvent(&tme);
+        isTrackMouseEvent = false;
+    }
     for (auto& func : mouseMoveHandlers)
     {
         func(-888, -888);

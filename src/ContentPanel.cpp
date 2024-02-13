@@ -78,12 +78,16 @@ void ContentPanel::paint(SkCanvas* canvas)
 	auto top = 0 - (scrollerRect.fTop - clipRect.fTop) / clipRect.height() * totalHeight;
 	auto y = top + clipRect.fTop + verticalVal +28.f;
 	if (y > 195.f)y = 195.f; // magic num
+	
 	for (auto& item:files) //192个要200多毫秒
 	{
 		auto [fileName, lastTime] = item;
 		textLength = wcslen(fileName.data()) * 2;
+		canvas->save();
+		canvas->clipRect(SkRect::MakeLTRB(rect.fLeft,y-20, leftRect.fRight,y+20));
 		canvas->drawSimpleText(fileName.data(), textLength, SkTextEncoding::kUTF16,
 					rect.fLeft + paddingLeft, y, *fontText, paint);
+		canvas->restore();
 		auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", lastTime);
 		str = str.substr(0, str.find_last_of(L"."));
 		textLength = wcslen(str.data()) * 2;
