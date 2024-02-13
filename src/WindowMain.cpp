@@ -10,7 +10,6 @@
 
 WindowMain::WindowMain()
 {
-    initSize();
     initWindow();
 }
 
@@ -40,14 +39,4 @@ LRESULT WindowMain::wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
         break;
     }
     return DefWindowProc(hwnd, msg, wparam, lparam);
-}
-
-void WindowMain::initSize()
-{
-    w = 1200;
-    h = 800;
-    ctrls.push_back(std::make_shared<TitleBar>(this));
-    ctrls.push_back(std::make_shared<ToolBar>(this));
-    ctrls.push_back(std::make_shared<LeftPanel>(this));
-    ctrls.push_back(std::make_shared<ContentPanel>(this));
 }

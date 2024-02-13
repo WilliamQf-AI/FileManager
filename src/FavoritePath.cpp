@@ -7,6 +7,7 @@
 #include "WindowBase.h"
 #include "SystemIcon.h"
 #include "App.h"
+#include "LeftPanel.h"
 
 FavoritePath::FavoritePath(WindowBase* root) :ControlBase(root)
 {
@@ -139,7 +140,7 @@ void FavoritePath::mouseWheel(const int& x, const int& y,const int& delta)
 
 void FavoritePath::resize(const int& w, const int& h)
 {
-	rect.setXYWH(0, y, root->ctrls[2]->rect.width(), h - y - 50);
+	rect.setXYWH(0, y, root->leftPanel->rect.width(), h - y - 50);
 	if (totalHeight > rect.height()) {
 		auto h = rect.height() * (rect.height() / totalHeight);
 		if (h < 40.f) h = 40.f;

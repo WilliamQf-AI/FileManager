@@ -4,6 +4,7 @@
 #include "App.h"
 #include <include/core/SkPaint.h>
 #include "WindowBase.h"
+#include "LeftPanel.h"
 
 QuickBtn::QuickBtn(WindowBase* root) :ControlBase(root)
 {
@@ -55,7 +56,7 @@ void QuickBtn::paint(SkCanvas* canvas)
 
 void QuickBtn::resize(const int& w, const int& h)
 {
-	auto yVal = root->ctrls[2]->rect.fTop;
+	auto yVal = root->leftPanel->rect.fTop;
 	rect.setXYWH(0.f, yVal, 380.f, 92.f);
 }
 

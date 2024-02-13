@@ -7,6 +7,9 @@
 #include <shlobj.h>
 #include "WindowMain.h"
 #include "App.h"
+#include "TitleBar.h"
+#include "ToolBar.h"
+#include "LeftPanel.h"
 
 
 
@@ -110,8 +113,8 @@ void ContentPanel::paint(SkCanvas* canvas)
 
 void ContentPanel::resize(const int& w, const int& h)
 {
-	auto topVal = root->ctrls[0]->rect.height() + root->ctrls[1]->rect.height();
-	auto leftVal = root->ctrls[2]->rect.fRight;
+	auto topVal = root->titleBar->rect.height() + root->toolBar->rect.height();
+	auto leftVal = root->leftPanel->rect.fRight;
 	rect.setXYWH(leftVal, topVal, w-leftVal, h - topVal);
 	clipRect = SkRect::MakeLTRB(rect.fLeft, rect.fTop + 46.f, rect.fRight, rect.fBottom);
 	auto yVal = topVal+46.f;

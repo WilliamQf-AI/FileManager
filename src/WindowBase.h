@@ -11,7 +11,10 @@
 #define WM_DEBUG_MESSAGE (WM_APP+9)
 using EventHandlerType = void(*)(const int&, const int&);
 
-class ControlBase;
+class TitleBar;
+class ToolBar;
+class LeftPanel;
+class ContentPanel;
 class WindowBase
 {
 public:
@@ -24,7 +27,7 @@ public:
     HWND hwndToolTip{nullptr};
     bool isMouseDown{false};
     bool isTrackMouseEvent{ false };
-    int w{ 0 }, h{0};
+    int w{ 1200 }, h{800};
     std::vector<std::function<void(const int&, const int&)>> mouseMoveHandlers;
     std::vector<std::function<void(const int&, const int&)>> mouseDragHandlers;
     std::vector<std::function<void(const int&, const int&)>> mouseDownHandlers;
@@ -32,7 +35,10 @@ public:
     std::vector<std::function<void(const int&, const int&)>> mouseDBClickHandlers;
     std::vector<std::function<void(const int&, const int&)>> resizeHandlers;
     std::vector<std::function<void(const int&, const int& ,const int&)>> mouseWheelHandlers;
-    std::vector<std::shared_ptr<ControlBase>> ctrls;
+    std::shared_ptr<TitleBar> titleBar;
+    std::shared_ptr<ToolBar> toolBar;
+    std::shared_ptr<LeftPanel> leftPanel;
+    std::shared_ptr<ContentPanel> contentPanel;
 
 protected:
     virtual LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) = 0;

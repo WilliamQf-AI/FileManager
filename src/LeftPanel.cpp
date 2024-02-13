@@ -2,6 +2,8 @@
 #include "WindowMain.h"
 #include "SystemIcon.h"
 #include "App.h"
+#include "TitleBar.h"
+#include "ToolBar.h"
 
 
 LeftPanel::LeftPanel(WindowBase* root) :ControlBase(root)
@@ -36,7 +38,7 @@ void LeftPanel::paint(SkCanvas* canvas)
 
 void LeftPanel::resize(const int& w, const int& h)
 {
-	auto topVal = root->ctrls[0]->rect.height() + root->ctrls[1]->rect.height();
+	auto topVal = root->titleBar->rect.height() + root->toolBar->rect.height();
 	rect.setXYWH(0.f, topVal, 380.f, h - topVal);
 	diskList->y = topVal + 98.f;
 	favoritePath->y = diskList->y + diskList->driveInfo.size() * (46 + 8)+6.f;

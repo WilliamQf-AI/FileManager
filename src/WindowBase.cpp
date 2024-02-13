@@ -10,11 +10,22 @@
 #include "include/core/SkCanvas.h"
 #include "App.h"
 #include "ControlBase.h"
+#include "TitleBar.h"
+#include "ToolBar.h"
+#include "LeftPanel.h"
+#include "ContentPanel.h"
+#include "TitleBar.h"
+#include "ToolBar.h"
+#include "LeftPanel.h"
+#include "ContentPanel.h"
 
 
 WindowBase::WindowBase()
 {
-
+    titleBar = std::make_shared<TitleBar>(this);
+    toolBar = std::make_shared<ToolBar>(this);
+    leftPanel = std::make_shared<LeftPanel>(this);
+    contentPanel = std::make_shared<ContentPanel>(this);
 }
 
 WindowBase::~WindowBase()
@@ -55,10 +66,11 @@ void WindowBase::paintWindow()
     SkImageInfo info = SkImageInfo::MakeN32Premul(w, h);
     auto canvas = SkCanvas::MakeRasterDirect(info, pixels, 4 * w);
     canvas->clear(SK_ColorWHITE);
-    for (auto& ctrl : ctrls)
-    {
-        ctrl->paint(canvas.get());
-    }
+    auto c = canvas.get();
+    titleBar->paint(c);
+    toolBar->paint(c);
+    leftPanel->paint(c);
+    contentPanel->paint(c);
     StretchDIBits(dc, 0, 0, w, h, 0, 0, w, h, bmpInfo->bmiColors, bmpInfo, DIB_RGB_COLORS, SRCCOPY);
     ReleaseDC(hwnd, dc);
     EndPaint(hwnd, &ps);

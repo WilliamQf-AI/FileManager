@@ -1,6 +1,7 @@
 ﻿#include "ToolBar.h"
 #include "WindowMain.h"
 #include "App.h"
+#include "TitleBar.h"
 
 ToolBar::ToolBar(WindowBase* root) :ControlBase(root)
 {
@@ -80,6 +81,6 @@ void ToolBar::paint(SkCanvas* canvas)
 
 void ToolBar::resize(const int& w, const int& h)
 {
-	auto top = root->ctrls[0]->rect.height();
+	auto top = root->titleBar->rect.height();
 	rect.setXYWH(0.f, top, root->w, 60.f);
 }

@@ -10,7 +10,7 @@ class WindowBase;
 class TitleBarTab : public ControlBase
 {
 public:
-    TitleBarTab(WindowBase* root);
+    TitleBarTab(WindowBase* root,std::wstring&& title);
     ~TitleBarTab();
     void paint(SkCanvas* canvas) override;
     bool isSelected{ true };

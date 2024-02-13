@@ -7,11 +7,8 @@
 class WindowBase;
 TitleBar::TitleBar(WindowBase* root) :ControlBase(root)
 {
-	auto tab1 = std::make_shared<TitleBarTab>(root);
-	tab1->isSelected = false;
+	auto tab1 = std::make_shared<TitleBarTab>(root, std::wstring(L"最近使用的文件"));
 	tabs.push_back(tab1);
-	auto tab2 = std::make_shared<TitleBarTab>(root);
-	tabs.push_back(tab2);
 	btns = std::make_shared<TitleBarBtns>(root);
 	root->mouseMoveHandlers.push_back(
 		std::bind(&TitleBar::mouseMove, this, std::placeholders::_1, std::placeholders::_2)

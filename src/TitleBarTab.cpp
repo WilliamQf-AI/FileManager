@@ -7,9 +7,8 @@
 #include "SystemIcon.h"
 #include "App.h"
 
-TitleBarTab::TitleBarTab(WindowBase* root) :ControlBase(root)
+TitleBarTab::TitleBarTab(WindowBase* root, std::wstring&& title) :ControlBase(root),title{title}
 {
-	title = L"文件夹名称";
 }
 
 TitleBarTab::~TitleBarTab()
