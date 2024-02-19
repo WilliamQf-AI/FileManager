@@ -69,7 +69,7 @@ void DiskList::paint(SkCanvas* canvas)
 
 void DiskList::resize(const int& w, const int& h)
 {
-	auto h1 = driveInfo.size() * (46 + 8) + 60 + 16;
+	auto h1 = driveInfo.size() * (46 + 8);
 	rect.setXYWH(0.f, y, 380.f, h1);
 }
 
@@ -88,7 +88,7 @@ void DiskList::mouseMove(const int& x, const int& y)
 	}
 	if (index != hoverIndex) {
 		hoverIndex = index;
-		InvalidateRect(root->hwnd, nullptr, false);
+		repaint();
 	}
 }
 

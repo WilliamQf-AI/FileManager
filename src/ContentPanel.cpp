@@ -48,6 +48,7 @@ void ContentPanel::paint(SkCanvas* canvas)
 	
 	SkPaint paint;
 	paint.setColor(0xFFE8E8E8);
+	canvas->drawLine(rect.fLeft, rect.fTop, rect.fLeft, rect.fBottom, paint);
 	canvas->drawLine(rect.fLeft, rect.fTop + 46.f, rect.fRight, rect.fTop + 46.f,paint);
 	canvas->drawLine(rightRect.fLeft, rightRect.fTop, rightRect.fLeft, rightRect.fBottom, paint);
 

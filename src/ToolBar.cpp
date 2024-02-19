@@ -77,7 +77,7 @@ void ToolBar::paint(SkCanvas* canvas)
 	auto textLength = wcslen(str.data()) * 2;
 	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, searchRect.fLeft + 38, pos.fY-4, *fontText, paint);
 	paint.setColor(0xFFE8E8E8);
-	canvas->drawLine(0.f, rect.fBottom, rect.fRight, rect.fBottom, paint);
+	canvas->drawLine(0.f, rect.fBottom-1, rect.fRight, rect.fBottom-1, paint);
 }
 
 void ToolBar::resize(const int& w, const int& h)

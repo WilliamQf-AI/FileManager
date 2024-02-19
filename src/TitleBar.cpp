@@ -127,6 +127,7 @@ void TitleBar::addTab(bool needRefresh)
 		if (tab->isSelected) {
 			tab->isDirty = true;
 			tab->isSelected = false;
+			break;
 		}
 	}
 	auto tab = std::make_shared<TitleBarTab>(root, std::wstring(L"最近使用的文件"));	

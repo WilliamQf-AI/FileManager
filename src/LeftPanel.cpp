@@ -26,8 +26,6 @@ void LeftPanel::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
 	SkPaint paint;
-	paint.setColor(0xFFE8E8E8);
-	canvas->drawLine(rect.fRight, rect.fTop, rect.fRight, rect.fBottom, paint);
 	paint.setColor(0xFFF8FBFF);
 	paint.setStyle(SkPaint::kFill_Style);
 	canvas->drawRect(rect, paint);

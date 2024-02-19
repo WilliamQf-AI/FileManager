@@ -67,12 +67,9 @@ void QuickBtn::mouseMove(const int& x, const int& y)
 	if (rect.contains(x, y)&&x>10.f&&x<rect.fRight-16.f) {
 		index = x / 64.f;		
 	}
-	else {
-		index = -1;
-	}
 	if (index != hoverIndex) {
 		hoverIndex = index;
-		InvalidateRect(root->hwnd, nullptr, false);
+		repaint();
 	}
 }
 
