@@ -26,6 +26,7 @@ TitleBarBtns::~TitleBarBtns()
 
 void TitleBarBtns::paint(SkCanvas *canvas)
 {
+	if (!needPaint(canvas, 0xFFD3E3FD)) return;
 	auto isMaximized = IsZoomed(root->hwnd) != 0;
 	SkPaint paint;
 	if (hoverIndex == 0) {
@@ -54,6 +55,7 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 		paint.setColor(SK_ColorWHITE);
 	}
 	canvas->drawString(iconCode, pos.fX + 132, pos.fY, *font, paint);
+	
 }
 
 void TitleBarBtns::mouseDown(const int& x, const int& y)
@@ -90,21 +92,20 @@ void TitleBarBtns::resize(const int& w, const int& h)
 
 void TitleBarBtns::mouseMove(const int& x, const int& y)
 {
-	if (!rect.contains(x, y)) {
-		if (hoverIndex >= 0) {
-			hoverIndex = -1;
-			InvalidateRect(root->hwnd, nullptr, false);
+	int index = -1;
+	if (rect.contains(x, y)) {
+		if (x < rect.fLeft + 66) {
+			index = 0;
 		}
-		return;
+		else if (x < rect.fLeft + 132) {
+			index = 1;
+		}
+		else {
+			index = 2;
+		}
 	}
-	if (x < rect.fLeft + 66) {
-		hoverIndex = 0;
+	if (index != hoverIndex) {
+		hoverIndex = index;
+		repaint();
 	}
-	else if (x < rect.fLeft + 132) {
-		hoverIndex = 1;
-	}
-	else {
-		hoverIndex = 2;
-	}
-	InvalidateRect(root->hwnd, nullptr, false);
 }

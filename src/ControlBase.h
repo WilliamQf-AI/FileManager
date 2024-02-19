@@ -14,9 +14,12 @@ public:
 	SkPoint getStartPosOfIconAtCenterOfRect(std::wstring& str,SkRect& rect, SkFont* font);
 	float getTextVerticalVal(SkFont* font);
 	std::wstring fileTimeToString(const std::filesystem::file_time_type& timePoint);
-	virtual void paint(SkCanvas* canvas) = 0;
+	void repaint();
+	bool needPaint(SkCanvas* canvas, const SkColor& color = 0xFFFFFFFF);
+	virtual void paint(SkCanvas* canvas) {};
 	SkRect rect;
 	WindowMain* root;
+	bool isDirty{ true };
 private:
 
 };

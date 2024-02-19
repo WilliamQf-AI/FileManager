@@ -10,4 +10,5 @@ BottomBar::~BottomBar()
 
 void BottomBar::paint(SkCanvas* canvas)
 {
+	if (!needPaint(canvas)) return;
 }

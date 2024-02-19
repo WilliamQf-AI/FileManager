@@ -17,6 +17,7 @@ TitleBarTab::~TitleBarTab()
 
 void TitleBarTab::paint(SkCanvas* canvas)
 {
+	if (!needPaint(canvas, 0xFFD3E3FD)) return;
 	SkPaint paint;
 	paint.setAntiAlias(true);
 	if (isSelected) {
@@ -60,7 +61,6 @@ void TitleBarTab::paint(SkCanvas* canvas)
 		rect.fRight - 8.f - 13.f-10.f,
 		rect.fTop + 10.f + 20.f,
 		*font, paint);
-
 	//canvas->drawSimpleText(iconCode, 3, SkTextEncoding::kUTF8,0, 0, *font,paint);
 	//SystemIcon::reset();
 	//PostMessage(root->hwnd, WM_DEBUG_MESSAGE, 0, 0);

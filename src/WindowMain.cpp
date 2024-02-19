@@ -66,12 +66,11 @@ void WindowMain::paintWindow()
     void* pixels = bmpInfo->bmiColors;
     SkImageInfo info = SkImageInfo::MakeN32Premul(w, h);
     auto canvas = SkCanvas::MakeRasterDirect(info, pixels, 4 * w);
-    canvas->clear(SK_ColorWHITE);
     auto c = canvas.get();
-    titleBar->paint(c);
-    toolBar->paint(c);
-    leftPanel->paint(c);
-    contentPanel->paint(c);
+    for (auto& func : paintHandlers)
+    {
+        func(c);
+    }
     StretchDIBits(dc, 0, 0, w, h, 0, 0, w, h, bmpInfo->bmiColors, bmpInfo, DIB_RGB_COLORS, SRCCOPY);
     ReleaseDC(hwnd, dc);
     EndPaint(hwnd, &ps);

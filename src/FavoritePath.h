@@ -18,7 +18,6 @@ public:
 	float y;
 private:
 	float totalHeight{0};
-	SkRect rect;
 	SkRect scrollerRect;
 	bool hoverScroller{ false };
 	double top{ 0.f };

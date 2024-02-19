@@ -39,8 +39,9 @@ FavoritePath::~FavoritePath()
 
 void FavoritePath::paint(SkCanvas* canvas)
 {
-	auto rectHeight = rect.height();
+	if (!needPaint(canvas, 0xFFF8FBFF)) return;
 	SkPaint paint;
+	auto rectHeight = rect.height();
 	canvas->save();
 	canvas->clipRect(rect);
 	auto top = 0 - (scrollerRect.fTop-rect.fTop) / rectHeight * totalHeight;
@@ -76,7 +77,7 @@ void FavoritePath::mouseMove(const int& x, const int& y)
 	}
 	if (flag != hoverScroller) {
 		hoverScroller = flag;
-		InvalidateRect(root->hwnd, nullptr, false);
+		repaint();
 	}
 }
 
@@ -90,8 +91,8 @@ void FavoritePath::mouseUp(const int& x, const int& y)
 	if (!scrollerRect.contains(x,y)) {
 		if (hoverScroller) {
 			hoverScroller = false;
+			repaint();
 		}
-		InvalidateRect(root->hwnd, nullptr, false);
 	}
 }
 
@@ -103,14 +104,14 @@ void FavoritePath::mouseDrag(const int& x, const int& y)
 			if (scrollerRect.fBottom < rect.fBottom) {
 				auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
 				scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + v- scrollerRect.fBottom);
-				InvalidateRect(root->hwnd, nullptr, false);
+				repaint();
 			}
 		}
 		else {
 			if (scrollerRect.fTop > rect.fTop) {
 				auto v = std::max(scrollerRect.fTop + span, rect.fTop);
 				scrollerRect.offsetTo(rect.fRight - 8, v);
-				InvalidateRect(root->hwnd, nullptr, false);
+				repaint();
 			}
 		}		
 		downY = y;
@@ -125,14 +126,14 @@ void FavoritePath::mouseWheel(const int& x, const int& y,const int& delta)
 			if (scrollerRect.fTop > rect.fTop) {
 				auto v = std::max(scrollerRect.fTop - span, rect.fTop);
 				scrollerRect.offsetTo(rect.fRight - 8, v);
-				InvalidateRect(root->hwnd, nullptr, false);
+				repaint();
 			}
 		}
 		else {
 			if (scrollerRect.fBottom < rect.fBottom) {
 				auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
 				scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + v - scrollerRect.fBottom);
-				InvalidateRect(root->hwnd, nullptr, false);
+				repaint();
 			}
 		}
 	}	

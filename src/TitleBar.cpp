@@ -32,16 +32,11 @@ TitleBar::~TitleBar()
 
 void TitleBar::paint(SkCanvas* canvas)
 {	
+	if (!needPaint(canvas)) return;
 	SkPaint paint;
 	paint.setColor(0xFFD3E3FD);
 	paint.setStyle(SkPaint::kFill_Style);
 	canvas->drawRect(rect, paint);
-
-	for (auto& tab:tabs)
-	{
-		tab->paint(canvas);
-	}
-	btns->paint(canvas);
 }
 
 void TitleBar::mouseMove(const int& x, const int& y)
@@ -56,11 +51,13 @@ void TitleBar::mouseMove(const int& x, const int& y)
 			hoverClose = r.contains(x, y);
 		}
 		if (tab->isHovered != hovered) {
+			tab->isDirty = true;
 			flag = true;
 			tab->isHovered = hovered;
 		}
 		if (tab->isHoverCloseBtn != hoverClose) {
 			flag = true;
+			tab->isDirty = true;
 			tab->isHoverCloseBtn = hoverClose;
 		}
 	}
@@ -88,7 +85,9 @@ void TitleBar::mouseDown(const int& x, const int& y)
 	}
 	auto it2 = std::find_if(tabs.begin(), tabs.end(), [](auto& item) {return item->isSelected; });
 	(*it2)->isSelected = false;
+	(*it2)->isDirty = true;
 	tab->isSelected = true;
+	tab->isDirty = true;
 	InvalidateRect(root->hwnd, nullptr, false);
 }
 
@@ -123,9 +122,12 @@ void TitleBar::resize(const int& w, const int& h)
 
 void TitleBar::addTab(bool needRefresh)
 {
-	for (size_t i = 0; i < tabs.size(); i++)
+	for (auto& tab:tabs)
 	{
-		tabs[i]->isSelected = false;
+		if (tab->isSelected) {
+			tab->isDirty = true;
+			tab->isSelected = false;
+		}
 	}
 	auto tab = std::make_shared<TitleBarTab>(root, std::wstring(L"最近使用的文件"));	
 	tab->rect.setXYWH(12.f + tabs.size() * 200.f + tabs.size() * 3.f, 10.f, 200.f, 46.f);

@@ -42,7 +42,7 @@ ContentPanel::~ContentPanel()
 
 void ContentPanel::paint(SkCanvas* canvas)
 {
-	
+	if (!needPaint(canvas)) return;
 	auto leftRect = SkRect::MakeXYWH(rect.fLeft, rect.fTop, 460.f, 46.f);
 	auto rightRect = SkRect::MakeLTRB(rect.fLeft+460.f, rect.fTop, root->w, rect.fTop+46.f);
 	

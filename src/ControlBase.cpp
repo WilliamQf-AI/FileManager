@@ -1,4 +1,5 @@
 #include "ControlBase.h"
+#include <Windows.h>
 #include <include/core/SkFontMetrics.h>
 #include <include/core/SkFontTypes.h>
 #include <iostream>
@@ -8,9 +9,14 @@
 #include <chrono>
 #include <format>
 #include <ctime>
+#include "WindowMain.h"
+
 
 ControlBase::ControlBase(WindowMain* root):root{root}
 {
+    root->paintHandlers.push_back(
+        std::bind(&ControlBase::paint, this, std::placeholders::_1)
+    );
 }
 
 ControlBase::~ControlBase()
@@ -56,4 +62,20 @@ std::wstring ControlBase::fileTimeToString(const std::filesystem::file_time_type
     //auto seconds = std::chrono::duration_cast<std::chrono::seconds>(span).count();
     auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
     return str.substr(0, str.find_last_of(L"."));
+}
+
+void ControlBase::repaint()
+{
+    isDirty = true;
+    InvalidateRect(root->hwnd, nullptr, false);
+}
+
+bool ControlBase::needPaint(SkCanvas* canvas,const SkColor& color)
+{
+    if (!isDirty) return false;
+    SkPaint paint;
+    paint.setColor(color);
+    canvas->drawRect(rect, paint);
+    isDirty = false;
+    return true;
 }

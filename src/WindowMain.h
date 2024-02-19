@@ -5,6 +5,7 @@
 #include <vector>
 #include <functional>
 #include "include/core/SkSurface.h"
+#include "include/core/SkCanvas.h"
 #include "src/base/SkAutoMalloc.h"
 
 #define WM_FLASH_CURSOR (WM_APP+8)
@@ -35,6 +36,7 @@ public:
     std::vector<std::function<void(const int&, const int&)>> mouseDBClickHandlers;
     std::vector<std::function<void(const int&, const int&)>> resizeHandlers;
     std::vector<std::function<void(const int&, const int& ,const int&)>> mouseWheelHandlers;
+    std::vector<std::function<void(SkCanvas*)>> paintHandlers;
     std::shared_ptr<TitleBar> titleBar;
     std::shared_ptr<ToolBar> toolBar;
     std::shared_ptr<LeftPanel> leftPanel;

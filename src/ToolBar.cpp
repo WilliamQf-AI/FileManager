@@ -39,6 +39,7 @@ ToolBar::~ToolBar()
 
 void ToolBar::paint(SkCanvas* canvas)
 {
+	if (!needPaint(canvas)) return;
 	auto iconRect = SkRect::MakeXYWH(0, rect.fTop, 50, rect.height());
 	auto font = App::GetFontIcon();
 	font->setSize(26.f);

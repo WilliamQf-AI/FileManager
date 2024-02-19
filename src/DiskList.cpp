@@ -36,6 +36,7 @@ DiskList::~DiskList()
 
 void DiskList::paint(SkCanvas* canvas)
 {
+	if (!needPaint(canvas, 0xFFF8FBFF)) return;
 	SkPaint paint;
 	SkRect itemRect = SkRect::MakeXYWH(12.f, y, rect.width() - 24.f, 46.f);
 	for (size_t i = 0; i < driveInfo.size(); i++)

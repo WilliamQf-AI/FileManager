@@ -26,6 +26,7 @@ QuickBtn::~QuickBtn()
 
 void QuickBtn::paint(SkCanvas* canvas)
 {
+	if (!needPaint(canvas, 0xFFF8FBFF)) return;
 	SkPaint paint;
 	if (hoverIndex > -1) {
 		paint.setColor(0x221677ff);
