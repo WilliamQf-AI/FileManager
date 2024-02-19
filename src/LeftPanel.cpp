@@ -33,6 +33,11 @@ void LeftPanel::paint(SkCanvas* canvas)
 
 void LeftPanel::resize(const int& w, const int& h)
 {
+	isDirty = true;
+	quickBtn->isDirty = true;
+	diskList->isDirty = true;
+	favoritePath->isDirty = true;
+	settingBar->isDirty = true;
 	auto topVal = root->titleBar->rect.height() + root->toolBar->rect.height();
 	rect.setXYWH(0.f, topVal, 380.f, h - topVal);
 	diskList->y = topVal + 98.f;

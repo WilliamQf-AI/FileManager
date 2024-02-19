@@ -87,6 +87,7 @@ void TitleBarBtns::mouseDown(const int& x, const int& y)
 
 void TitleBarBtns::resize(const int& w, const int& h)
 {
+	isDirty = true;
 	rect.setXYWH(w - 198.f, 0.f, 198.f, 56.f);
 }
 

@@ -12,6 +12,8 @@ class TitleBarTab : public ControlBase
 public:
     TitleBarTab(WindowMain* root,std::wstring&& title);
     ~TitleBarTab();
+
+    void resize(const int& w, const int& h);
     void paint(SkCanvas* canvas) override;
     bool isSelected{ true };
     bool isHovered{ false };

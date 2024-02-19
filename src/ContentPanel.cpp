@@ -114,6 +114,7 @@ void ContentPanel::paint(SkCanvas* canvas)
 
 void ContentPanel::resize(const int& w, const int& h)
 {
+	isDirty = true;
 	auto topVal = root->titleBar->rect.height() + root->toolBar->rect.height();
 	auto leftVal = root->leftPanel->rect.fRight;
 	rect.setXYWH(leftVal, topVal, w-leftVal, h - topVal);

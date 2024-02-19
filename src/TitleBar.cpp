@@ -113,6 +113,7 @@ void TitleBar::mouseDrag(const int& x, const int& y)
 
 void TitleBar::resize(const int& w, const int& h)
 {
+	isDirty = true;
 	rect.setXYWH(0, 0, w, 56.f);
 	for (size_t i = 0; i < tabs.size(); i++)
 	{

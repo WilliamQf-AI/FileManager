@@ -5,32 +5,9 @@
 
 ToolBar::ToolBar(WindowMain* root) :ControlBase(root)
 {
-
 	root->resizeHandlers.push_back(
 		std::bind(&ToolBar::resize, this, std::placeholders::_1, std::placeholders::_2)
 	);
-
-	
-
-	//auto toolLayout = YGNodeNew();
-	//YGNodeStyleSetHeight(toolLayout, 50.f);
-	//YGNodeStyleSetWidth(toolLayout,200.f);
-	//YGNodeStyleSetHeightAuto(toolLayout);
-	//YGNodeInsertChild(layout, toolLayout, 0);
-
-	//auto addressLayout = YGNodeNew();
-	//YGNodeStyleSetHeight(addressLayout, 40.f);
-	//YGNodeStyleSetFlexGrow(addressLayout, 1.f);
-	//YGNodeStyleSetMargin(addressLayout, YGEdgeLeft, 8.f);
-	//YGNodeStyleSetMargin(addressLayout, YGEdgeRight, 6.f);
-	//YGNodeInsertChild(layout, addressLayout, 1);
-
-	//auto searchLayout = YGNodeNew();
-	//YGNodeStyleSetHeight(searchLayout, 40.f);
-	//YGNodeStyleSetFlexGrow(searchLayout, 0.5f);
-	//YGNodeStyleSetMargin(searchLayout, YGEdgeLeft, 6.f);
-	//YGNodeStyleSetMargin(searchLayout, YGEdgeRight, 12.f);
-	//YGNodeInsertChild(layout, searchLayout, 2);
 }
 
 ToolBar::~ToolBar()
@@ -82,6 +59,7 @@ void ToolBar::paint(SkCanvas* canvas)
 
 void ToolBar::resize(const int& w, const int& h)
 {
+	isDirty = true;
 	auto top = root->titleBar->rect.height();
 	rect.setXYWH(0.f, top, root->w, 60.f);
 }
