@@ -146,7 +146,6 @@ void ContentPanel::getRecentFiles()
 		files.push_back(std::make_tuple(fileName, zTime));
 	}
 	totalHeight = 40 * files.size();
-	InvalidateRect(root->hwnd, nullptr, false);
 }
 
 void ContentPanel::mouseMove(const int& x, const int& y)
@@ -157,7 +156,7 @@ void ContentPanel::mouseMove(const int& x, const int& y)
 	}
 	if (flag != hoverScroller) {
 		hoverScroller = flag;
-		InvalidateRect(root->hwnd, nullptr, false);
+		repaint();
 	}
 }
 
@@ -171,8 +170,8 @@ void ContentPanel::mouseUp(const int& x, const int& y)
 	if (!scrollerRect.contains(x, y)) {
 		if (hoverScroller) {
 			hoverScroller = false;
+			repaint();
 		}
-		InvalidateRect(root->hwnd, nullptr, false);
 	}
 }
 
@@ -184,14 +183,14 @@ void ContentPanel::mouseDrag(const int& x, const int& y)
 			if (scrollerRect.fBottom < clipRect.fBottom) {
 				auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
 				scrollerRect.offsetTo(rect.fRight - 16, scrollerRect.fTop + v - scrollerRect.fBottom);
-				InvalidateRect(root->hwnd, nullptr, false);
+				repaint();
 			}
 		}
 		else {
 			if (scrollerRect.fTop > clipRect.fTop) {
 				auto v = std::max(scrollerRect.fTop + span, rect.fTop);
 				scrollerRect.offsetTo(rect.fRight - 16, v);
-				InvalidateRect(root->hwnd, nullptr, false);
+				repaint();
 			}
 		}
 		downY = y;
@@ -206,14 +205,14 @@ void ContentPanel::mouseWheel(const int& x, const int& y, const int& delta)
 			if (scrollerRect.fTop > clipRect.fTop) {
 				auto v = std::max(scrollerRect.fTop - span, clipRect.fTop);
 				scrollerRect.offsetTo(clipRect.fRight - 16, v);
-				InvalidateRect(root->hwnd, nullptr, false);
+				repaint();
 			}
 		}
 		else {
 			if (scrollerRect.fBottom < clipRect.fBottom) {
 				auto v = std::min(scrollerRect.fBottom + span, clipRect.fBottom);
 				scrollerRect.offsetTo(clipRect.fRight - 16, scrollerRect.fTop + v - scrollerRect.fBottom);
-				InvalidateRect(root->hwnd, nullptr, false);
+				repaint();
 			}
 		}
 	}
