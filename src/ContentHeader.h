@@ -14,7 +14,7 @@ public:
     void mouseUp(const int& x, const int& y);
     void mouseDrag(const int& x, const int& y);
     void resize(const int& w, const int& h);
-
+    std::vector<std::tuple<std::wstring, float>> columns;
 private:
 
 };

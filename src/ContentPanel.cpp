@@ -12,12 +12,14 @@
 
 ContentPanel::ContentPanel(WindowMain* root) :ControlBase(root)
 {
-	contentHeader = std::make_shared<ContentHeader>(root);
-	contentList = std::make_shared<ContentList>(root);
-	contentBottom = std::make_shared<ContentBottom>(root);
 	root->resizeHandlers.push_back(
 		std::bind(&ContentPanel::resize, this, std::placeholders::_1, std::placeholders::_2)
 	);
+	contentHeader = std::make_shared<ContentHeader>(root);
+	contentHeader->columns.push_back(std::make_tuple(L"最近使用的文件", 0.f));
+	contentHeader->columns.push_back(std::make_tuple(L"使用时间", 460.f));
+	contentList = std::make_shared<ContentList>(root);
+	contentBottom = std::make_shared<ContentBottom>(root);
 }
 
 ContentPanel::~ContentPanel()
