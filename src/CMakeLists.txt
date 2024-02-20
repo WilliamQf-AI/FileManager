@@ -28,7 +28,11 @@ set(SRC
     SettingBar.h
     ContentPanel.cpp
     ContentPanel.h
-    BottomBar.cpp
-    BottomBar.h
+    ContentHeader.cpp
+    ContentHeader.h
+    ContentList.cpp
+    ContentList.h
+    ContentBottom.cpp
+    ContentBottom.h
 )
 target_sources(FileManager PRIVATE ${SRC})

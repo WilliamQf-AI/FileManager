@@ -6,13 +6,13 @@
 #include <include/core/SkCanvas.h>
 #include "ControlBase.h"
 
-
 class WindowMain;
-class BottomBar : public ControlBase
+class ContentBottom : public ControlBase
 {
 public:
-    BottomBar(WindowMain* root);
-    ~BottomBar();
-    void paint(SkCanvas* canvas) override;
+    ContentBottom(WindowMain *root);
+    ~ContentBottom();
+    void paint(SkCanvas *canvas) override;
+
 private:
 };

@@ -58,18 +58,15 @@ void TitleBarTab::paint(SkCanvas* canvas)
 		paint.setColor(0xFF333333);
 	}
 	else {
-		paint.setColor(0xFF888888);
+		paint.setColor(0xFF999999);
 	}
 	
 	auto font = App::GetFontIcon();
-	font->setSize(20.f);
+	font->setSize(18.f);
 	paint.setAntiAlias(false);	
 	auto iconCode = (const char*)u8"\ue6e7"; 
 	canvas->drawString(iconCode, 
-		rect.fRight - 8.f - 13.f-10.f,
+		rect.fRight - 8.f - 22.f,
 		rect.fTop + 10.f + 20.f,
 		*font, paint);
-	//canvas->drawSimpleText(iconCode, 3, SkTextEncoding::kUTF8,0, 0, *font,paint);
-	//SystemIcon::reset();
-	//PostMessage(root->hwnd, WM_DEBUG_MESSAGE, 0, 0);
 }
