@@ -13,6 +13,6 @@ public:
     ContentBottom(WindowMain *root);
     ~ContentBottom();
     void paint(SkCanvas *canvas) override;
-
+    void resize(const int& w, const int& h);
 private:
 };

@@ -18,8 +18,8 @@ ContentPanel::ContentPanel(WindowMain* root) :ControlBase(root)
 	contentHeader = std::make_shared<ContentHeader>(root);
 	contentHeader->columns.push_back(std::make_tuple(L"最近使用的文件", 0.f));
 	contentHeader->columns.push_back(std::make_tuple(L"使用时间", 460.f));
-	contentList = std::make_shared<ContentList>(root);
 	contentBottom = std::make_shared<ContentBottom>(root);
+	contentList = std::make_shared<ContentList>(root);
 }
 
 ContentPanel::~ContentPanel()
@@ -45,8 +45,7 @@ void ContentPanel::resize(const int& w, const int& h)
 
 	auto topVal = root->titleBar->rect.height() + root->toolBar->rect.height();
 	auto leftVal = root->leftPanel->rect.fRight;
-	auto bottomVal = contentBottom->rect.height();
-	rect.setXYWH(leftVal, topVal, w-leftVal, h - topVal - bottomVal);
+	rect.setLTRB(leftVal, topVal, w, h);
 
 	//recent files 
 	//C:\Users\liuxiaolun\AppData\Roaming\Microsoft\Windows\Recent

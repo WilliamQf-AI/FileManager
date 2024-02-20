@@ -26,6 +26,9 @@ ContentList::ContentList(WindowMain* root) :ControlBase(root)
 	root->resizeHandlers.push_back(
 		std::bind(&ContentList::resize, this, std::placeholders::_1, std::placeholders::_2)
 	);
+	root->mouseWheelHandlers.push_back(
+		std::bind(&ContentList::mouseWheel, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
+	);
 }
 
 ContentList::~ContentList()
@@ -34,6 +37,7 @@ ContentList::~ContentList()
 
 void ContentList::paint(SkCanvas* canvas)
 {
+	if (!needPaint(canvas)) return;
 	auto leftRect = SkRect::MakeXYWH(rect.fLeft, rect.fTop, 460.f, 46.f);
 	auto rightRect = SkRect::MakeLTRB(rect.fLeft + 460.f, rect.fTop, root->w, rect.fTop + 46.f);
 	SkPaint paint;
@@ -48,7 +52,7 @@ void ContentList::paint(SkCanvas* canvas)
 	auto y = top + rect.fTop + verticalVal + 28.f;
 	if (y > 195.f)y = 195.f; // magic num
 
-	for (auto& item : files) //192个要200多毫秒
+	for (auto& item : files)
 	{
 		auto [fileName, lastTime] = item;
 		auto textLength = wcslen(fileName.data()) * 2;
@@ -74,6 +78,8 @@ void ContentList::paint(SkCanvas* canvas)
 		canvas->drawRoundRect(scrollerRect, 3, 3, paint);
 	}
 	canvas->restore();
+	paint.setColor(0xFFD8D8D8);
+	canvas->drawLine(rect.fLeft, rect.fBottom, rect.fRight, rect.fBottom, paint);
 }
 
 void ContentList::mouseMove(const int& x, const int& y)
@@ -127,8 +133,8 @@ void ContentList::mouseDrag(const int& x, const int& y)
 
 void ContentList::resize(const int& w, const int& h)
 {
-	rect.setLTRB(root->contentPanel->rect.fLeft,
-		root->contentPanel->contentHeader->rect.fBottom,
+	rect.setLTRB(root->contentPanel->rect.fLeft+1,
+		root->contentPanel->contentHeader->rect.fBottom+1,
 		root->contentPanel->rect.fRight,
 		root->contentPanel->contentBottom->rect.fTop
 	);

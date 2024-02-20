@@ -51,8 +51,8 @@ void ContentHeader::paint(SkCanvas* canvas)
 	{
 		left += std::get<1>(column);
 		paint.setColor(0xFFD8D8D8);
-		canvas->drawLine(left, rect.fTop, left, rect.fBottom, paint);
 		if (left > rect.fLeft) {
+			canvas->drawLine(left, rect.fTop, left, rect.fBottom, paint);
 			canvas->drawString(iconCode, left - paddingRight, rect.fTop + 32.f, *font, paint);
 		}
 		paint.setColor(0xFF888888);
@@ -83,7 +83,7 @@ void ContentHeader::mouseDrag(const int& x, const int& y)
 
 void ContentHeader::resize(const int& w, const int& h)
 {
-	rect.setXYWH(root->contentPanel->rect.fLeft, 
+	rect.setXYWH(root->contentPanel->rect.fLeft+1, 
 		root->contentPanel->rect.fTop, 
 		root->contentPanel->rect.width(),
 		46.f);
