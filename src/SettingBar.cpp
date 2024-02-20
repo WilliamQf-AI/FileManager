@@ -22,5 +22,4 @@ void SettingBar::paint(SkCanvas* canvas)
 
 void SettingBar::resize(const int& w, const int& h)
 {
-	isDirty = true;
 }
