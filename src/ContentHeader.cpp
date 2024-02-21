@@ -1,11 +1,13 @@
 ﻿#include "ContentHeader.h"
-
+#include <string>
 #include "App.h"
 #include "WindowMain.h"
 #include "ContentPanel.h"
 
 ContentHeader::ContentHeader(WindowMain* root) :ControlBase(root)
 {
+	columns.push_back(FileColumnHeader(L"最近使用的文件", false));
+	columns.push_back(FileColumnHeader(L"使用时间", false));
 	root->mouseMoveHandlers.push_back(
 		std::bind(&ContentHeader::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
 	);
@@ -40,28 +42,19 @@ void ContentHeader::paint(SkCanvas* canvas)
 	auto font = App::GetFontIcon();
 	font->setSize(24.f);
 	paint.setAntiAlias(false);
-
-	auto paddingLeft{ 18.f };
-	auto paddingRight{ 38.f };
-
-	auto right = rect.fLeft;
 	for (size_t i = 0; i < columns.size(); i++)
 	{
 		paint.setColor(0xFF888888);
-		auto str = std::get<0>(columns[i]);
-		auto textLength = wcslen(str.data()) * 2;
-		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16,
-			right + paddingLeft, rect.fTop + 29.f, *fontText, paint);
-		if (i + 1 < columns.size()) {
-			right += std::get<1>(columns[i + 1]);
-			paint.setColor(0xFFE8E8E8);
-			canvas->drawLine(right, rect.fTop, right, rect.fBottom, paint);
-		}
-		else {
-			right = root->w;
-		}
+		auto textLength = wcslen(columns[i].title.data()) * 2;
+		canvas->drawSimpleText(columns[i].title.data(), textLength, SkTextEncoding::kUTF16,
+			columns[i].left + paddingLeft, rect.fTop + 29.f, *fontText, paint);
+		paint.setColor(0xFFE8E8E8);
+		if (i != 0) {
+			canvas->drawLine(columns[i].left, rect.fTop, columns[i].left, rect.fBottom, paint);
+		}		
 		paint.setColor(0xFFBBBBBB);
-		canvas->drawString(std::get<2>(columns[i]), right - paddingRight, rect.fTop + 32.f, *font, paint);
+		auto icon = columns[i].isSort ? (const char*)u8"\ue606":(const char*)u8"\ue60f";
+		canvas->drawString(icon, columns[i].right - paddingRight, rect.fTop + 32.f, *font, paint);
 	}
 }
 
@@ -83,8 +76,12 @@ void ContentHeader::mouseDrag(const int& x, const int& y)
 
 void ContentHeader::resize(const int& w, const int& h)
 {
-	rect.setXYWH(root->contentPanel->rect.fLeft+1, 
-		root->contentPanel->rect.fTop, 
+	rect.setXYWH(root->contentPanel->rect.fLeft + 1,
+		root->contentPanel->rect.fTop,
 		root->contentPanel->rect.width(),
 		46.f);
+	columns[0].left = rect.fLeft;
+	columns[0].right = rect.fLeft + 460.f;
+	columns[1].left = rect.fLeft + 460.f;
+	columns[1].right = rect.fRight - 460.f;
 }

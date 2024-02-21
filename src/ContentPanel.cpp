@@ -14,8 +14,6 @@ ContentPanel::ContentPanel(WindowMain* root) :ControlBase(root)
 		std::bind(&ContentPanel::resize, this, std::placeholders::_1, std::placeholders::_2)
 	);
 	contentHeader = std::make_shared<ContentHeader>(root);
-	contentHeader->columns.push_back(std::make_tuple(L"最近使用的文件", 0.f, (const char*)u8"\ue606"));
-	contentHeader->columns.push_back(std::make_tuple(L"使用时间", 460.f, (const char*)u8"\ue60f"));
 	contentBottom = std::make_shared<ContentBottom>(root);
 	contentList = std::make_shared<ContentList>(root);
 }

@@ -8,6 +8,7 @@
 #include "App.h"
 #include "WindowMain.h"
 #include "ContentPanel.h"
+#include "FileColumnTime.h"
 
 ContentList::ContentList(WindowMain* root) :ControlBase(root)
 {
@@ -40,21 +41,53 @@ void ContentList::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
 	SkPaint paint;
-	auto paddingLeft{ 18.f };
+	auto paddingLeft = root->contentPanel->contentHeader->paddingLeft;
+	auto paddingRight = root->contentPanel->contentHeader->paddingRight;
+	auto columns = root->contentPanel->contentHeader->columns;
 	auto fontText = App::GetFontText();
 	fontText->setSize(16.8);
-	auto verticalVal = getTextVerticalVal(fontText.get());
 	canvas->save();
 	canvas->clipRect(rect);
 	paint.setColor(0xFF555555);
 	auto top = 0 - (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
-	auto y = top + rect.fTop + verticalVal + 28.f;
-	if (y > 195.f)y = 195.f; // magic num
+	auto y = top + rect.fTop + 32.f;
+	//if (y > 195.f)y = 195.f; // magic num
+
+	auto right = rect.fLeft;
+	for (unsigned i = 0; i < columns.size(); i++)
+	{
+		auto str = std::get<0>(columns[i]);
+		auto strLen = wcslen(str.data()) * 2;
+		canvas->save();
+		if (i + 1 < columns.size()) {
+			right += std::get<1>(columns[i + 1]);
+		}
+		else {
+			right = root->w;
+		}
+		canvas->clipRect(SkRect::MakeLTRB(rect.fLeft, y - 20, right, y + 20));
+	}
+
 
 	for (auto& item : files)
 	{
+		auto right = rect.fLeft;
+		for (unsigned i = 0; i < columns.size(); i++)
+		{
+			auto str = std::get<0>(columns[i]);
+			auto strLen = wcslen(str.data()) * 2;
+			canvas->save();
+			if (i + 1 < columns.size()) {
+				canvas->clipRect(SkRect::MakeLTRB(right+paddingLeft, y - 20, right + std::get<1>(columns[i + 1])-paddingRight, y + 20));
+				right += std::get<1>(columns[i + 1]);
+			}
+			else {
+				canvas->clipRect(SkRect::MakeLTRB(right+paddingLeft, y - 20, root->w-paddingRight, y + 20));
+			}
+
+		}
 		auto fileName = std::get<0>(item);
-		auto fileTime = std::get<2>(item);
+		auto fileTime = std::get<1>(item);
 		auto textLength = wcslen(fileName.data()) * 2;
 		canvas->save();
 		canvas->clipRect(SkRect::MakeLTRB(rect.fLeft, y - 20, rect.fLeft + 460.f, y + 20));
@@ -184,12 +217,10 @@ void ContentList::getRecentFiles()
 		auto zTime = std::chrono::zoned_time(zone, sysClock);
 		auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
 		str = str.substr(0, str.find_last_of(L"."));
-		files.push_back(std::make_tuple(fileName, fileTime,str));
+		columns.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime)});
 	}
-	totalHeight = 40 * files.size();
-	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
-		auto a1 = std::get<1>(a);
-		auto b1 = std::get<1>(b);
-		return a1 > b1;
+	totalHeight = 40 * columns.size();
+	std::sort(columns.begin(), columns.end(), [](const auto& a, const auto& b) {
+		return std::any_cast<std::filesystem::file_time_type>(a[2]) > std::any_cast<std::filesystem::file_time_type>(b[2]);
 		});
 }

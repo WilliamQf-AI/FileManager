@@ -2,6 +2,8 @@
 #include "ControlBase.h"
 #include "include/core/SkCanvas.h"
 #include <filesystem>
+#include <any>
+#include "FileColumn.h"
 
 class WindowMain;
 class ContentList : public ControlBase
@@ -18,7 +20,8 @@ public:
     void mouseWheel(const int& x, const int& y, const int& delta);
 private:
     void getRecentFiles();
-    std::vector<std::tuple<std::wstring,std::filesystem::file_time_type,std::wstring>> files;
+    std::vector<std::vector<FileColumn>> columns;
+
     float totalHeight{ 0 };
     bool hoverScroller{ false };
     SkRect scrollerRect;

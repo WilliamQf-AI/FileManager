@@ -1,6 +1,7 @@
 #pragma once
 #include "ControlBase.h"
 #include "include/core/SkCanvas.h"
+#include "FileColumnHeader.h"
 
 class WindowMain;
 class ContentHeader : public ControlBase
@@ -14,7 +15,9 @@ public:
     void mouseUp(const int& x, const int& y);
     void mouseDrag(const int& x, const int& y);
     void resize(const int& w, const int& h);
-    std::vector<std::tuple<std::wstring, float, const char*>> columns;
+    std::vector<FileColumnHeader> columns;
+    float paddingLeft{ 18.f };
+    float paddingRight{ 38.f };
 private:
 
 };
