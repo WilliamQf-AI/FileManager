@@ -3,7 +3,9 @@
 FileColumn::FileColumn(std::wstring& text) :text{ text } {
 
 }
+FileColumn::FileColumn(std::wstring&& text) :text{ text } {
 
+}
 FileColumn::~FileColumn() {
 
 }
