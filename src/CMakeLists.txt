@@ -24,6 +24,10 @@ set(SRC
     TitleBarBtns.h
     ToolBar.cpp
     ToolBar.h
+    PathTool.cpp
+    PathTool.h
+    PathInput.cpp
+    PathInput.h
     LeftPanel.cpp
     LeftPanel.h
     QuickBtn.cpp
