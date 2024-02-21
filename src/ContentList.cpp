@@ -147,21 +147,25 @@ void ContentList::resize(const int& w, const int& h)
 
 void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 {
-	if (rect.contains(x, y)) {
-		auto span = 12.f;
-		if (delta > 0) {
-			if (scrollerRect.fTop > rect.fTop) {
-				auto v = std::max(scrollerRect.fTop - span, rect.fTop);
-				scrollerRect.offsetTo(rect.fRight - 16, v);
-				repaint();
-			}
+	if (totalHeight <= rect.height()) {
+		return;
+	}
+	if (!rect.contains(x, y)) {
+		return;
+	}
+	auto span = 12.f;
+	if (delta > 0) {
+		if (scrollerRect.fTop > rect.fTop) {
+			auto v = std::max(scrollerRect.fTop - span, rect.fTop);
+			scrollerRect.offsetTo(rect.fRight - 16, v);
+			repaint();
 		}
-		else {
-			if (scrollerRect.fBottom < rect.fBottom) {
-				auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
-				scrollerRect.offsetTo(rect.fRight - 16, scrollerRect.fTop + v - scrollerRect.fBottom);
-				repaint();
-			}
+	}
+	else {
+		if (scrollerRect.fBottom < rect.fBottom) {
+			auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
+			scrollerRect.offsetTo(rect.fRight - 16, scrollerRect.fTop + v - scrollerRect.fBottom);
+			repaint();
 		}
 	}
 }

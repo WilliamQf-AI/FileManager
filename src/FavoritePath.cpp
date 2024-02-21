@@ -98,45 +98,53 @@ void FavoritePath::mouseUp(const int& x, const int& y)
 
 void FavoritePath::mouseDrag(const int& x, const int& y)
 {
-	if (hoverScroller) {
-		float span = y - downY;
-		if (span > 0) {
-			if (scrollerRect.fBottom < rect.fBottom) {
-				auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
-				scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + v- scrollerRect.fBottom);
-				repaint();
-			}
-		}
-		else {
-			if (scrollerRect.fTop > rect.fTop) {
-				auto v = std::max(scrollerRect.fTop + span, rect.fTop);
-				scrollerRect.offsetTo(rect.fRight - 8, v);
-				repaint();
-			}
-		}		
-		downY = y;
+	if (totalHeight <= rect.height()) {
+		return;
 	}
+	if (!hoverScroller) {
+		return;
+	}
+	float span = y - downY;
+	if (span > 0) {
+		if (scrollerRect.fBottom < rect.fBottom) {
+			auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
+			scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + v - scrollerRect.fBottom);
+			repaint();
+		}
+	}
+	else {
+		if (scrollerRect.fTop > rect.fTop) {
+			auto v = std::max(scrollerRect.fTop + span, rect.fTop);
+			scrollerRect.offsetTo(rect.fRight - 8, v);
+			repaint();
+		}
+	}
+	downY = y;
 }
 
 void FavoritePath::mouseWheel(const int& x, const int& y,const int& delta)
 {
-	if (rect.contains(x, y)) {
-		auto span = 12.f;
-		if (delta > 0) {
-			if (scrollerRect.fTop > rect.fTop) {
-				auto v = std::max(scrollerRect.fTop - span, rect.fTop);
-				scrollerRect.offsetTo(rect.fRight - 8, v);
-				repaint();
-			}
+	if (totalHeight <= rect.height()) {
+		return;
+	}
+	if (!rect.contains(x, y)) {
+		return;
+	}
+	auto span = 12.f;
+	if (delta > 0) {
+		if (scrollerRect.fTop > rect.fTop) {
+			auto v = std::max(scrollerRect.fTop - span, rect.fTop);
+			scrollerRect.offsetTo(rect.fRight - 8, v);
+			repaint();
 		}
-		else {
-			if (scrollerRect.fBottom < rect.fBottom) {
-				auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
-				scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + v - scrollerRect.fBottom);
-				repaint();
-			}
+	}
+	else {
+		if (scrollerRect.fBottom < rect.fBottom) {
+			auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
+			scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + v - scrollerRect.fBottom);
+			repaint();
 		}
-	}	
+	}
 }
 
 void FavoritePath::resize(const int& w, const int& h)
