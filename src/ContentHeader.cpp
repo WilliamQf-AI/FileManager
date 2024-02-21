@@ -45,8 +45,8 @@ void ContentHeader::paint(SkCanvas* canvas)
 	for (size_t i = 0; i < columns.size(); i++)
 	{
 		paint.setColor(0xFF888888);
-		auto textLength = wcslen(columns[i].title.data()) * 2;
-		canvas->drawSimpleText(columns[i].title.data(), textLength, SkTextEncoding::kUTF16,
+		auto len = wcslen(columns[i].title.data()) * 2;
+		canvas->drawSimpleText(columns[i].title.data(), len, SkTextEncoding::kUTF16,
 			columns[i].left + paddingLeft, rect.fTop + 29.f, *fontText, paint);
 		paint.setColor(0xFFE8E8E8);
 		if (i != 0) {
@@ -82,6 +82,6 @@ void ContentHeader::resize(const int& w, const int& h)
 		46.f);
 	columns[0].left = rect.fLeft;
 	columns[0].right = rect.fLeft + 460.f;
-	columns[1].left = rect.fLeft + 460.f;
-	columns[1].right = rect.fRight - 460.f;
+	columns[1].left = columns[0].right;
+	columns[1].right = rect.fRight;
 }

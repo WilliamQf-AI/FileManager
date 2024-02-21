@@ -20,7 +20,7 @@ public:
     void mouseWheel(const int& x, const int& y, const int& delta);
 private:
     void getRecentFiles();
-    std::vector<std::vector<FileColumn>> columns;
+    std::vector<std::vector<FileColumn>> files;
 
     float totalHeight{ 0 };
     bool hoverScroller{ false };

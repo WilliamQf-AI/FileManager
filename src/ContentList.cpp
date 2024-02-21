@@ -53,50 +53,17 @@ void ContentList::paint(SkCanvas* canvas)
 	auto y = top + rect.fTop + 32.f;
 	//if (y > 195.f)y = 195.f; // magic num
 
-	auto right = rect.fLeft;
-	for (unsigned i = 0; i < columns.size(); i++)
+	for (auto& file : files)
 	{
-		auto str = std::get<0>(columns[i]);
-		auto strLen = wcslen(str.data()) * 2;
-		canvas->save();
-		if (i + 1 < columns.size()) {
-			right += std::get<1>(columns[i + 1]);
-		}
-		else {
-			right = root->w;
-		}
-		canvas->clipRect(SkRect::MakeLTRB(rect.fLeft, y - 20, right, y + 20));
-	}
-
-
-	for (auto& item : files)
-	{
-		auto right = rect.fLeft;
-		for (unsigned i = 0; i < columns.size(); i++)
+		for (size_t i = 0; i < columns.size(); i++)
 		{
-			auto str = std::get<0>(columns[i]);
-			auto strLen = wcslen(str.data()) * 2;
 			canvas->save();
-			if (i + 1 < columns.size()) {
-				canvas->clipRect(SkRect::MakeLTRB(right+paddingLeft, y - 20, right + std::get<1>(columns[i + 1])-paddingRight, y + 20));
-				right += std::get<1>(columns[i + 1]);
-			}
-			else {
-				canvas->clipRect(SkRect::MakeLTRB(right+paddingLeft, y - 20, root->w-paddingRight, y + 20));
-			}
-
+			canvas->clipRect(SkRect::MakeLTRB(columns[i].left + paddingLeft, y - 20, columns[i].right - paddingRight, y + 20));
+			auto len = wcslen(file[i].text.data()) * 2;
+			canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16,
+				columns[i].left + paddingLeft, y, *fontText, paint);
+			canvas->restore();
 		}
-		auto fileName = std::get<0>(item);
-		auto fileTime = std::get<1>(item);
-		auto textLength = wcslen(fileName.data()) * 2;
-		canvas->save();
-		canvas->clipRect(SkRect::MakeLTRB(rect.fLeft, y - 20, rect.fLeft + 460.f, y + 20));
-		canvas->drawSimpleText(fileName.data(), textLength, SkTextEncoding::kUTF16,
-			rect.fLeft + paddingLeft, y, *fontText, paint);
-		canvas->restore();
-		textLength = wcslen(fileTime.data()) * 2;
-		canvas->drawSimpleText(fileTime.data(), textLength, SkTextEncoding::kUTF16,
-			rect.fLeft + 460.f + paddingLeft, y, *fontText, paint);
 		y += 40;
 	}
 	if (totalHeight > rect.height()) {
@@ -217,10 +184,10 @@ void ContentList::getRecentFiles()
 		auto zTime = std::chrono::zoned_time(zone, sysClock);
 		auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
 		str = str.substr(0, str.find_last_of(L"."));
-		columns.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime)});
+		files.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime)});
 	}
-	totalHeight = 40 * columns.size();
-	std::sort(columns.begin(), columns.end(), [](const auto& a, const auto& b) {
-		return std::any_cast<std::filesystem::file_time_type>(a[2]) > std::any_cast<std::filesystem::file_time_type>(b[2]);
+	totalHeight = 40 * files.size();
+	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
+		return a[1] > b[1];
 		});
 }
