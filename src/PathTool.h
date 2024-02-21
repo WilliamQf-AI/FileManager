@@ -8,6 +8,7 @@ public:
 	~PathTool();
 
 private:
-	void resize(const int& w, const int& h);
+	void resize(const int& w, const int& h); 
+	void paint(SkCanvas* canvas) override;
 };
 

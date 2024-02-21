@@ -2,12 +2,14 @@
 #include "WindowMain.h"
 #include "App.h"
 #include "TitleBar.h"
+#include "PathTool.h"
 
 ToolBar::ToolBar(WindowMain* root) :ControlBase(root)
 {
 	root->resizeHandlers.push_back(
 		std::bind(&ToolBar::resize, this, std::placeholders::_1, std::placeholders::_2)
 	);
+	pathTool = std::make_shared<PathTool>(root);
 }
 
 ToolBar::~ToolBar()
@@ -17,20 +19,10 @@ ToolBar::~ToolBar()
 void ToolBar::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
-	auto iconRect = SkRect::MakeXYWH(0, rect.fTop, 50, rect.height());
 	auto font = App::GetFontIcon();
 	font->setSize(26.f);
-	auto iconCode = (const char*)u8"\ue80b";
-	auto pos = getStartPosOfIconAtCenterOfRect(iconCode, iconRect, font.get());
 	SkPaint paint;
 	paint.setColor(0xFF666666);
-	canvas->drawString(iconCode, pos.fX, pos.fY, *font, paint);
-	iconCode = (const char*)u8"\ue80c";
-	canvas->drawString(iconCode, pos.fX+50, pos.fY, *font, paint);
-	iconCode = (const char*)u8"\ue80a";
-	canvas->drawString(iconCode, pos.fX + 100, pos.fY, *font, paint);
-	iconCode = (const char*)u8"\ue741";
-	canvas->drawString(iconCode, pos.fX + 150, pos.fY, *font, paint);
 
 	auto w = (root->w - 232) / 3 * 2;
 	auto addressRect = SkRect::MakeXYWH(208, rect.fTop+10, w, 40);
@@ -42,17 +34,17 @@ void ToolBar::paint(SkCanvas* canvas)
 	canvas->drawRoundRect(searchRect, radio, radio, paint);
 
 	paint.setColor(0xFF999999);
-	iconCode = (const char*)u8"\ue611";
-	canvas->drawString(iconCode, addressRect.fRight - 68, pos.fY, *font, paint);
+	auto iconCode = (const char*)u8"\ue611";
+	canvas->drawString(iconCode, addressRect.fRight - 68, 25, *font, paint);
 	iconCode = (const char*)u8"\ue764";
-	canvas->drawString(iconCode, addressRect.fRight - 34, pos.fY, *font, paint);
+	canvas->drawString(iconCode, addressRect.fRight - 34, 25, *font, paint);
 	iconCode = (const char*)u8"\ue6a6";
-	canvas->drawString(iconCode, searchRect.fLeft+8, pos.fY, *font, paint);
+	canvas->drawString(iconCode, searchRect.fLeft+8, 25, *font, paint);
 	paint.setColor(0xFFBBBBBB);
 	auto fontText = App::GetFontText();
 	std::wstring str = L"Powered by Everything";
 	auto textLength = wcslen(str.data()) * 2;
-	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, searchRect.fLeft + 38, pos.fY-4, *fontText, paint);
+	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, searchRect.fLeft + 38, 25, *fontText, paint);
 	paint.setColor(0xFFE8E8E8);
 	canvas->drawLine(0.f, rect.fBottom-1, rect.fRight, rect.fBottom-1, paint);
 }
