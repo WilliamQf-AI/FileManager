@@ -78,7 +78,7 @@ void ContentList::paint(SkCanvas* canvas)
 		canvas->drawRoundRect(scrollerRect, 3, 3, paint);
 	}
 	canvas->restore();
-	paint.setColor(0xFFD8D8D8);
+	paint.setColor(0xFFE8E8E8);
 	canvas->drawLine(rect.fLeft, rect.fBottom, rect.fRight, rect.fBottom, paint);
 }
 
