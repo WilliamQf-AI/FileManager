@@ -28,6 +28,8 @@ set(SRC
     PathTool.h
     PathInput.cpp
     PathInput.h
+    SearchInput.cpp
+    SearchInput.h
     LeftPanel.cpp
     LeftPanel.h
     QuickBtn.cpp
