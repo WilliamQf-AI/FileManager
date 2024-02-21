@@ -41,7 +41,7 @@ public:
     std::shared_ptr<ToolBar> toolBar;
     std::shared_ptr<LeftPanel> leftPanel;
     std::shared_ptr<ContentPanel> contentPanel;
-
+    std::unique_ptr<SkCanvas> canvas;
 protected:
     void initWindow();
     void paintWindow();

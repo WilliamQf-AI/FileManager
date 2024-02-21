@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <shellapi.h>
 #include <shlobj.h>
+#include <chrono>
 
 #include "App.h"
 #include "WindowMain.h"
@@ -38,8 +39,6 @@ ContentList::~ContentList()
 void ContentList::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
-	auto leftRect = SkRect::MakeXYWH(rect.fLeft, rect.fTop, 460.f, 46.f);
-	auto rightRect = SkRect::MakeLTRB(rect.fLeft + 460.f, rect.fTop, root->w, rect.fTop + 46.f);
 	SkPaint paint;
 	auto paddingLeft{ 18.f };
 	auto fontText = App::GetFontText();
@@ -54,18 +53,17 @@ void ContentList::paint(SkCanvas* canvas)
 
 	for (auto& item : files)
 	{
-		auto [fileName, lastTime] = item;
+		auto fileName = std::get<0>(item);
+		auto fileTime = std::get<2>(item);
 		auto textLength = wcslen(fileName.data()) * 2;
 		canvas->save();
-		canvas->clipRect(SkRect::MakeLTRB(rect.fLeft, y - 20, leftRect.fRight, y + 20));
+		canvas->clipRect(SkRect::MakeLTRB(rect.fLeft, y - 20, rect.fLeft + 460.f, y + 20));
 		canvas->drawSimpleText(fileName.data(), textLength, SkTextEncoding::kUTF16,
 			rect.fLeft + paddingLeft, y, *fontText, paint);
 		canvas->restore();
-		auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", lastTime);
-		str = str.substr(0, str.find_last_of(L"."));
-		textLength = wcslen(str.data()) * 2;
-		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16,
-			rightRect.fLeft + paddingLeft, y, *fontText, paint);
+		textLength = wcslen(fileTime.data()) * 2;
+		canvas->drawSimpleText(fileTime.data(), textLength, SkTextEncoding::kUTF16,
+			rect.fLeft + 460.f + paddingLeft, y, *fontText, paint);
 		y += 40;
 	}
 	if (totalHeight > rect.height()) {
@@ -181,9 +179,17 @@ void ContentList::getRecentFiles()
 	std::filesystem::path path(pathStr);
 	for (const auto& entry : std::filesystem::directory_iterator(path)) {
 		auto fileName = entry.path().stem().wstring();
+		auto fileTime = entry.last_write_time();
 		auto sysClock = std::chrono::clock_cast<std::chrono::system_clock>(entry.last_write_time());
 		auto zTime = std::chrono::zoned_time(zone, sysClock);
-		files.push_back(std::make_tuple(fileName, zTime));
+		auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
+		str = str.substr(0, str.find_last_of(L"."));
+		files.push_back(std::make_tuple(fileName, fileTime,str));
 	}
 	totalHeight = 40 * files.size();
+	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
+		auto a1 = std::get<1>(a);
+		auto b1 = std::get<1>(b);
+		return a1 > b1;
+		});
 }

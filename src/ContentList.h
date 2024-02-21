@@ -1,6 +1,7 @@
 #pragma once
 #include "ControlBase.h"
 #include "include/core/SkCanvas.h"
+#include <filesystem>
 
 class WindowMain;
 class ContentList : public ControlBase
@@ -17,8 +18,7 @@ public:
     void mouseWheel(const int& x, const int& y, const int& delta);
 private:
     void getRecentFiles();
-    std::vector<std::tuple<std::wstring,
-        std::chrono::zoned_time<std::chrono::system_clock::duration, const std::chrono::time_zone*>>> files;
+    std::vector<std::tuple<std::wstring,std::filesystem::file_time_type,std::wstring>> files;
     float totalHeight{ 0 };
     bool hoverScroller{ false };
     SkRect scrollerRect;

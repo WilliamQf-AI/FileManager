@@ -1,4 +1,4 @@
-#include "WindowMain.h"
+ï»¿#include "WindowMain.h"
 #include <windowsx.h>
 #include <dwmapi.h>
 #include <sstream>
@@ -48,33 +48,6 @@ void WindowMain::setTimeout(const unsigned int& id,const unsigned int& ms)
 void WindowMain::clearTimeout(const unsigned int& id)
 {
     KillTimer(hwnd, id);
-}
-
-
-void WindowMain::paintWindow()
-{
-    PAINTSTRUCT ps;
-    auto dc = BeginPaint(hwnd, &ps);
-    BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(surfaceMemory.get());
-    ZeroMemory(bmpInfo, sizeof(BITMAPINFO));
-    bmpInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    bmpInfo->bmiHeader.biWidth = w;
-    bmpInfo->bmiHeader.biHeight = -h; // negative means top-down bitmap. Skia draws top-down.
-    bmpInfo->bmiHeader.biPlanes = 1;
-    bmpInfo->bmiHeader.biBitCount = 32;
-    bmpInfo->bmiHeader.biCompression = BI_RGB;
-    void* pixels = bmpInfo->bmiColors;
-    SkImageInfo info = SkImageInfo::MakeN32Premul(w, h);
-    auto canvas = SkCanvas::MakeRasterDirect(info, pixels, 4 * w);
-    auto c = canvas.get();
-    for (auto& func : paintHandlers)
-    {
-        func(c);
-    }
-    StretchDIBits(dc, 0, 0, w, h, 0, 0, w, h, bmpInfo->bmiColors, bmpInfo, DIB_RGB_COLORS, SRCCOPY);
-    ReleaseDC(hwnd, dc);
-    EndPaint(hwnd, &ps);
-    //surfaceMemory.reset(0); //Êµ¼ùÖ¤Ã÷ÕâÑù¼´½ÚÊ¡ÄÚ´æ£¬ËÙ¶ÈÒ²²»»áÂı
 }
 
 LRESULT CALLBACK WindowMain::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -267,11 +240,41 @@ void WindowMain::onSize(const int& w, const int& h)
     surface.reset();
     size_t bmpSize = sizeof(BITMAPINFOHEADER) + w * h * sizeof(uint32_t);
     surfaceMemory.reset(bmpSize);
+
+    BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(surfaceMemory.get());
+    ZeroMemory(bmpInfo, sizeof(BITMAPINFO));
+    bmpInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bmpInfo->bmiHeader.biWidth = w;
+    bmpInfo->bmiHeader.biHeight = -h; // negative means top-down bitmap. Skia draws top-down.
+    bmpInfo->bmiHeader.biPlanes = 1;
+    bmpInfo->bmiHeader.biBitCount = 32;
+    bmpInfo->bmiHeader.biCompression = BI_RGB;
+    void* pixels = bmpInfo->bmiColors;
+    SkImageInfo info = SkImageInfo::MakeN32Premul(w, h);
+    auto temp = SkCanvas::MakeRasterDirect(info, pixels, 4 * w);
+    canvas = std::move(temp);
     for (auto& func : resizeHandlers)
     {
         func(w, h);
     }
 }
+
+void WindowMain::paintWindow()
+{
+    PAINTSTRUCT ps;
+    auto dc = BeginPaint(hwnd, &ps);
+    auto c = canvas.get();
+    for (auto& func : paintHandlers)
+    {
+        func(c);
+    }
+    BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(surfaceMemory.get());
+    StretchDIBits(dc, 0, 0, w, h, 0, 0, w, h, bmpInfo->bmiColors, bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+    ReleaseDC(hwnd, dc);
+    EndPaint(hwnd, &ps);
+    //surfaceMemory.reset(0); //å®è·µè¯æ˜è¿™æ ·å³èŠ‚çœå†…å­˜ï¼Œé€Ÿåº¦ä¹Ÿä¸ä¼šæ…¢
+}
+
 void WindowMain::onGetMaxMinMizeInfo(MINMAXINFO* mminfo)
 {
     RECT workArea;

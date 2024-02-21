@@ -1,6 +1,4 @@
 ﻿#include "ContentPanel.h"
-#include <filesystem>
-#include <fileapi.h>
 
 #include "WindowMain.h"
 #include "App.h"
