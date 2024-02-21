@@ -40,29 +40,29 @@ void ContentHeader::paint(SkCanvas* canvas)
 	auto font = App::GetFontIcon();
 	font->setSize(24.f);
 	paint.setAntiAlias(false);
-	auto iconCode = (const char*)u8"\ue606";
 
 	auto paddingLeft{ 18.f };
 	auto paddingRight{ 38.f };
 
-	auto left = rect.fLeft;
-	for (auto& column:columns)
+	auto right = rect.fLeft;
+	for (size_t i = 0; i < columns.size(); i++)
 	{
-		left += std::get<1>(column);
-		if (left > rect.fLeft) {
-			paint.setColor(0xFFE8E8E8);
-			canvas->drawLine(left, rect.fTop, left, rect.fBottom, paint);
-			paint.setColor(0xFFBBBBBB);
-			canvas->drawString(iconCode, left - paddingRight, rect.fTop + 32.f, *font, paint);
-		}
 		paint.setColor(0xFF888888);
-		auto str = std::get<0>(column);
+		auto str = std::get<0>(columns[i]);
 		auto textLength = wcslen(str.data()) * 2;
 		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16,
-			left + paddingLeft, rect.fTop+29.f, *fontText, paint);
+			right + paddingLeft, rect.fTop + 29.f, *fontText, paint);
+		if (i + 1 < columns.size()) {
+			right += std::get<1>(columns[i + 1]);
+			paint.setColor(0xFFE8E8E8);
+			canvas->drawLine(right, rect.fTop, right, rect.fBottom, paint);
+		}
+		else {
+			right = root->w;
+		}
+		paint.setColor(0xFFBBBBBB);
+		canvas->drawString(std::get<2>(columns[i]), right - paddingRight, rect.fTop + 32.f, *font, paint);
 	}
-	paint.setColor(0xFFAAAAAA);
-	canvas->drawString(iconCode, root->w - paddingRight, rect.fTop + 32.f, *font, paint);
 }
 
 void ContentHeader::mouseMove(const int& x, const int& y)
