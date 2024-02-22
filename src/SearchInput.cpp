@@ -45,9 +45,10 @@ void SearchInput::paint(SkCanvas* canvas)
 
 	paint.setColor(0xFFBBBBBB);
 	auto fontText = App::GetFontText();
+	fontText->setSize(16.f);
 	std::wstring str = L"Powered by Everything";
 	auto textLength = wcslen(str.data()) * 2;
-	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, rect.fLeft + 38, rect.fTop + 25, *fontText, paint);
+	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, rect.fLeft + 38, rect.fTop + 26, *fontText, paint);
 }
 
 void SearchInput::mouseMove(const int& x, const int& y)

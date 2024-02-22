@@ -25,11 +25,9 @@ ContentPanel::~ContentPanel()
 void ContentPanel::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
-
 	SkPaint paint;
 	paint.setColor(0xFFE8E8E8);
 	canvas->drawLine(rect.fLeft, rect.fTop, rect.fLeft, rect.fBottom, paint);
-
 }
 
 void ContentPanel::resize(const int& w, const int& h)
