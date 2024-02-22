@@ -9,15 +9,6 @@
 
 QuickBtn::QuickBtn(WindowMain* root) :ControlBase(root)
 {
-	root->resizeHandlers.push_back(
-		std::bind(&QuickBtn::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseMoveHandlers.push_back(
-		std::bind(&QuickBtn::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDownHandlers.push_back(
-		std::bind(&QuickBtn::mouseDown, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 QuickBtn::~QuickBtn()

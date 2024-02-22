@@ -14,9 +14,7 @@
 
 ControlBase::ControlBase(WindowMain* root):root{root}
 {
-    root->paintHandlers.push_back(
-        std::bind(&ControlBase::paint, this, std::placeholders::_1)
-    );
+    root->ctrls.push_back(this);
 }
 
 ControlBase::~ControlBase()

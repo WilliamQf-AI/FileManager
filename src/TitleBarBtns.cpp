@@ -8,16 +8,6 @@
 
 TitleBarBtns::TitleBarBtns(WindowMain* root) :ControlBase(root)
 {
-	
-	root->mouseMoveHandlers.push_back(
-		std::bind(&TitleBarBtns::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDownHandlers.push_back(
-		std::bind(&TitleBarBtns::mouseDown, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->resizeHandlers.push_back(
-		std::bind(&TitleBarBtns::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 TitleBarBtns::~TitleBarBtns()

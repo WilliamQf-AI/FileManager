@@ -4,9 +4,6 @@
 
 ContentBottom::ContentBottom(WindowMain *root) : ControlBase(root)
 {
-	root->resizeHandlers.push_back(
-		std::bind(&ContentBottom::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 ContentBottom::~ContentBottom()

@@ -10,9 +10,6 @@
 
 ContentPanel::ContentPanel(WindowMain* root) :ControlBase(root)
 {
-	root->resizeHandlers.push_back(
-		std::bind(&ContentPanel::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
 	contentHeader = std::make_shared<ContentHeader>(root);
 	contentBottom = std::make_shared<ContentBottom>(root);
 	contentList = std::make_shared<ContentList>(root);

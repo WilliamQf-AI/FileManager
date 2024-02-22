@@ -9,9 +9,6 @@
 
 TitleBarTab::TitleBarTab(WindowMain* root, std::wstring&& title) :ControlBase(root),title{title}
 {
-	root->resizeHandlers.push_back(
-		std::bind(&TitleBarTab::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 TitleBarTab::~TitleBarTab()

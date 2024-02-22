@@ -8,9 +8,6 @@
 
 ToolBar::ToolBar(WindowMain* root) :ControlBase(root)
 {
-	root->resizeHandlers.push_back(
-		std::bind(&ToolBar::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
 	pathTool = std::make_shared<PathTool>(root);
 	pathInput = std::make_shared<PathInput>(root);
 	searchInput = std::make_shared<SearchInput>(root);

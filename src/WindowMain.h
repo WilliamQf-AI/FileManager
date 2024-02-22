@@ -7,6 +7,7 @@
 #include "include/core/SkSurface.h"
 #include "include/core/SkCanvas.h"
 #include "src/base/SkAutoMalloc.h"
+#include "ControlBase.h"
 
 #define WM_FLASH_CURSOR (WM_APP+8)
 #define WM_DEBUG_MESSAGE (WM_APP+9)
@@ -30,14 +31,8 @@ public:
     bool isMouseDown{false};
     bool isTrackMouseEvent{ false };
     int w{ 1200 }, h{800};
-    std::vector<std::function<void(const int&, const int&)>> mouseMoveHandlers;
-    std::vector<std::function<void(const int&, const int&)>> mouseDragHandlers;
-    std::vector<std::function<void(const int&, const int&)>> mouseDownHandlers;
-    std::vector<std::function<void(const int&, const int&)>> mouseUpHandlers;
-    std::vector<std::function<void(const int&, const int&)>> mouseDBClickHandlers;
-    std::vector<std::function<void(const int&, const int&)>> resizeHandlers;
-    std::vector<std::function<void(const int&, const int& ,const int&)>> mouseWheelHandlers;
-    std::vector<std::function<void(SkCanvas*)>> paintHandlers;
+
+    std::vector<ControlBase*> ctrls;
     std::shared_ptr<TitleBar> titleBar;
     std::shared_ptr<ToolBar> toolBar;
     std::shared_ptr<LeftPanel> leftPanel;

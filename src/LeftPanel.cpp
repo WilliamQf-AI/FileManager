@@ -8,10 +8,6 @@
 
 LeftPanel::LeftPanel(WindowMain* root) :ControlBase(root)
 {
-	auto index = 1;	
-	root->resizeHandlers.push_back(
-		std::bind(&LeftPanel::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
 	quickBtn = std::make_shared<QuickBtn>(root);
 	diskList = std::make_shared<DiskList>(root);
 	favoritePath = std::make_shared<FavoritePath>(root);

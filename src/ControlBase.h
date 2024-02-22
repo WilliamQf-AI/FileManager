@@ -17,6 +17,12 @@ public:
 	void repaint();
 	bool needPaint(SkCanvas* canvas, const SkColor& color = 0xFFFFFFFF);
 	virtual void paint(SkCanvas* canvas) {};
+	virtual void resize(const int& w, const int& h) {};
+	virtual void mouseMove(const int& x, const int& y) {};
+	virtual void mouseDown(const int& x, const int& y) {};
+	virtual void mouseUp(const int& x, const int& y) {};
+	virtual void mouseDrag(const int& x, const int& y) {};
+	virtual void mouseWheel(const int&, const int&, const int&) {};
 	SkRect rect;
 	WindowMain* root;
 	bool isDirty{ true };

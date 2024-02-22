@@ -5,9 +5,6 @@
 
 PathTool::PathTool(WindowMain* root) : ControlBase(root)
 {
-	root->resizeHandlers.push_back(
-		std::bind(&PathTool::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 PathTool::~PathTool()

@@ -19,15 +19,6 @@ DiskList::DiskList(WindowMain* root) :ControlBase(root)
 			}
 		}
 	}
-	root->resizeHandlers.push_back(
-		std::bind(&DiskList::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseMoveHandlers.push_back(
-		std::bind(&DiskList::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDownHandlers.push_back(
-		std::bind(&DiskList::mouseDown, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 DiskList::~DiskList()

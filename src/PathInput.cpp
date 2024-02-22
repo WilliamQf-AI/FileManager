@@ -6,15 +6,6 @@
 
 PathInput::PathInput(WindowMain* root) : ControlBase(root)
 {
-	root->resizeHandlers.push_back(
-		std::bind(&PathInput::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseMoveHandlers.push_back(
-		std::bind(&PathInput::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDownHandlers.push_back(
-		std::bind(&PathInput::mouseDown, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 PathInput::~PathInput()

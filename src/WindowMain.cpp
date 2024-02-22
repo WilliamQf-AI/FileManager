@@ -181,15 +181,15 @@ void WindowMain::mouseMove(const int& x, const int& y)
     }
     SetCursor(LoadCursor(NULL, IDC_ARROW));
     if (isMouseDown) {
-        for (auto& func : mouseDragHandlers)
+        for (auto& obj : ctrls)
         {
-            func(x, y);
+            obj->mouseDrag(x, y);
         }
     }
     else {
-        for (auto& func : mouseMoveHandlers)
+        for (auto& obj : ctrls)
         {
-            func(x, y);
+            obj->mouseMove(x, y);
         }
     }
 }
@@ -203,32 +203,32 @@ void WindowMain::mouseLeave()
         TrackMouseEvent(&tme);
         isTrackMouseEvent = false;
     }
-    for (auto& func : mouseMoveHandlers)
+    for (auto& obj : ctrls)
     {
-        func(-888, -888);
+        obj->mouseMove(-888, -888);
     }
 }
 void WindowMain::mouseDown(const int& x, const int& y)
 {
     isMouseDown = true;
-    for (auto& func : mouseDownHandlers)
+    for (auto& obj : ctrls)
     {
-        func(x, y);
+        obj->mouseDown(x, y);
     }
 }
 void WindowMain::mouseUp(const int& x, const int& y)
 {
     isMouseDown = false;
-    for (auto& func : mouseUpHandlers)
+    for (auto& obj : ctrls)
     {
-        func(x, y);
+        obj->mouseUp(x, y);
     }
 }
 void WindowMain::mouseWheel(const int& x, const int& y,const int& delta)
 {
-    for (auto& func : mouseWheelHandlers)
+    for (auto& obj : ctrls)
     {
-        func(x,y,delta);
+        obj->mouseWheel(x,y,delta);
     }
 }
 void WindowMain::onClose()
@@ -255,9 +255,9 @@ void WindowMain::onSize(const int& w, const int& h)
     SkImageInfo info = SkImageInfo::MakeN32Premul(w, h);
     auto temp = SkCanvas::MakeRasterDirect(info, pixels, 4 * w);
     canvas = std::move(temp);
-    for (auto& func : resizeHandlers)
+    for (auto& obj : ctrls)
     {
-        func(w, h);
+        obj->resize(w, h);
     }
 }
 
@@ -266,9 +266,9 @@ void WindowMain::paintWindow()
     PAINTSTRUCT ps;
     auto dc = BeginPaint(hwnd, &ps);
     auto c = canvas.get();
-    for (auto& func : paintHandlers)
+    for (auto& obj : ctrls)
     {
-        func(c);
+        obj->paint(c);
     }
     BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(surfaceMemory.get());
     StretchDIBits(dc, 0, 0, w, h, 0, 0, w, h, bmpInfo->bmiColors, bmpInfo, DIB_RGB_COLORS, SRCCOPY);

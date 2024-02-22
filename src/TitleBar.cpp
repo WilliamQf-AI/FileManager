@@ -9,21 +9,6 @@ TitleBar::TitleBar(WindowMain* root) :ControlBase(root)
 {
 	addTab(false);
 	btns = std::make_shared<TitleBarBtns>(root);
-	root->mouseMoveHandlers.push_back(
-		std::bind(&TitleBar::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDownHandlers.push_back(
-		std::bind(&TitleBar::mouseDown, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDragHandlers.push_back(
-		std::bind(&TitleBar::mouseDrag, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseUpHandlers.push_back(
-		std::bind(&TitleBar::mouseUp, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->resizeHandlers.push_back(
-		std::bind(&TitleBar::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 TitleBar::~TitleBar()
@@ -71,6 +56,22 @@ void TitleBar::mouseDown(const int& x, const int& y)
 		return;
 	}
 	auto tab = *it;
+	if (tab->hoverIndex == 1) {
+		for (auto& item : tabs)
+		{
+			if (item->historyNum > tab->historyNum) {
+				item->historyNum -= 1;
+			}
+		}
+		tabs.erase(it);
+		for (size_t i = 0; i < tabs.size(); i++)
+		{
+			tabs[i]->rect.setXYWH(12.f + i * 200.f + i * 3.f, 10.f, 200.f, 46.f);
+			tabs[i]->isDirty = true;
+		}
+		repaint();
+		return;
+	}
 	if (tab->isSelected) {
 		return;
 	}

@@ -6,15 +6,6 @@
 
 SearchInput::SearchInput(WindowMain* root) : ControlBase(root)
 {
-	root->resizeHandlers.push_back(
-		std::bind(&SearchInput::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseMoveHandlers.push_back(
-		std::bind(&SearchInput::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDownHandlers.push_back(
-		std::bind(&SearchInput::mouseDown, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 SearchInput::~SearchInput()

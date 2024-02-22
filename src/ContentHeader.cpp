@@ -8,21 +8,6 @@ ContentHeader::ContentHeader(WindowMain* root) :ControlBase(root)
 {
 	columns.push_back(FileColumnHeader(L"最近使用的文件", false));
 	columns.push_back(FileColumnHeader(L"使用时间", true));
-	root->mouseMoveHandlers.push_back(
-		std::bind(&ContentHeader::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDownHandlers.push_back(
-		std::bind(&ContentHeader::mouseDown, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDragHandlers.push_back(
-		std::bind(&ContentHeader::mouseDrag, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseUpHandlers.push_back(
-		std::bind(&ContentHeader::mouseUp, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->resizeHandlers.push_back(
-		std::bind(&ContentHeader::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 ContentHeader::~ContentHeader()

@@ -3,9 +3,6 @@
 
 SettingBar::SettingBar(WindowMain* root) :ControlBase(root)
 {
-	root->resizeHandlers.push_back(
-		std::bind(&SettingBar::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
 }
 
 SettingBar::~SettingBar()

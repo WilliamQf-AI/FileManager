@@ -12,25 +12,6 @@
 FavoritePath::FavoritePath(WindowMain* root) :ControlBase(root)
 {
 	totalHeight = 46 * 26;
-
-	root->mouseMoveHandlers.push_back(
-		std::bind(&FavoritePath::mouseMove, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDownHandlers.push_back(
-		std::bind(&FavoritePath::mouseDown, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseDragHandlers.push_back(
-		std::bind(&FavoritePath::mouseDrag, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseUpHandlers.push_back(
-		std::bind(&FavoritePath::mouseUp, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->resizeHandlers.push_back(
-		std::bind(&FavoritePath::resize, this, std::placeholders::_1, std::placeholders::_2)
-	);
-	root->mouseWheelHandlers.push_back(
-		std::bind(&FavoritePath::mouseWheel, this, std::placeholders::_1, std::placeholders::_2,std::placeholders::_3)
-	);
 }
 
 FavoritePath::~FavoritePath()
