@@ -41,24 +41,15 @@ void TitleBar::paint(SkCanvas* canvas)
 
 void TitleBar::mouseMove(const int& x, const int& y)
 {
+	if (!rect.contains(x, y)) {
+		return;
+	}
 	bool flag{ false };
 	for (auto& tab:tabs)
 	{
-		auto hovered = tab->rect.contains(x, y);
-		auto hoverClose{ false };
-		if (hovered) {
-			SkRect r = SkRect::MakeXYWH(tab->rect.fRight - 8.f - 26.f, tab->rect.fTop + 10, 26.f, 26.f);
-			hoverClose = r.contains(x, y);
-		}
-		if (tab->isHovered != hovered) {
-			tab->isDirty = true;
+		auto tempFlag = tab->hoverChange(x, y);
+		if (tempFlag) {
 			flag = true;
-			tab->isHovered = hovered;
-		}
-		if (tab->isHoverCloseBtn != hoverClose) {
-			flag = true;
-			tab->isDirty = true;
-			tab->isHoverCloseBtn = hoverClose;
 		}
 	}
 	if (flag) {
@@ -71,7 +62,7 @@ void TitleBar::mouseDown(const int& x, const int& y)
 	if (!rect.contains(x, y)) {
 		return;
 	}
-	auto it = std::find_if(tabs.begin(), tabs.end(), [](auto& item) {return item->isHovered; });
+	auto it = std::find_if(tabs.begin(), tabs.end(), [](auto& item) {return item->hoverIndex != -1; });
 	if (it == tabs.end()) {
 		GetCursorPos(&startPos);
 		ScreenToClient(root->hwnd, &startPos);
@@ -83,11 +74,18 @@ void TitleBar::mouseDown(const int& x, const int& y)
 	if (tab->isSelected) {
 		return;
 	}
-	auto it2 = std::find_if(tabs.begin(), tabs.end(), [](auto& item) {return item->isSelected; });
+	auto it2 = std::find_if(tabs.begin(), tabs.end(), [](auto& item) { return item->isSelected; });
 	(*it2)->isSelected = false;
 	(*it2)->isDirty = true;
 	tab->isSelected = true;
 	tab->isDirty = true;
+	for (auto& item:tabs)
+	{
+		if (item->historyNum > tab->historyNum) {
+			item->historyNum -= 1;
+		}
+	}
+	tab->historyNum = tabs.size() - 1;
 	InvalidateRect(root->hwnd, nullptr, false);
 }
 
@@ -133,7 +131,8 @@ void TitleBar::addTab(bool needRefresh)
 	}
 	auto tab = std::make_shared<TitleBarTab>(root, std::wstring(L"最近使用的文件"));	
 	tab->rect.setXYWH(12.f + tabs.size() * 200.f + tabs.size() * 3.f, 10.f, 200.f, 46.f);
-	tabs.push_back(std::move(tab));
+	tab->historyNum = tabs.size();
+	tabs.push_back(std::move(tab));	
 	if (needRefresh) {
 		InvalidateRect(root->hwnd, nullptr, false);
 	}

@@ -18,6 +18,25 @@ TitleBarTab::~TitleBarTab()
 {
 }
 
+bool TitleBarTab::hoverChange(const int& x, const int& y)
+{
+	bool flag{ false };
+	int index = -1;
+	if (rect.contains(x, y)) {
+		index = 0;
+		SkRect r = SkRect::MakeXYWH(rect.fRight - 8.f - 26.f, rect.fTop + 10, 26.f, 26.f);
+		if (r.contains(x, y)) {
+			index = 1;
+		}
+	}
+	if (index != hoverIndex) {
+		hoverIndex = index;
+		isDirty = true;
+		flag = true;
+	}
+	return flag;
+}
+
 void TitleBarTab::resize(const int& w, const int& h)
 {
 	isDirty = true;
@@ -36,7 +55,7 @@ void TitleBarTab::paint(SkCanvas* canvas)
 		rr.setRectRadii(rect, radii);
 		canvas->drawRRect(rr, paint);
 	}
-	else if (isHovered) {
+	else if (hoverIndex >= 0) {
 		paint.setColor(0x88FFFFFF);  //0xFFA8C7FA
 		auto r = rect;
 		r.inset(4, 6);
@@ -51,7 +70,7 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	fontText->setSize(16.f);
 	canvas->drawSimpleText(title.data(), textLength, SkTextEncoding::kUTF16, 
 		rect.fLeft+34.f, rect.centerY()+4.5, *fontText, paint);
-	if (isHoverCloseBtn) {
+	if (hoverIndex == 1) { //close
 		paint.setColor(0x18000000);
 		SkRect closeRect = SkRect::MakeXYWH(rect.fRight - 8.f - 26.f, rect.fTop + 10.f, 26.f, 26.f);
 		canvas->drawRoundRect(closeRect, 6, 6, paint);
