@@ -9,8 +9,8 @@ public:
 	~QuickBtn();
 	void paint(SkCanvas* canvas) override;
 private:
-	void resize(const int& w, const int& h);
-	void mouseMove(const int& x, const int& y);
-	void mouseDown(const int& x, const int& y);
+	void resize(const int& w, const int& h) override;
+	void mouseMove(const int& x, const int& y) override;
+	void mouseDown(const int& x, const int& y) override;
 	int hoverIndex{ -1 };
 };

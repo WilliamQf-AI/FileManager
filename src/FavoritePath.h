@@ -8,15 +8,15 @@ class FavoritePath : public ControlBase
 public:
 	FavoritePath(WindowMain* root);
 	~FavoritePath();
-	void paint(SkCanvas* canvas) override;
-	void mouseMove(const int& x, const int& y);
-	void mouseDown(const int& x, const int& y);
-	void mouseUp(const int& x, const int& y);
-	void mouseDrag(const int& x, const int& y);
-	void mouseWheel(const int& x, const int& y,const int& delta);
-	void resize(const int& w, const int& h);
 	float y;
 private:
+	void paint(SkCanvas* canvas) override;
+	void mouseMove(const int& x, const int& y) override;
+	void mouseDown(const int& x, const int& y) override;
+	void mouseUp(const int& x, const int& y) override;
+	void mouseDrag(const int& x, const int& y) override;
+	void mouseWheel(const int& x, const int& y, const int& delta) override;
+	void resize(const int& w, const int& h) override;
 	float totalHeight{0};
 	SkRect scrollerRect;
 	bool hoverScroller{ false };

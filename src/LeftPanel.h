@@ -17,10 +17,9 @@ class LeftPanel : public ControlBase
 public:
     LeftPanel(WindowMain* root);
     ~LeftPanel();
-    void paint(SkCanvas* canvas) override;
-
-    void resize(const int& w, const int& h);
 private:
+    void paint(SkCanvas* canvas) override;
+    void resize(const int& w, const int& h) override;
     std::shared_ptr<FavoritePath> favoritePath;
     std::shared_ptr<SettingBar> settingBar;
     std::shared_ptr<QuickBtn> quickBtn;

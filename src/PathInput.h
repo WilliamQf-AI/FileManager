@@ -8,10 +8,10 @@ public:
 	~PathInput();
 
 private:
-	void resize(const int& w, const int& h);
+	void resize(const int& w, const int& h) override;
 	void paint(SkCanvas* canvas) override;
-	void mouseMove(const int& x, const int& y);
-	void mouseDown(const int& x, const int& y);
+	void mouseMove(const int& x, const int& y) override;
+	void mouseDown(const int& x, const int& y) override;
 	int hoverIndex{ -1 };
 };
 

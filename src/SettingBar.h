@@ -8,8 +8,8 @@ class SettingBar : public ControlBase
 public:
 	SettingBar(WindowMain* root);
 	~SettingBar();
-	void paint(SkCanvas* canvas) override;
-	void resize(const int& w, const int& h);
 private:
+	void paint(SkCanvas* canvas) override;
+	void resize(const int& w, const int& h) override;
 
 };

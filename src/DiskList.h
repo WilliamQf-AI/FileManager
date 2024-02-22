@@ -8,13 +8,13 @@ class DiskList : public ControlBase
 public:
 	DiskList(WindowMain* root);
 	~DiskList();
-	void paint(SkCanvas* canvas) override;
 	std::vector<std::tuple<char, double, double, bool>> driveInfo;
 	float y;
 private:
-	void resize(const int& w, const int& h);
-	void mouseMove(const int& x, const int& y);
-	void mouseDown(const int& x, const int& y);
+	void paint(SkCanvas* canvas) override;
+	void resize(const int& w, const int& h) override;
+	void mouseMove(const int& x, const int& y) override;
+	void mouseDown(const int& x, const int& y) override;
 	int hoverIndex{ -1 };
 };
 

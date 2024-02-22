@@ -13,10 +13,11 @@ public:
     TitleBarTab(WindowMain* root,std::wstring&& title);
     ~TitleBarTab();
     bool hoverChange(const int& x, const int& y);
-    void resize(const int& w, const int& h);
-    void paint(SkCanvas* canvas) override;
     bool isSelected{ true };
     int hoverIndex{ -1 };
     std::wstring title;
     unsigned historyNum;
+private:
+    void resize(const int& w, const int& h) override;
+    void paint(SkCanvas* canvas) override;
 };

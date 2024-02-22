@@ -20,5 +20,5 @@ public:
     std::shared_ptr<SearchInput> searchInput;
 private:
     void paint(SkCanvas* canvas) override;
-    void resize(const int& w, const int& h);
+    void resize(const int& w, const int& h) override;
 };

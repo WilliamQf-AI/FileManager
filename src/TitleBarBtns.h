@@ -12,10 +12,10 @@ class TitleBarBtns : public ControlBase
 public:
     TitleBarBtns(WindowMain* root);
     ~TitleBarBtns();
-    void paint(SkCanvas *canvas) override;
-    void mouseMove(const int& x, const int& y);
-    void mouseDown(const int& x, const int& y);
-    void resize(const int& w, const int& h);
     int hoverIndex{ -1 };
 private:
+    void paint(SkCanvas* canvas) override;
+    void mouseMove(const int& x, const int& y) override;
+    void mouseDown(const int& x, const int& y) override;
+    void resize(const int& w, const int& h) override;
 };
