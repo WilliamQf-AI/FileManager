@@ -51,20 +51,19 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 void TitleBarBtns::mouseDown(const int& x, const int& y)
 {
 	if (hoverIndex == 0) {
-		//PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
-		SendMessage(root->hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		ReleaseCapture();
+		PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		//SendMessage(root->hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
 		root->isMouseDown = false;
 	}
 	else if (hoverIndex == 1) {
 		auto isMaximized = IsZoomed(root->hwnd) != 0;
+		ReleaseCapture();
 		if (isMaximized) {
-			//PostMessage(root->hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
-			SendMessage(root->hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+			PostMessage(root->hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
 		}
 		else {
-			//ShowWindow(root->hwnd, SW_MAXIMIZE);
-			//PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
-			SendMessage(root->hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+			PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 		}
 		root->isMouseDown = false;
 	}
