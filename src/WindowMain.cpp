@@ -281,8 +281,8 @@ void WindowMain::onGetMaxMinMizeInfo(MINMAXINFO* mminfo)
 {
     RECT workArea;
     SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);    
-    mminfo->ptMinTrackSize.x = 800;
-    mminfo->ptMinTrackSize.y = 600;
+    mminfo->ptMinTrackSize.x = 960;
+    mminfo->ptMinTrackSize.y = 660;
     mminfo->ptMaxSize.x = workArea.right - workArea.left;
     mminfo->ptMaxSize.y = workArea.bottom - workArea.top;
     mminfo->ptMaxPosition.x = 0;

@@ -27,8 +27,8 @@ void Home::paint(SkCanvas* canvas)
 
 	paint.setColor(0xFFD3E3FD);
 	auto y = rect.centerY() - 58.f;
-	canvas->drawLine(rect.fLeft+120.f, y, rect.centerX()-160.f, y, paint);
-	canvas->drawLine(rect.centerX() + 160.f, y, rect.fRight-120.f, y, paint);
+	canvas->drawLine(rect.fLeft+110.f, y, rect.centerX()-140.f, y, paint);
+	canvas->drawLine(rect.centerX() + 140.f, y, rect.fRight-110.f, y, paint);
 
 	auto fontText = App::GetFontText();
 	fontText->setSize(18.f);

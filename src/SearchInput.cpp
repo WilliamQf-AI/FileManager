@@ -26,7 +26,8 @@ void SearchInput::resize(const int& w, const int& h)
 	isDirty = true;
 	auto top = root->toolBar->rect.fTop+10.f;
 	auto left = root->toolBar->pathInput->rect.fRight+12.f;
-	rect.setLTRB(left, top, root->w-12.f, top+40.f);
+	auto bottom = root->toolBar->pathInput->rect.fBottom;
+	rect.setLTRB(left, top, root->w-16.f, bottom);
 }
 
 void SearchInput::paint(SkCanvas* canvas)
