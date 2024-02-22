@@ -211,9 +211,10 @@ void WindowMain::mouseLeave()
 void WindowMain::mouseDown(const int& x, const int& y)
 {
     isMouseDown = true;
-    for (auto& obj : ctrls)
+    auto size = ctrls.size(); //避免执行最后一个元素的mouseDown事件，因为最后一个元素可能是刚刚添加的，构造函数还没有执行完
+    for (size_t i = 0; i < size; i++)
     {
-        obj->mouseDown(x, y);
+        ctrls[i]->mouseDown(x, y);
     }
 }
 void WindowMain::mouseUp(const int& x, const int& y)
