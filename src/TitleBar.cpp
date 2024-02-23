@@ -57,35 +57,7 @@ void TitleBar::mouseDown(const int& x, const int& y)
 	}
 	auto tab = *it;
 	if (tab->hoverIndex == 1) { //删除Tab
-		int index = 0;
-		if (tabs.size() == 1) {
-			return;
-		}
-		int maxIndex{ -1 }, maxHistory{ -1 };
-		for (size_t i = 0; i < tabs.size(); i++)
-		{
-			if (tabs[i].get() == tab.get()) {
-
-				tab->isDel = true;
-				if (i + 1 < tabs.size()) {
-					tabs[i + 1]->hoverIndex = 1;
-				}
-				continue;
-			}
-			tabs[i]->rect.setXYWH(12.f + index * 200.f + index * 3.f, 10.f, 200.f, 46.f);
-			index += 1;
-			tabs[i]->isDirty = true;
-			if (tabs[i]->historyNum > tab->historyNum) {
-				tabs[i]->historyNum -= 1;
-			}
-			if (tabs[i]->historyNum > maxHistory) {
-				maxHistory = tabs[i]->historyNum;
-				maxIndex = i;
-			}
-		}
-		tabs[maxIndex]->isSelected = true;
-		btns->isDirty = true;
-		repaint();
+		closeTab(tab.get());
 		return;
 	}
 	if (tab->isSelected) {
@@ -134,6 +106,44 @@ void TitleBar::resize(const int& w, const int& h)
 	{
 		tabs[i]->rect.setXYWH(12.f+i*200.f+i*3.f, 10.f, 200.f, 46.f);
 	}	
+}
+
+void TitleBar::closeTab(TitleBarTab* tab)
+{
+	int index{0}, maxIndex{ -1 }, maxHistory{ -1 };
+	for (size_t i = 0; i < tabs.size(); i++)
+	{
+		if (tabs[i].get() == tab) {
+
+			tab->isDel = true;
+			if (i + 1 < tabs.size()) {
+				tabs[i + 1]->hoverIndex = 1;
+			}
+			continue;
+		}
+		tabs[i]->rect.setXYWH(12.f + index * 200.f + index * 3.f, 10.f, 200.f, 46.f);
+		index += 1;
+		tabs[i]->isDirty = true;
+		if (tabs[i]->historyNum > tab->historyNum) {
+			tabs[i]->historyNum -= 1;
+		}
+		if (tabs[i]->historyNum > maxHistory) {
+			maxHistory = tabs[i]->historyNum;
+			maxIndex = i;
+		}
+	}
+	if (maxIndex > -1) {
+		tabs[maxIndex]->isSelected = true;
+	}
+	btns->isDirty = true;
+	if (tabs.size() == 1) {
+		std::filesystem::path p("");
+		auto tab = std::make_shared<TitleBarTab>(root, p);
+		tab->rect.setXYWH(12.f, 10.f, 200.f, 46.f);
+		tab->historyNum = 0;
+		tabs.push_back(std::move(tab));
+	}
+	repaint();
 }
 
 void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
