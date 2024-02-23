@@ -10,7 +10,6 @@ public:
 	SystemIcon();
 	~SystemIcon();
 	static sk_sp<SkImage> getIcon(SHSTOCKICONID id,const int& size);
-	static sk_sp<SkImage> getIcon(KNOWNFOLDERID id, const int& size); //(int)CSIDL_MYMUSIC
 	static sk_sp<SkImage> getIcon(std::wstring path, const int& size);
 	static void reset();
 private:

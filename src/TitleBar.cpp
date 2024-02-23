@@ -7,7 +7,7 @@
 class WindowBase;
 TitleBar::TitleBar(WindowMain* root) :ControlBase(root)
 {
-	addTab(false);
+	addTab(std::filesystem::path(""), false);
 	btns = std::make_shared<TitleBarBtns>(root);
 }
 
@@ -56,7 +56,7 @@ void TitleBar::mouseDown(const int& x, const int& y)
 		return;
 	}
 	auto tab = *it;
-	if (tab->hoverIndex == 1) {
+	if (tab->hoverIndex == 1) { //删除Tab
 		int index = 0;
 		if (tabs.size() == 1) {
 			return;
@@ -103,7 +103,7 @@ void TitleBar::mouseDown(const int& x, const int& y)
 void TitleBar::mouseUp(const int& x, const int& y)
 {
 	draggingWindow = false;
-	std::erase_if(tabs, [](auto& item) { return item->isDel; });
+	std::erase_if(tabs, [](auto& item) { return item->isDel; }); //删除tab
 }
 
 void TitleBar::mouseDrag(const int& x, const int& y)
@@ -130,7 +130,7 @@ void TitleBar::resize(const int& w, const int& h)
 	}	
 }
 
-void TitleBar::addTab(bool needRefresh)
+void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 {
 	for (auto& tab:tabs)
 	{
@@ -141,7 +141,7 @@ void TitleBar::addTab(bool needRefresh)
 			break;
 		}
 	}
-	auto tab = std::make_shared<TitleBarTab>(root, std::wstring(L"首页"));	
+	auto tab = std::make_shared<TitleBarTab>(root, path);	
 	tab->rect.setXYWH(12.f + tabs.size() * 200.f + tabs.size() * 3.f, 10.f, 200.f, 46.f);
 	tab->historyNum = tabs.size();
 	tabs.push_back(std::move(tab));	

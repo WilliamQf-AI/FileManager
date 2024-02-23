@@ -29,23 +29,6 @@ sk_sp<SkImage> SystemIcon::getIcon(SHSTOCKICONID id, const int& size)
 	return img;
 }
 
-sk_sp<SkImage> SystemIcon::getIcon(KNOWNFOLDERID id, const int& size)
-{
-	PWSTR pszPath;
-	HRESULT hr = SHGetKnownFolderPath(id, 0, NULL, &pszPath);
-	if (FAILED(hr)) {
-		return nullptr;
-	}
-	SHFILEINFO sfi{ 0 };
-	SHGetFileInfo(pszPath, 0, &sfi, sizeof(SHFILEINFO),  SHGFI_ICON | SHGFI_SMALLICON);
-	if (!sfi.hIcon) {
-		return nullptr;
-	}
-	CoTaskMemFree(pszPath);
-	auto img = iconToImg(sfi.hIcon, size);
-	return img;
-}
-
 sk_sp<SkImage> SystemIcon::getIcon(std::wstring path, const int& size)
 {
 	SHFILEINFO sfi;

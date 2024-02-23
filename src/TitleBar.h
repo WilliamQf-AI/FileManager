@@ -7,6 +7,7 @@
 #include "ControlBase.h"
 #include "TitleBarBtns.h"
 #include "TitleBarTab.h"
+#include "filesystem"
 
 class WindowMain;
 class TitleBar : public ControlBase
@@ -14,7 +15,7 @@ class TitleBar : public ControlBase
 public:
     TitleBar(WindowMain* root);
     ~TitleBar();
-    void addTab(bool needRefresh=true);
+    void addTab(std::filesystem::path&& path,bool needRefresh=true);
     std::shared_ptr<TitleBarBtns> btns;
     std::vector<std::shared_ptr<TitleBarTab>> tabs;
     POINT startPos;

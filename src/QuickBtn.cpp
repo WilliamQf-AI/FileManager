@@ -1,11 +1,11 @@
 ﻿#include "QuickBtn.h"
-#include <Windows.h>
 #include "SystemIcon.h"
 #include "App.h"
 #include <include/core/SkPaint.h>
 #include "WindowMain.h"
 #include "LeftPanel.h"
 #include "TitleBar.h"
+#include <filesystem>
 
 QuickBtn::QuickBtn(WindowMain* root) :ControlBase(root)
 {
@@ -29,7 +29,8 @@ void QuickBtn::paint(SkCanvas* canvas)
 						  FOLDERID_Downloads,FOLDERID_Pictures,FOLDERID_Documents };	
 	for (size_t i = 0; i < 6; i++)
 	{
-		auto img = SystemIcon::getIcon(ids[i], 24);
+		auto str = getKnownFolderPath(ids[i]);
+		auto img = SystemIcon::getIcon(str, 24);
 		canvas->drawImage(img, 10.f + 60 * i + 16.f, rect.fTop+16.f+12.f);
 		auto textLength = wcslen(names[i].data()) * 2;
 		auto fontText = App::GetFontText();
@@ -66,7 +67,50 @@ void QuickBtn::mouseMove(const int& x, const int& y)
 
 void QuickBtn::mouseDown(const int& x, const int& y)
 {
-	if (hoverIndex != -1) {
-		root->titleBar->addTab();
+	std::wstring pathStr;
+	switch (hoverIndex)
+	{
+	case 0: {
+		pathStr = getKnownFolderPath(FOLDERID_Desktop);
+		break;
 	}
+	case 1:{
+		pathStr = getKnownFolderPath(FOLDERID_Music);
+		break;
+	}
+	case 2: {
+		pathStr = getKnownFolderPath(FOLDERID_Videos);
+		break;
+	}
+	case 3: {
+		pathStr = getKnownFolderPath(FOLDERID_Downloads);
+		break;
+	}
+	case 4: {
+		pathStr = getKnownFolderPath(FOLDERID_Pictures);
+		break;
+	}
+	case 5: {
+		pathStr = getKnownFolderPath(FOLDERID_Documents);
+		break;
+	}
+	default:
+		break;
+	}
+	if (pathStr.empty()) {
+		return;
+	}
+	root->titleBar->addTab(pathStr);
+}
+
+std::wstring QuickBtn::getKnownFolderPath(GUID id)
+{
+	PWSTR pszPath;
+	HRESULT hr = SHGetKnownFolderPath(id, 0, NULL, &pszPath);
+	if (FAILED(hr)) {
+		return L"";
+	}
+	std::wstring pathStr(pszPath);
+	CoTaskMemFree(pszPath);
+	return pathStr;
 }

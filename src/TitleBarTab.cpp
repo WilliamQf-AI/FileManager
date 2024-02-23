@@ -7,8 +7,14 @@
 #include "SystemIcon.h"
 #include "App.h"
 
-TitleBarTab::TitleBarTab(WindowMain* root, std::wstring&& title) :ControlBase(root),title{title}
+TitleBarTab::TitleBarTab(WindowMain* root, std::filesystem::path& path) :ControlBase(root),path{path}
 {
+	if (path.empty()) {
+		title = L"主页";
+	}
+	else {
+		title = path.filename().wstring();
+	}	
 }
 
 TitleBarTab::~TitleBarTab()
