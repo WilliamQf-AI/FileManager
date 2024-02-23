@@ -18,7 +18,7 @@ public:
     int hoverIndex{ -1 };
     std::wstring title;
     std::filesystem::path path;
-    unsigned historyNum;
+    int historyNum;
 private:
     void resize(const int& w, const int& h) override;
     void paint(SkCanvas* canvas) override;

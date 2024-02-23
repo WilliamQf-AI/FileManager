@@ -61,6 +61,8 @@ void TitleBar::mouseDown(const int& x, const int& y)
 		if (tabs.size() == 1) {
 			return;
 		}
+
+		int maxIndex{ -1 }, maxHistory{ -1 };
 		for (size_t i = 0; i < tabs.size(); i++)
 		{
 			if (tabs[i].get() == tab.get()) {
@@ -77,7 +79,12 @@ void TitleBar::mouseDown(const int& x, const int& y)
 			if (tabs[i]->historyNum > tab->historyNum) {
 				tabs[i]->historyNum -= 1;
 			}
+			if (tabs[i]->historyNum > maxHistory) {
+				maxHistory = tabs[i]->historyNum;
+				maxIndex = i;
+			}
 		}
+		tabs[maxIndex]->isSelected = true;
 		btns->isDirty = true;
 		repaint();
 		return;
