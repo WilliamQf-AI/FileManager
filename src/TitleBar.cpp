@@ -58,10 +58,17 @@ void TitleBar::mouseDown(const int& x, const int& y)
 	auto tab = *it;
 	if (tab->hoverIndex == 1) {
 		int index = 0;
+		if (tabs.size() == 1) {
+			return;
+		}
 		for (size_t i = 0; i < tabs.size(); i++)
 		{
 			if (tabs[i].get() == tab.get()) {
+
 				tab->isDel = true;
+				if (i + 1 < tabs.size()) {
+					tabs[i + 1]->hoverIndex = 1;
+				}
 				continue;
 			}
 			tabs[i]->rect.setXYWH(12.f + index * 200.f + index * 3.f, 10.f, 200.f, 46.f);
@@ -96,7 +103,6 @@ void TitleBar::mouseDown(const int& x, const int& y)
 void TitleBar::mouseUp(const int& x, const int& y)
 {
 	draggingWindow = false;
-	ReleaseCapture();
 	std::erase_if(tabs, [](auto& item) { return item->isDel; });
 }
 
@@ -135,7 +141,7 @@ void TitleBar::addTab(bool needRefresh)
 			break;
 		}
 	}
-	auto tab = std::make_shared<TitleBarTab>(root, std::wstring(L"最近使用的文件"));	
+	auto tab = std::make_shared<TitleBarTab>(root, std::wstring(L"首页"));	
 	tab->rect.setXYWH(12.f + tabs.size() * 200.f + tabs.size() * 3.f, 10.f, 200.f, 46.f);
 	tab->historyNum = tabs.size();
 	tabs.push_back(std::move(tab));	
