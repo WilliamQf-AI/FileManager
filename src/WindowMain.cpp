@@ -211,11 +211,19 @@ void WindowMain::mouseLeave()
 void WindowMain::mouseDown(const int& x, const int& y)
 {
     isMouseDown = true;
-    auto size = ctrls.size(); //避免执行最后一个元素的mouseDown事件，因为最后一个元素可能是刚刚添加的，构造函数还没有执行完
+    //避免执行最后一个元素的mouseDown事件，因为最后一个元素可能是刚刚添加的，构造函数还没有执行完
+    auto size = ctrls.size(); 
+    //auto iter = ctrls.end();
+    //auto flag = false;
     for (size_t i = 0; i < size; i++)
     {
         ctrls[i]->mouseDown(x, y);
     }
+    std::erase_if(ctrls, [](auto& item) { return item->isDel; });
+    //if (flag) {
+    //    ctrls.erase(iter);
+    //}
+    
 }
 void WindowMain::mouseUp(const int& x, const int& y)
 {

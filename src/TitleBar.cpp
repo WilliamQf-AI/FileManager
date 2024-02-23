@@ -57,18 +57,21 @@ void TitleBar::mouseDown(const int& x, const int& y)
 	}
 	auto tab = *it;
 	if (tab->hoverIndex == 1) {
-		for (auto& item : tabs)
-		{
-			if (item->historyNum > tab->historyNum) {
-				item->historyNum -= 1;
-			}
-		}
-		tabs.erase(it);
+		int index = 0;
 		for (size_t i = 0; i < tabs.size(); i++)
 		{
-			tabs[i]->rect.setXYWH(12.f + i * 200.f + i * 3.f, 10.f, 200.f, 46.f);
+			if (tabs[i].get() == tab.get()) {
+				tab->isDel = true;
+				continue;
+			}
+			tabs[i]->rect.setXYWH(12.f + index * 200.f + index * 3.f, 10.f, 200.f, 46.f);
+			index += 1;
 			tabs[i]->isDirty = true;
+			if (tabs[i]->historyNum > tab->historyNum) {
+				tabs[i]->historyNum -= 1;
+			}
 		}
+		btns->isDirty = true;
 		repaint();
 		return;
 	}
@@ -94,6 +97,7 @@ void TitleBar::mouseUp(const int& x, const int& y)
 {
 	draggingWindow = false;
 	ReleaseCapture();
+	std::erase_if(tabs, [](auto& item) { return item->isDel; });
 }
 
 void TitleBar::mouseDrag(const int& x, const int& y)
@@ -127,6 +131,7 @@ void TitleBar::addTab(bool needRefresh)
 		if (tab->isSelected) {
 			tab->isDirty = true;
 			tab->isSelected = false;
+			tab->hoverIndex = -1;
 			break;
 		}
 	}

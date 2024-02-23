@@ -26,6 +26,7 @@ public:
 	SkRect rect;
 	WindowMain* root;
 	bool isDirty{ true };
+	bool isDel{ false };
 private:
 
 };
