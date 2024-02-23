@@ -141,6 +141,7 @@ void TitleBar::closeTab(TitleBarTab* tab)
 		auto tab = std::make_shared<TitleBarTab>(root, p);
 		tab->rect.setXYWH(12.f, 10.f, 200.f, 46.f);
 		tab->historyNum = 0;
+		tab->hoverIndex = 1;
 		tabs.push_back(std::move(tab));
 	}
 	repaint();
