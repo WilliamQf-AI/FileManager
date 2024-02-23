@@ -61,7 +61,6 @@ void TitleBar::mouseDown(const int& x, const int& y)
 		if (tabs.size() == 1) {
 			return;
 		}
-
 		int maxIndex{ -1 }, maxHistory{ -1 };
 		for (size_t i = 0; i < tabs.size(); i++)
 		{
@@ -92,9 +91,9 @@ void TitleBar::mouseDown(const int& x, const int& y)
 	if (tab->isSelected) {
 		return;
 	}
-	auto it2 = std::find_if(tabs.begin(), tabs.end(), [](auto& item) { return item->isSelected; });
-	(*it2)->isSelected = false;
-	(*it2)->isDirty = true;
+	auto it2 = *std::find_if(tabs.begin(), tabs.end(), [](auto& item) { return item->isSelected; });
+	it2->isSelected = false;
+	it2->isDirty = true;
 	tab->isSelected = true;
 	tab->isDirty = true;
 	for (auto& item:tabs)
