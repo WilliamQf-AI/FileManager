@@ -179,7 +179,6 @@ void WindowMain::mouseMove(const int& x, const int& y)
         tme.dwHoverTime = 1;
         isTrackMouseEvent = TrackMouseEvent(&tme);
     }
-    SetCursor(LoadCursor(NULL, IDC_ARROW));
     if (isMouseDown) {
         for (auto& obj : ctrls)
         {
@@ -304,7 +303,7 @@ void WindowMain::initWindow()
     auto hinstance = GetModuleHandle(NULL);
     WNDCLASSEX wcx{};
     wcx.cbSize = sizeof(wcx);
-    wcx.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+    wcx.style = CS_HREDRAW | CS_VREDRAW; // | CS_DBLCLKS
     wcx.lpfnWndProc = &WindowMain::RouteWindowMessage;
     wcx.cbWndExtra = sizeof(WindowMain*);
     wcx.hInstance = hinstance;

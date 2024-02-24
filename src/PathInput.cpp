@@ -46,6 +46,12 @@ void PathInput::mouseMove(const int& x, const int& y)
 	}
 	if (index != hoverIndex) {
 		hoverIndex = index;
+		if (index == 0) {
+			SetCursor(LoadCursor(nullptr, IDC_IBEAM));
+		}
+		else{
+			SetCursor(LoadCursor(nullptr, IDC_ARROW));
+		}
 		repaint();
 	}
 }

@@ -37,7 +37,7 @@ public:
     std::shared_ptr<ToolBar> toolBar;
     std::shared_ptr<LeftPanel> leftPanel;
     std::shared_ptr<ContentPanel> contentPanel;
-    std::shared_ptr<Home> home;
+    std::shared_ptr<ControlBase> home;
     std::unique_ptr<SkCanvas> canvas;
 protected:
     void initWindow();

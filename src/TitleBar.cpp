@@ -81,6 +81,7 @@ void TitleBar::mouseDown(const int& x, const int& y)
 void TitleBar::mouseUp(const int& x, const int& y)
 {
 	draggingWindow = false;
+	ReleaseCapture();//不然拖拽窗口之后，就无法改变窗口大小了。
 	std::erase_if(tabs, [](auto& item) { return item->isDel; }); //删除tab
 }
 
@@ -110,11 +111,13 @@ void TitleBar::resize(const int& w, const int& h)
 
 void TitleBar::closeTab(TitleBarTab* tab)
 {
+	if (tabs.size() == 1 && tabs[0]->path.empty()) {
+		return;
+	}
 	int index{0}, maxIndex{ -1 }, maxHistory{ -1 };
 	for (size_t i = 0; i < tabs.size(); i++)
 	{
 		if (tabs[i].get() == tab) {
-
 			tab->isDel = true;
 			if (i + 1 < tabs.size()) {
 				tabs[i + 1]->hoverIndex = 1;

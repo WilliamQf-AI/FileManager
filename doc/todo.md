@@ -1,4 +1,9 @@
+tab页不要盖住最小化按钮
+
+
 Deskttop翻译成桌面
+
+滚动条应该：SetCapture(root->hwnd);ReleaseCapture();
 
 
 滚动滚动条还是会内存泄露

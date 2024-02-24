@@ -50,6 +50,12 @@ void SearchInput::mouseMove(const int& x, const int& y)
 		index = 0;
 	}
 	if (index != hoverIndex) {
+		if (index == 0) {
+			SetCursor(LoadCursor(nullptr, IDC_IBEAM));
+		}
+		else {
+			SetCursor(LoadCursor(nullptr, IDC_ARROW));
+		}
 		hoverIndex = index;
 		repaint();
 	}
