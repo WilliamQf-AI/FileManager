@@ -1,4 +1,7 @@
+创建了新contentPanel  click事件会有问题。
+鼠标移入窗口，cursor不会改变。
 tab页不要盖住最小化按钮
+
 
 
 Deskttop翻译成桌面

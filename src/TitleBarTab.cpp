@@ -6,16 +6,21 @@
 #include "WindowMain.h"
 #include "SystemIcon.h"
 #include "App.h"
+#include "Home.h"
+#include "ContentPanel.h"
 
-TitleBarTab::TitleBarTab(WindowMain* root, std::filesystem::path& path) :ControlBase(root),path{path}
+TitleBarTab::TitleBarTab(WindowMain* root, std::filesystem::path& path,bool first) :ControlBase(root),path{path}
 {
 	if (path.empty()) {
 		title = L"主页";
+		if (!first) {
+			root->content = std::make_shared<Home>(root);
+		}
 	}
 	else {
 		title = path.filename().wstring();
-	}
-
+		root->content = std::make_shared<ContentPanel>(root);
+	}	
 }
 
 TitleBarTab::~TitleBarTab()

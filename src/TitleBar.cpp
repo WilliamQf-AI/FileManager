@@ -161,10 +161,10 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 			break;
 		}
 	}
-	auto tab = std::make_shared<TitleBarTab>(root, path);	
+	auto tab = std::make_shared<TitleBarTab>(root, path,!needRefresh);	
 	tab->rect.setXYWH(12.f + tabs.size() * 200.f + tabs.size() * 3.f, 10.f, 200.f, 46.f);
 	tab->historyNum = tabs.size();
-	tabs.push_back(std::move(tab));	
+	tabs.push_back(std::move(tab));
 	if (needRefresh) {
 		InvalidateRect(root->hwnd, nullptr, false);
 	}

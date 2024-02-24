@@ -27,7 +27,7 @@ WindowMain::WindowMain()
     toolBar = std::make_shared<ToolBar>(this);
     leftPanel = std::make_shared<LeftPanel>(this);
     //contentPanel = std::make_shared<ContentPanel>(this);
-    home = std::make_shared<Home>(this);
+    content = std::make_shared<Home>(this);
     initWindow();
 }
 
@@ -165,7 +165,9 @@ int WindowMain::nctest(const int& x, const int& y)
         return HTLEFT;
     }
     else {
-
+        if (!isTrackMouseEvent) {
+            SetCursor(LoadCursor(nullptr, IDC_ARROW));
+        }
         return HTCLIENT;
     }
 }
