@@ -34,8 +34,6 @@ void ContentList::paint(SkCanvas* canvas)
 	paint.setColor(0xFF555555);
 	auto top = 0 - (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
 	auto y = top + rect.fTop + 32.f;
-	//if (y > 195.f)y = 195.f; // magic num
-
 	for (auto& file : files)
 	{
 		for (size_t i = 0; i < columns.size(); i++)
@@ -115,7 +113,7 @@ void ContentList::mouseDrag(const int& x, const int& y)
 void ContentList::resize(const int& w, const int& h)
 {
 	auto parent = (ContentPanel*)root->contentPanel.get();
-	rect.setLTRB(root->contentPanel->rect.fLeft+1,
+	rect.setLTRB(parent->rect.fLeft+1,
 		parent->contentHeader->rect.fBottom+1,
 		parent->rect.fRight,
 		parent->contentBottom->rect.fTop

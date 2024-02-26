@@ -27,16 +27,22 @@ void ContentPanel::paint(SkCanvas* canvas)
 	canvas->drawLine(rect.fLeft, rect.fTop, rect.fLeft, rect.fBottom, paint);
 }
 
+void ContentPanel::initResize(const int& w, const int& h)
+{
+	isDirty = true;
+	resize(w, h);
+	contentHeader->resize(w, h);
+	contentBottom->resize(w, h);
+	contentList->resize(w, h);
+}
+
 void ContentPanel::resize(const int& w, const int& h)
 {
 	isDirty = true;
 	contentHeader->isDirty = true;
 	contentList->isDirty = true;
 	contentBottom->isDirty = true;
-
-	auto topVal = root->titleBar->rect.height() + root->toolBar->rect.height();
-	auto leftVal = root->leftPanel->rect.fRight;
-	rect.setLTRB(leftVal, topVal, w, h);
+	rect.setLTRB(root->leftPanel->rect.fRight, root->toolBar->rect.fBottom, w, h);
 
 	//recent files 
 	//C:\Users\liuxiaolun\AppData\Roaming\Microsoft\Windows\Recent

@@ -8,6 +8,7 @@ ContentHeader::ContentHeader(WindowMain* root) :ControlBase(root)
 {
 	columns.push_back(FileColumnHeader(L"最近使用的文件", false));
 	columns.push_back(FileColumnHeader(L"使用时间", true));
+	resize(root->w, root->h);
 }
 
 ContentHeader::~ContentHeader()
