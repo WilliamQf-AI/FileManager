@@ -273,9 +273,9 @@ void WindowMain::paintWindow()
     PAINTSTRUCT ps;
     auto dc = BeginPaint(hwnd, &ps);
     auto c = canvas.get();
-    for (auto& obj : ctrls)
+    for (size_t i = 0; i < ctrls.size(); i++)
     {
-        obj->paint(c);
+        ctrls[i]->paint(c);
     }
     BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(surfaceMemory.get());
     StretchDIBits(dc, 0, 0, w, h, 0, 0, w, h, bmpInfo->bmiColors, bmpInfo, DIB_RGB_COLORS, SRCCOPY);

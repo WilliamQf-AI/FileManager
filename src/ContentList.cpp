@@ -23,9 +23,10 @@ void ContentList::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
 	SkPaint paint;
-	auto paddingLeft = root->contentPanel->contentHeader->paddingLeft;
-	auto paddingRight = root->contentPanel->contentHeader->paddingRight;
-	auto columns = root->contentPanel->contentHeader->columns;
+	auto parent = (ContentPanel*)root->contentPanel.get();
+	auto paddingLeft = parent->contentHeader->paddingLeft;
+	auto paddingRight = parent->contentHeader->paddingRight;
+	auto columns = parent->contentHeader->columns;
 	auto fontText = App::GetFontText();
 	fontText->setSize(16.8);
 	canvas->save();
@@ -113,10 +114,11 @@ void ContentList::mouseDrag(const int& x, const int& y)
 
 void ContentList::resize(const int& w, const int& h)
 {
+	auto parent = (ContentPanel*)root->contentPanel.get();
 	rect.setLTRB(root->contentPanel->rect.fLeft+1,
-		root->contentPanel->contentHeader->rect.fBottom+1,
-		root->contentPanel->rect.fRight,
-		root->contentPanel->contentBottom->rect.fTop
+		parent->contentHeader->rect.fBottom+1,
+		parent->rect.fRight,
+		parent->contentBottom->rect.fTop
 	);
 	if (totalHeight > rect.height()) {
 		auto h = rect.height() * (rect.height() / totalHeight);

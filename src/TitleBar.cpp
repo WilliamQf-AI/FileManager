@@ -168,11 +168,11 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 	tab->historyNum = tabs.size();
 	tabs.push_back(std::move(tab));
 	if (needRefresh) {
-		root->content = std::make_shared<ContentPanel>(root);
+		root->contentPanel = std::make_shared<ContentPanel>(root);
 		InvalidateRect(root->hwnd, nullptr, false);
 	}
 	else {
-		root->content = std::make_shared<Home>(root);
+		root->contentPanel = std::make_shared<Home>(root);
 	}
 
 }
