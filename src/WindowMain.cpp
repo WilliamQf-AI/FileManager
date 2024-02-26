@@ -18,7 +18,6 @@
 #include "ToolBar.h"
 #include "LeftPanel.h"
 #include "ContentPanel.h"
-#include "Home.h"
 
 
 WindowMain::WindowMain()
@@ -26,6 +25,7 @@ WindowMain::WindowMain()
     titleBar = std::make_shared<TitleBar>(this);
     toolBar = std::make_shared<ToolBar>(this);
     leftPanel = std::make_shared<LeftPanel>(this);
+    contentPanel = std::make_shared<ContentPanel>(this);
     initWindow();
 }
 

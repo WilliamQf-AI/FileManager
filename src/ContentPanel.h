@@ -17,10 +17,10 @@ public:
     ContentPanel(WindowMain* root);
     ~ContentPanel();
     void paint(SkCanvas* canvas) override;
+    void initFileContent();
+    void resize(const int& w, const int& h);
     std::shared_ptr<ContentHeader> contentHeader;
     std::shared_ptr<ContentList> contentList;
     std::shared_ptr<ContentBottom> contentBottom;
-    void initResize(const int& w, const int& h);
 private:
-    void resize(const int& w, const int& h);
 };

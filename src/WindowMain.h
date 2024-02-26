@@ -17,7 +17,6 @@ class TitleBar;
 class ToolBar;
 class LeftPanel;
 class ContentPanel;
-class Home;
 class WindowMain
 {
 public:
@@ -36,7 +35,7 @@ public:
     std::shared_ptr<TitleBar> titleBar;
     std::shared_ptr<ToolBar> toolBar;
     std::shared_ptr<LeftPanel> leftPanel;
-    std::shared_ptr<ControlBase> contentPanel;
+    std::shared_ptr<ContentPanel> contentPanel;
     std::unique_ptr<SkCanvas> canvas;
 protected:
     void initWindow();

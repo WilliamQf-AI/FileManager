@@ -5,7 +5,6 @@
 #include "WindowMain.h"
 #include "SystemIcon.h"
 #include "App.h"
-#include "Home.h"
 #include "ContentPanel.h"
 
 TitleBarTab::TitleBarTab(WindowMain* root, std::filesystem::path& path) :ControlBase(root),path{path}
@@ -14,7 +13,7 @@ TitleBarTab::TitleBarTab(WindowMain* root, std::filesystem::path& path) :Control
 		title = L"主页";
 	}
 	else {
-		title = path.filename().wstring();
+		title = path.filename().wstring();		
 	}
 }
 
@@ -68,7 +67,7 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	auto img = SystemIcon::getIcon(SIID_FOLDER,26); //CSIDL_QUICKACCESS
 	canvas->drawImage(img, rect.fLeft + 8.f, rect.centerY() - img->height() / 2);
 
-	paint.setColor(0xFF333333);
+	paint.setColor(0xFF666666);
 	auto textLength = wcslen(title.data()) * 2;
 	auto fontText = App::GetFontText();
 	fontText->setSize(16.f);
@@ -78,7 +77,7 @@ void TitleBarTab::paint(SkCanvas* canvas)
 		paint.setColor(0x18000000);
 		SkRect closeRect = SkRect::MakeXYWH(rect.fRight - 8.f - 26.f, rect.fTop + 10.f, 26.f, 26.f);
 		canvas->drawRoundRect(closeRect, 6, 6, paint);
-		paint.setColor(0xFF333333);
+		paint.setColor(0xFF666666);
 	}
 	else {
 		paint.setColor(0xFF999999);

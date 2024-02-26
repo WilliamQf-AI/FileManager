@@ -3,7 +3,6 @@
 #include "App.h"
 #include "include/core/SkFontMetrics.h"
 #include "TitleBarBtns.h"
-#include "Home.h"
 #include "ContentPanel.h"
 
 class WindowBase;
@@ -65,19 +64,7 @@ void TitleBar::mouseDown(const int& x, const int& y)
 	if (tab->isSelected) {
 		return;
 	}
-	auto it2 = *std::find_if(tabs.begin(), tabs.end(), [](auto& item) { return item->isSelected; });
-	it2->isSelected = false;
-	it2->isDirty = true;
-	tab->isSelected = true;
-	tab->isDirty = true;
-	for (auto& item:tabs)
-	{
-		if (item->historyNum > tab->historyNum) {
-			item->historyNum -= 1;
-		}
-	}
-	tab->historyNum = tabs.size() - 1;
-	InvalidateRect(root->hwnd, nullptr, false);
+	selectTab(tab.get());
 }
 
 void TitleBar::mouseUp(const int& x, const int& y)
@@ -152,6 +139,24 @@ void TitleBar::closeTab(TitleBarTab* tab)
 	repaint();
 }
 
+void TitleBar::selectTab(TitleBarTab* tab)
+{
+	auto it2 = *std::find_if(tabs.begin(), tabs.end(), [](auto& item) { return item->isSelected; });
+	it2->isSelected = false;
+	it2->isDirty = true;
+	tab->isSelected = true;
+	tab->isDirty = true;
+	for (auto& item : tabs)
+	{
+		if (item->historyNum > tab->historyNum) {
+			item->historyNum -= 1;
+		}
+	}
+	tab->historyNum = tabs.size() - 1;
+	root->contentPanel->isDirty = true;
+	InvalidateRect(root->hwnd, nullptr, false);
+}
+
 void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 {
 	for (auto& tab:tabs)
@@ -168,13 +173,8 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 	tab->historyNum = tabs.size();
 	tabs.push_back(std::move(tab));
 	if (needRefresh) {
-		auto ptr = std::make_shared<ContentPanel>(root);
-		root->contentPanel = ptr;
-		ptr->initResize(root->w, root->h);
+		root->contentPanel->initFileContent();
 		InvalidateRect(root->hwnd, nullptr, false);
-	}
-	else {
-		root->contentPanel = std::make_shared<Home>(root);
 	}
 
 }

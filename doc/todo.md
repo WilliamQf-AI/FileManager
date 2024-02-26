@@ -1,3 +1,6 @@
+移除Home，ContentHeader等paint判断，返回空
+移除getStartPosOfIconAtCenterOfRect
+
 要为各个Control做init方法。
 创建了新contentPanel  click事件会有问题。
 鼠标移入窗口，cursor不会改变。

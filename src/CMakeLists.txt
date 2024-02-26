@@ -40,8 +40,6 @@ set(SRC
     FavoritePath.h
     SettingBar.cpp
     SettingBar.h
-    Home.cpp
-    Home.h
     ContentPanel.cpp
     ContentPanel.h
     ContentHeader.cpp
