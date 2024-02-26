@@ -9,18 +9,12 @@
 class WindowBase;
 TitleBar::TitleBar(WindowMain* root) :ControlBase(root)
 {
+	addTab(std::filesystem::path(""), false);
+	btns = std::make_shared<TitleBarBtns>(root);
 }
 
 TitleBar::~TitleBar()
 {
-}
-
-void TitleBar::init()
-{
-	ControlBase::init();
-	addTab(std::filesystem::path(""), false);
-	btns = std::make_shared<TitleBarBtns>(root);
-	btns->init();
 }
 
 void TitleBar::paint(SkCanvas* canvas)
@@ -172,14 +166,13 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 	auto tab = std::make_shared<TitleBarTab>(root, path);
 	tab->rect.setXYWH(12.f + tabs.size() * 200.f + tabs.size() * 3.f, 10.f, 200.f, 46.f);
 	tab->historyNum = tabs.size();
-	tab->init();
 	tabs.push_back(std::move(tab));
 	if (needRefresh) {
-		root->content = std::make_shared<Home>(root);
+		root->content = std::make_shared<ContentPanel>(root);
 		InvalidateRect(root->hwnd, nullptr, false);
 	}
 	else {
-		root->content = std::make_shared<ContentPanel>(root);
+		root->content = std::make_shared<Home>(root);
 	}
 
 }

@@ -26,8 +26,6 @@ WindowMain::WindowMain()
     titleBar = std::make_shared<TitleBar>(this);
     toolBar = std::make_shared<ToolBar>(this);
     leftPanel = std::make_shared<LeftPanel>(this);
-    //contentPanel = std::make_shared<ContentPanel>(this);
-    content = std::make_shared<Home>(this);
     initWindow();
 }
 
@@ -252,7 +250,6 @@ void WindowMain::onSize(const int& w, const int& h)
     surface.reset();
     size_t bmpSize = sizeof(BITMAPINFOHEADER) + w * h * sizeof(uint32_t);
     surfaceMemory.reset(bmpSize);
-
     BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(surfaceMemory.get());
     ZeroMemory(bmpInfo, sizeof(BITMAPINFO));
     bmpInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -265,9 +262,9 @@ void WindowMain::onSize(const int& w, const int& h)
     SkImageInfo info = SkImageInfo::MakeN32Premul(w, h);
     auto temp = SkCanvas::MakeRasterDirect(info, pixels, 4 * w);
     canvas = std::move(temp);
-    for (auto& obj : ctrls)
+    for (size_t i = 0; i < ctrls.size(); i++)
     {
-        obj->resize(w, h);
+        ctrls[i]->resize(w, h);
     }
 }
 

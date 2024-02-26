@@ -39,6 +39,5 @@ void Home::resize(const int& w, const int& h)
 {
 	isDirty = true;
 	auto topVal = root->titleBar->rect.height() + root->toolBar->rect.height();
-	auto leftVal = root->leftPanel->rect.fRight;
-	rect.setLTRB(leftVal, topVal, w, h);
+	rect.setLTRB(380.f, topVal, w, h);
 }
