@@ -17,13 +17,11 @@ ContentHeader::~ContentHeader()
 void ContentHeader::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
-
 	SkPaint paint;
 	paint.setColor(0xFFE8E8E8);
 	canvas->drawLine(rect.fLeft, rect.fBottom, rect.fRight, rect.fBottom, paint);
 	auto fontText = App::GetFontText();
 	fontText->setSize(16.8);
-
 	auto font = App::GetFontIcon();
 	font->setSize(24.f);
 	paint.setAntiAlias(false);

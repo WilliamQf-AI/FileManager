@@ -15,6 +15,7 @@ class TitleBar : public ControlBase
 public:
     TitleBar(WindowMain* root);
     ~TitleBar();
+    void init() override;
     void addTab(std::filesystem::path&& path,bool needRefresh=true);
     std::shared_ptr<TitleBarBtns> btns;
     std::vector<std::shared_ptr<TitleBarTab>> tabs;

@@ -30,7 +30,7 @@ void PathTool::paint(SkCanvas* canvas)
 	{
 		if (hoverIndex == i) {
 			paint.setColor(0x18000000);  //0xFFA8C7FA
-			auto r = SkRect::MakeXYWH(12.f + hoverIndex * 50.f, rect.fTop + 16.f, 34.f, 30.f);
+			auto r = SkRect::MakeXYWH(11.f + hoverIndex * 50.f, rect.fTop + 16.f, 34.f, 30.f);
 			canvas->drawRoundRect(r, 6.f, 6.f, paint);
 			paint.setColor(0xFF222222);
 		}

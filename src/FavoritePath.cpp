@@ -37,7 +37,6 @@ void FavoritePath::paint(SkCanvas* canvas)
 		paint.setColor(0xFF333333);
 		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, 42, rect.fTop + top+ i * 46 + 26, *fontText, paint);
 	}
-
 	if (totalHeight > rectHeight) {
 		if (hoverScroller) {
 			paint.setColor(0xFFD3E3FD);

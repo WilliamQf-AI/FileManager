@@ -11,7 +11,7 @@ class WindowMain;
 class TitleBarTab : public ControlBase
 {
 public:
-    TitleBarTab(WindowMain* root,std::filesystem::path& path,bool first=false);
+    TitleBarTab(WindowMain* root,std::filesystem::path& path);
     ~TitleBarTab();
     bool hoverChange(const int& x, const int& y);
     bool isSelected{ true };
