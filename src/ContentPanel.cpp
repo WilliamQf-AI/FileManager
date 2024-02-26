@@ -63,9 +63,11 @@ void ContentPanel::resize(const int& w, const int& h)
 {
 	if (!isDirty) {
 		isDirty = true;
-		contentHeader->isDirty = true;
-		contentList->isDirty = true;
-		contentBottom->isDirty = true;
+		if (contentHeader) {
+			contentHeader->isDirty = true;
+			contentList->isDirty = true;
+			contentBottom->isDirty = true;
+		}
 	}
 	rect.setLTRB(380.f, 116.f, w, h);
 

@@ -1,8 +1,8 @@
-移除Home，ContentHeader等paint判断，返回空
+titleBarTab mouse out hover style is not removed.
+TitleBar selected index.
+AddressBar input text,selected,cursor,enter key change.
+back, forward, up path, refresh
 移除getStartPosOfIconAtCenterOfRect
-
-要为各个Control做init方法。
-创建了新contentPanel  click事件会有问题。
 鼠标移入窗口，cursor不会改变。
 tab页不要盖住最小化按钮
 
