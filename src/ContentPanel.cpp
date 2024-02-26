@@ -63,7 +63,9 @@ void ContentPanel::resize(const int& w, const int& h)
 {
 	if (!isDirty) {
 		isDirty = true;
-		if (contentHeader) {
+		auto it = std::find_if(root->titleBar->tabs.begin(), root->titleBar->tabs.end(), [](auto& item) {return item->isSelected; });
+		auto tab = *it;
+		if (contentHeader && !tab->path.empty()) {
 			contentHeader->isDirty = true;
 			contentList->isDirty = true;
 			contentBottom->isDirty = true;

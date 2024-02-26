@@ -27,9 +27,6 @@ void TitleBar::paint(SkCanvas* canvas)
 
 void TitleBar::mouseMove(const int& x, const int& y)
 {
-	if (!rect.contains(x, y)) {
-		return;
-	}
 	bool flag{ false };
 	for (auto& tab:tabs)
 	{

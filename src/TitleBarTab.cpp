@@ -23,7 +23,6 @@ TitleBarTab::~TitleBarTab()
 
 bool TitleBarTab::hoverChange(const int& x, const int& y)
 {
-	bool flag{ false };
 	int index = -1;
 	if (rect.contains(x, y)) {
 		index = 0;
@@ -35,9 +34,9 @@ bool TitleBarTab::hoverChange(const int& x, const int& y)
 	if (index != hoverIndex) {
 		hoverIndex = index;
 		isDirty = true;
-		flag = true;
+		return true;
 	}
-	return flag;
+	return false;
 }
 
 void TitleBarTab::resize(const int& w, const int& h)

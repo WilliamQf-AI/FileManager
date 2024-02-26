@@ -1,3 +1,4 @@
+回到主页之后，一拖拽，就又变成filecontent了
 titleBarTab mouse out hover style is not removed.
 TitleBar selected index.
 AddressBar input text,selected,cursor,enter key change.
