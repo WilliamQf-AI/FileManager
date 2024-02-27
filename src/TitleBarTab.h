@@ -19,6 +19,7 @@ public:
     std::wstring title;
     std::filesystem::path path;
     int historyNum;
+    int orderNum;
 private:
     void resize(const int& w, const int& h) override;
     void paint(SkCanvas* canvas) override;

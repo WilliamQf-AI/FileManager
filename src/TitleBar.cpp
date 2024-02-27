@@ -53,15 +53,15 @@ void TitleBar::mouseDown(const int& x, const int& y)
 		draggingWindow = true;
 		return;
 	}
-	auto tab = *it;
-	if (tab->hoverIndex == 1) { //删除Tab
-		closeTab(tab.get());
+	auto index = it - tabs.begin();
+	if (tabs[index]->hoverIndex == 1) { //删除Tab
+		closeTab(tabs[index].get());
 		return;
 	}
-	if (tab->isSelected) {
+	if (tabs[index]->isSelected) {
 		return;
 	}
-	selectTab(tab.get());
+	selectTab(index);
 }
 
 void TitleBar::mouseUp(const int& x, const int& y)
@@ -104,7 +104,7 @@ void TitleBar::closeTab(TitleBarTab* tab)
 	for (size_t i = 0; i < tabs.size(); i++)
 	{
 		if (tabs[i].get() == tab) {
-			tab->isDel = true;
+			tab->isDel = true; //删除
 			if (i + 1 < tabs.size()) {
 				tabs[i + 1]->hoverIndex = 1;
 			}
@@ -123,6 +123,8 @@ void TitleBar::closeTab(TitleBarTab* tab)
 	}
 	if (maxIndex > -1) {
 		tabs[maxIndex]->isSelected = true;
+		selectedTabIndex = maxIndex;
+		root->contentPanel->isDirty = true;
 	}
 	btns->isDirty = true;
 	if (tabs.size() == 1) {
@@ -132,25 +134,26 @@ void TitleBar::closeTab(TitleBarTab* tab)
 		tab->historyNum = 0;
 		tab->hoverIndex = 1;
 		tabs.push_back(std::move(tab));
+		selectedTabIndex = 0;
 	}
 	repaint();
 }
 
-void TitleBar::selectTab(TitleBarTab* tab)
+void TitleBar::selectTab(const int& index)
 {
-	auto it2 = *std::find_if(tabs.begin(), tabs.end(), [](auto& item) { return item->isSelected; });
-	it2->isSelected = false;
-	it2->isDirty = true;
-	tab->isSelected = true;
-	tab->isDirty = true;
+	tabs[selectedTabIndex]->isSelected = false;
+	tabs[selectedTabIndex]->isDirty = true;
+	tabs[index]->isSelected = true;
+	tabs[index]->isDirty = true;
 	for (auto& item : tabs)
 	{
-		if (item->historyNum > tab->historyNum) {
+		if (item->historyNum > tabs[index]->historyNum) {
 			item->historyNum -= 1;
 		}
 	}
-	tab->historyNum = tabs.size() - 1;
+	tabs[index]->historyNum = tabs.size() - 1;
 	root->contentPanel->isDirty = true;
+	selectedTabIndex = index;
 	InvalidateRect(root->hwnd, nullptr, false);
 }
 
@@ -166,9 +169,12 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 		}
 	}
 	auto tab = std::make_shared<TitleBarTab>(root, path);
-	tab->rect.setXYWH(12.f + tabs.size() * 200.f + tabs.size() * 3.f, 10.f, 200.f, 46.f);
-	tab->historyNum = tabs.size();
+	auto size = tabs.size();
+	tab->rect.setXYWH(12.f + size * 200.f + size * 3.f, 10.f, 200.f, 46.f);
+	tab->historyNum = size;
+	tab->orderNum = size;
 	tabs.push_back(std::move(tab));
+	selectedTabIndex = size;
 	if (needRefresh) {
 		root->contentPanel->initFileContent();
 		InvalidateRect(root->hwnd, nullptr, false);
