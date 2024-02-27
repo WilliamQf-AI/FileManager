@@ -6,6 +6,7 @@
 #include "FileColumn.h"
 
 class WindowMain;
+class TitleBarTab;
 class ContentList : public ControlBase
 {
 public:
@@ -18,6 +19,7 @@ public:
     void mouseDrag(const int& x, const int& y) override;
     void resize(const int& w, const int& h) override;
     void mouseWheel(const int& x, const int& y, const int& delta) override;
+    void tabChange(TitleBarTab* tab);
 private:
     void getRecentFiles();
     std::vector<std::vector<FileColumn>> files;

@@ -3,12 +3,13 @@
 #include "App.h"
 #include "WindowMain.h"
 #include "ContentPanel.h"
+#include "TitleBar.h"
+#include "TitleBarTab.h"
 
 ContentHeader::ContentHeader(WindowMain* root) :ControlBase(root)
 {
-	columns.push_back(FileColumnHeader(L"最近使用的文件", false));
-	columns.push_back(FileColumnHeader(L"使用时间", true));
-	resize(root->w, root->h);
+	auto func = std::bind(&ContentHeader::tabChange, this, std::placeholders::_1);
+	root->titleBar->tabChangeEvents.push_back(std::move(func));
 }
 
 ContentHeader::~ContentHeader()
@@ -68,4 +69,15 @@ void ContentHeader::resize(const int& w, const int& h)
 	columns[0].right = rect.fLeft + 460.f;
 	columns[1].left = columns[0].right;
 	columns[1].right = rect.fRight;
+}
+
+void ContentHeader::tabChange(TitleBarTab* tab)
+{
+	//columns.push_back(FileColumnHeader(L"最近使用的文件", false));
+	//columns.push_back(FileColumnHeader(L"使用时间", true));
+
+	columns.push_back(FileColumnHeader(L"名称", false));
+	columns.push_back(FileColumnHeader(L"修改日期", true));
+	columns.push_back(FileColumnHeader(L"类型", true));
+	columns.push_back(FileColumnHeader(L"大小", true));
 }

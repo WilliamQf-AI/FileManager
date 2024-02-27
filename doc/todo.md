@@ -1,3 +1,5 @@
+content list 获取文件类型就去搞outlook了
+
 AddressBar input text,selected,cursor,enter key change.
 back, forward, up path, refresh
 鼠标移入窗口，cursor不会改变。

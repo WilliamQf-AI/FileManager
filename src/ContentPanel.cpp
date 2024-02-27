@@ -47,7 +47,6 @@ void ContentPanel::paint(SkCanvas* canvas)
 	auto textLength = wcslen(str.data()) * 2;
 	paint.setColor(0xFFC0D0EA);
 	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, rect.centerX() - 102.f, y + 8.f, *fontText, paint);
-
 }
 
 void ContentPanel::resize(const int& w, const int& h)

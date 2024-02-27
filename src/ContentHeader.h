@@ -4,6 +4,7 @@
 #include "FileColumnHeader.h"
 
 class WindowMain;
+class TitleBarTab;
 class ContentHeader : public ControlBase
 {
 public:
@@ -15,6 +16,7 @@ public:
     void mouseUp(const int& x, const int& y) override;
     void mouseDrag(const int& x, const int& y) override;
     void resize(const int& w, const int& h) override;
+    void tabChange(TitleBarTab* tab);
     std::vector<FileColumnHeader> columns;
     float paddingLeft{ 18.f };
     float paddingRight{ 38.f };

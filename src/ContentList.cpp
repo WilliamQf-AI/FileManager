@@ -9,10 +9,13 @@
 #include "WindowMain.h"
 #include "ContentPanel.h"
 #include "FileColumnTime.h"
+#include "TitleBar.h"
+#include "TitleBarTab.h"
 
 ContentList::ContentList(WindowMain* root) :ControlBase(root)
 {
-	getRecentFiles();
+	auto func = std::bind(&ContentList::tabChange, this, std::placeholders::_1);
+	root->titleBar->tabChangeEvents.push_back(std::move(func));
 }
 
 ContentList::~ContentList()
@@ -151,6 +154,25 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 	}
 }
 
+void ContentList::tabChange(TitleBarTab* tab)
+{
+	auto zone = std::chrono::current_zone();
+	for (const auto& entry : std::filesystem::directory_iterator(tab->path)) {
+		auto fileName = entry.path().stem().wstring();
+		auto fileTime = entry.last_write_time();
+		auto sysClock = std::chrono::clock_cast<std::chrono::system_clock>(entry.last_write_time());
+		auto zTime = std::chrono::zoned_time(zone, sysClock);
+		auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
+		str = str.substr(0, str.find_last_of(L"."));
+		
+		files.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime) });
+	}
+	totalHeight = 40 * files.size();
+	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
+		return a[1] > b[1];
+		});
+}
+
 void ContentList::getRecentFiles()
 {
 	PWSTR pszPath = nullptr;
@@ -160,6 +182,7 @@ void ContentList::getRecentFiles()
 
 	auto zone = std::chrono::current_zone();
 	std::filesystem::path path(pathStr);
+	SHFILEINFO fileInfo = { 0 };
 	for (const auto& entry : std::filesystem::directory_iterator(path)) {
 		auto fileName = entry.path().stem().wstring();
 		auto fileTime = entry.last_write_time();
@@ -167,6 +190,17 @@ void ContentList::getRecentFiles()
 		auto zTime = std::chrono::zoned_time(zone, sysClock);
 		auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
 		str = str.substr(0, str.find_last_of(L"."));
+
+
+		
+		std::wstring  typeStr;
+		if (SHGetFileInfo(entry.path().wstring().c_str(), 0, &fileInfo, sizeof(fileInfo),
+			SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX) != 0)
+		{
+			typeStr = fileInfo.szTypeName;
+		}
+
+
 		files.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime)});
 	}
 	totalHeight = 40 * files.size();
