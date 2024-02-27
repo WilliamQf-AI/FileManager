@@ -22,7 +22,6 @@ ContentList::~ContentList()
 void ContentList::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
-	SkPaint paint;
 	auto parent = (ContentPanel*)root->contentPanel.get();
 	auto paddingLeft = parent->contentHeader->paddingLeft;
 	auto paddingRight = parent->contentHeader->paddingRight;
@@ -31,9 +30,11 @@ void ContentList::paint(SkCanvas* canvas)
 	fontText->setSize(16.8);
 	canvas->save();
 	canvas->clipRect(rect);
-	paint.setColor(0xFF555555);
 	auto top = 0 - (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
 	auto y = top + rect.fTop + 32.f;
+	SkPaint paint;
+	paint.setColor(0xFF555555);
+	paint.setAntiAlias(true);
 	for (auto& file : files)
 	{
 		for (size_t i = 0; i < columns.size(); i++)

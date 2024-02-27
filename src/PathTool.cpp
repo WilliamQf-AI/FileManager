@@ -2,6 +2,7 @@
 #include "WindowMain.h"
 #include "ToolBar.h"
 #include "App.h"
+#include "TitleBar.h"
 
 PathTool::PathTool(WindowMain* root) : ControlBase(root)
 {
@@ -28,11 +29,14 @@ void PathTool::paint(SkCanvas* canvas)
 	font->setSize(26.f);
 	for (size_t i = 0; i < codes.size(); i++)
 	{
-		if (hoverIndex == i) {
+		if (hoverIndex == i && enableFlag[i]) {
 			paint.setColor(0x18000000);  //0xFFA8C7FA
 			auto r = SkRect::MakeXYWH(11.f + hoverIndex * 50.f, rect.fTop + 16.f, 34.f, 30.f);
 			canvas->drawRoundRect(r, 6.f, 6.f, paint);
 			paint.setColor(0xFF222222);
+		}
+		else if(!enableFlag[i]) {
+			paint.setColor(0xFFDDDDDD);
 		}
 		else {
 			paint.setColor(0xFF888888);
@@ -43,11 +47,16 @@ void PathTool::paint(SkCanvas* canvas)
 
 void PathTool::mouseMove(const int& x, const int& y)
 {
+	auto tab = root->titleBar->tabs[root->titleBar->selectedTabIndex].get();
+	if (tab->path.empty()) {
+
+	}
 	int index = -1;
 	if (rect.contains(x, y) && x > 8.f) {
 		index = (x-8.f) / 50;
 	}
 	if (index != hoverIndex) {
+
 		hoverIndex = index;
 		repaint();
 	}
@@ -55,4 +64,24 @@ void PathTool::mouseMove(const int& x, const int& y)
 
 void PathTool::mouseDown(const int& x, const int& y)
 {
+	if (hoverIndex >= 0) {
+		auto tab = root->titleBar->tabs[root->titleBar->selectedTabIndex].get();
+		switch (hoverIndex)
+		{
+		case 0: {
+
+		}
+		case 1:{
+
+			  }
+		case 2: {
+
+		}
+		case 3: {
+
+		}
+		default:
+			break;
+		}
+	}
 }

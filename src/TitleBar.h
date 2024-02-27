@@ -8,6 +8,7 @@
 #include "TitleBarBtns.h"
 #include "TitleBarTab.h"
 #include "filesystem"
+#include "functional"
 
 class WindowMain;
 class TitleBar : public ControlBase
@@ -19,6 +20,7 @@ public:
     void addTab(std::filesystem::path&& path,bool needRefresh=true);
     std::shared_ptr<TitleBarBtns> btns;
     std::vector<std::shared_ptr<TitleBarTab>> tabs;
+    std::vector<std::function<void(TitleBarTab* tab)>> tabChangeEvents;
     POINT startPos;
     bool draggingWindow{ false };
 private:

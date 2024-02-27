@@ -11,6 +11,7 @@
 #include "ContentBottom.h"
 
 class WindowMain;
+class TitleBarTab;
 class ContentPanel : public ControlBase
 {
 public:
@@ -19,6 +20,7 @@ public:
     void paint(SkCanvas* canvas) override;
     void initFileContent();
     void resize(const int& w, const int& h);
+    void tabChange(TitleBarTab* tab);
     std::shared_ptr<ContentHeader> contentHeader;
     std::shared_ptr<ContentList> contentList;
     std::shared_ptr<ContentBottom> contentBottom;

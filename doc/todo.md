@@ -5,6 +5,8 @@ tab页不要盖住最小化按钮
 
 window name
 
+监控文件目录的变化
+
 
 TitleBar selected index.这要结合拖拽tab页功能一起做
 Deskttop翻译成桌面

@@ -8,8 +8,11 @@
 
 
 
+
 ContentPanel::ContentPanel(WindowMain* root) :ControlBase(root)
 {
+	auto func = std::bind(&ContentPanel::tabChange, this, std::placeholders::_1);
+	root->titleBar->tabChangeEvents.push_back(func);
 }
 
 ContentPanel::~ContentPanel()
@@ -75,4 +78,9 @@ void ContentPanel::resize(const int& w, const int& h)
 
 	//recent files 
 	//C:\Users\liuxiaolun\AppData\Roaming\Microsoft\Windows\Recent
+}
+
+void ContentPanel::tabChange(TitleBarTab* tab)
+{
+	isDirty = true;
 }

@@ -24,7 +24,7 @@ void ToolBar::changeAddress()
 	//bool is_root_directory = (tab->path.root_path() == tab->path);
 	//if()
 	pathInput->isDirty = true;
-	
+	pathTool->isDirty = true;
 }
 
 void ToolBar::paint(SkCanvas* canvas)

@@ -125,7 +125,10 @@ void TitleBar::closeTab(TitleBarTab* tab)
 	if (maxIndex > -1) {
 		tabs[maxIndex]->isSelected = true;
 		selectedTabIndex = maxIndex;
-		root->contentPanel->isDirty = true;
+		for (size_t i = 0; i < tabChangeEvents.size(); i++)
+		{
+			tabChangeEvents[i](tabs[maxIndex].get());
+		}
 	}
 	btns->isDirty = true;
 	if (tabs.size() == 1) {
