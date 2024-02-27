@@ -6,23 +6,23 @@
 #include "PathInput.h"
 #include "SearchInput.h"
 #include "TitleBar.h"
+#include "TitleBarTab.h"
 
 ToolBar::ToolBar(WindowMain* root) :ControlBase(root)
 {
 	pathTool = std::make_shared<PathTool>(root);
 	pathInput = std::make_shared<PathInput>(root);
 	searchInput = std::make_shared<SearchInput>(root);
+	auto func = std::bind(&ToolBar::tabChange, this, std::placeholders::_1);
+	root->titleBar->tabChangeEvents.push_back(std::move(func));
 }
 
 ToolBar::~ToolBar()
 {
 }
 
-void ToolBar::changeAddress()
+void ToolBar::tabChange(TitleBarTab* tab)
 {
-	//auto tab = root->titleBar->tabs[root->titleBar->selectedTabIndex].get();
-	//bool is_root_directory = (tab->path.root_path() == tab->path);
-	//if()
 	pathInput->isDirty = true;
 	pathTool->isDirty = true;
 }

@@ -157,13 +157,11 @@ void TitleBar::selectTab(const int& index)
 	}
 	tabs[index]->historyNum = tabs.size() - 1;
 	root->contentPanel->isDirty = true;
-	if (tabs[selectedTabIndex]->path != tabs[index]->path) {
-		selectedTabIndex = index;
-		root->toolBar->changeAddress();
+	selectedTabIndex = index;
+	for (size_t i = 0; i < tabChangeEvents.size(); i++)
+	{
+		tabChangeEvents[i](tabs[selectedTabIndex].get());
 	}
-	else {
-		selectedTabIndex = index;
-	}	
 	InvalidateRect(root->hwnd, nullptr, false);
 }
 
@@ -186,8 +184,10 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 	tabs.push_back(std::move(tab));
 	selectedTabIndex = size;
 	if (needRefresh) {
-		root->toolBar->changeAddress();
-		root->contentPanel->initFileContent();
+		for (size_t i = 0; i < tabChangeEvents.size(); i++)
+		{
+			tabChangeEvents[i](tabs[selectedTabIndex].get());
+		}
 		InvalidateRect(root->hwnd, nullptr, false);
 	}
 }

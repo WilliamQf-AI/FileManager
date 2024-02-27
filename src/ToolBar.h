@@ -10,12 +10,13 @@ class WindowMain;
 class PathTool;
 class PathInput;
 class SearchInput;
+class TitleBarTab;
 class ToolBar : public ControlBase
 {
 public:
     ToolBar(WindowMain* root);
     ~ToolBar();
-    void changeAddress();
+    void tabChange(TitleBarTab* tab);
     std::shared_ptr<PathTool> pathTool;
     std::shared_ptr<PathInput> pathInput;
     std::shared_ptr<SearchInput> searchInput;

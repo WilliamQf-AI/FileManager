@@ -12,7 +12,7 @@
 ContentPanel::ContentPanel(WindowMain* root) :ControlBase(root)
 {
 	auto func = std::bind(&ContentPanel::tabChange, this, std::placeholders::_1);
-	root->titleBar->tabChangeEvents.push_back(func);
+	root->titleBar->tabChangeEvents.push_back(std::move(func));
 }
 
 ContentPanel::~ContentPanel()
@@ -50,18 +50,6 @@ void ContentPanel::paint(SkCanvas* canvas)
 
 }
 
-void ContentPanel::initFileContent()
-{
-	isDirty = true;
-	if (contentHeader) return;
-	contentHeader = std::make_shared<ContentHeader>(root);
-	contentBottom = std::make_shared<ContentBottom>(root);
-	contentList = std::make_shared<ContentList>(root);
-	contentHeader->resize(root->w, root->h);
-	contentBottom->resize(root->w, root->h);
-	contentList->resize(root->w, root->h);
-}
-
 void ContentPanel::resize(const int& w, const int& h)
 {
 	if (!isDirty) {
@@ -83,4 +71,18 @@ void ContentPanel::resize(const int& w, const int& h)
 void ContentPanel::tabChange(TitleBarTab* tab)
 {
 	isDirty = true;
+	if (contentHeader) {
+		contentHeader->isDirty = true;
+		contentBottom->isDirty = true;
+		contentList->isDirty = true;
+	}
+	else
+	{
+		contentHeader = std::make_shared<ContentHeader>(root);
+		contentBottom = std::make_shared<ContentBottom>(root);
+		contentList = std::make_shared<ContentList>(root);
+	}
+	contentHeader->resize(root->w, root->h);
+	contentBottom->resize(root->w, root->h);
+	contentList->resize(root->w, root->h);
 }
