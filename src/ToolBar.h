@@ -15,6 +15,7 @@ class ToolBar : public ControlBase
 public:
     ToolBar(WindowMain* root);
     ~ToolBar();
+    void changeAddress();
     std::shared_ptr<PathTool> pathTool;
     std::shared_ptr<PathInput> pathInput;
     std::shared_ptr<SearchInput> searchInput;

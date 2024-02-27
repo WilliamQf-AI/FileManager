@@ -5,6 +5,7 @@
 #include "PathTool.h"
 #include "PathInput.h"
 #include "SearchInput.h"
+#include "TitleBar.h"
 
 ToolBar::ToolBar(WindowMain* root) :ControlBase(root)
 {
@@ -15,6 +16,15 @@ ToolBar::ToolBar(WindowMain* root) :ControlBase(root)
 
 ToolBar::~ToolBar()
 {
+}
+
+void ToolBar::changeAddress()
+{
+	//auto tab = root->titleBar->tabs[root->titleBar->selectedTabIndex].get();
+	//bool is_root_directory = (tab->path.root_path() == tab->path);
+	//if()
+	pathInput->isDirty = true;
+	
 }
 
 void ToolBar::paint(SkCanvas* canvas)

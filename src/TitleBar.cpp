@@ -4,6 +4,7 @@
 #include "include/core/SkFontMetrics.h"
 #include "TitleBarBtns.h"
 #include "ContentPanel.h"
+#include "ToolBar.h"
 
 class WindowBase;
 TitleBar::TitleBar(WindowMain* root) :ControlBase(root)
@@ -153,7 +154,13 @@ void TitleBar::selectTab(const int& index)
 	}
 	tabs[index]->historyNum = tabs.size() - 1;
 	root->contentPanel->isDirty = true;
-	selectedTabIndex = index;
+	if (tabs[selectedTabIndex]->path != tabs[index]->path) {
+		selectedTabIndex = index;
+		root->toolBar->changeAddress();
+	}
+	else {
+		selectedTabIndex = index;
+	}	
 	InvalidateRect(root->hwnd, nullptr, false);
 }
 
@@ -176,6 +183,7 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 	tabs.push_back(std::move(tab));
 	selectedTabIndex = size;
 	if (needRefresh) {
+		root->toolBar->changeAddress();
 		root->contentPanel->initFileContent();
 		InvalidateRect(root->hwnd, nullptr, false);
 	}

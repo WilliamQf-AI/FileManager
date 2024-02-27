@@ -29,7 +29,7 @@ void SearchInput::paint(SkCanvas* canvas)
 	font->setSize(26.f); 
 	auto color = hoverIndex == 0 ? 0xFFE0E3EA : 0xFFECEFF7;
 	paint.setColor(color);
-	canvas->drawRoundRect(rect, 8.f, 8.f, paint);
+	canvas->drawRoundRect(rect, 6.f, 6.f, paint);
 
 	paint.setColor(0xFF999999);
 	auto iconCode = (const char*)u8"\ue6a6";
