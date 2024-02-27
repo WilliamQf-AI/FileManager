@@ -173,5 +173,4 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 		root->contentPanel->initFileContent();
 		InvalidateRect(root->hwnd, nullptr, false);
 	}
-
 }

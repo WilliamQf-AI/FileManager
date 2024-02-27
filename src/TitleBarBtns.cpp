@@ -31,20 +31,20 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 		paint.setColor(SK_ColorRED);
 		canvas->drawRect(SkRect::MakeXYWH(rect.fLeft + 132, rect.fTop, 66, 56), paint);
 	}
-	auto r = SkRect::MakeXYWH(rect.fLeft, 0, 66, 56);
 	auto font = App::GetFontIcon();
 	font->setSize(24.f);
-	auto iconCode = (const char *)u8"\ue6e8"; //最小化
-	auto pos = getStartPosOfIconAtCenterOfRect(iconCode, r, font.get());	
+	auto iconCode = (const char *)u8"\ue6e8"; //最小化	
 	paint.setColor(0xFF888888);
-	canvas->drawString(iconCode, pos.fX, pos.fY, *font, paint);
+	auto left = rect.fLeft + 23.f;
+	auto top = rect.fTop + 36.f;
+	canvas->drawString(iconCode, left, top, *font, paint);
 	iconCode = isMaximized? (const char*)u8"\ue6e9" : (const char*)u8"\ue6e5"; //最大化
-	canvas->drawString(iconCode, pos.fX +66, pos.fY, *font, paint);
+	canvas->drawString(iconCode, left +66.f, top, *font, paint);
 	iconCode = (const char*)u8"\ue6e7"; // 关闭
 	if (hoverIndex == 2) {
 		paint.setColor(SK_ColorWHITE);
 	}
-	canvas->drawString(iconCode, pos.fX + 132, pos.fY, *font, paint);
+	canvas->drawString(iconCode, left + 132.f, top, *font, paint);
 	
 }
 

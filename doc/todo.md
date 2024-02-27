@@ -1,14 +1,12 @@
-回到主页之后，一拖拽，就又变成filecontent了
-titleBarTab mouse out hover style is not removed.
-TitleBar selected index.
 AddressBar input text,selected,cursor,enter key change.
 back, forward, up path, refresh
-移除getStartPosOfIconAtCenterOfRect
 鼠标移入窗口，cursor不会改变。
 tab页不要盖住最小化按钮
 
+window name
 
 
+TitleBar selected index.这要结合拖拽tab页功能一起做
 Deskttop翻译成桌面
 
 滚动条应该：SetCapture(root->hwnd);ReleaseCapture();

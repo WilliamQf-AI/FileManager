@@ -10,8 +10,8 @@ class ControlBase
 public:
 	ControlBase(WindowMain* root);
 	~ControlBase();
-	SkPoint getStartPosOfIconAtCenterOfRect(const char* text,SkRect& rect,SkFont* font);
-	SkPoint getStartPosOfIconAtCenterOfRect(std::wstring& str,SkRect& rect, SkFont* font);
+	//SkPoint getStartPosOfIconAtCenterOfRect(const char* text,SkRect& rect,SkFont* font);
+	//SkPoint getStartPosOfIconAtCenterOfRect(std::wstring& str,SkRect& rect, SkFont* font);
 	float getTextVerticalVal(SkFont* font);
 	std::wstring fileTimeToString(const std::filesystem::file_time_type& timePoint);
 	void repaint();
