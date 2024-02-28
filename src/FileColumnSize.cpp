@@ -1,6 +1,9 @@
 #include "FileColumnSize.h"
+#include <format>
 
-FileColumnSize::FileColumnSize(int& size) : FileColumn(std::to_wstring(size)),size{size}
+FileColumnSize::FileColumnSize(unsigned long long& size) : 
+	FileColumn(size==0?std::wstring(L""):std::format(L"{} KB",size)),
+	size{size}
 {
 
 }

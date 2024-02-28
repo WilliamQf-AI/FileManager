@@ -77,12 +77,12 @@ void ContentHeader::tabChange(TitleBarTab* tab)
 	columns.clear();
 	columns.push_back(FileColumnHeader(L"名称", false));
 	columns.push_back(FileColumnHeader(L"修改日期", true));
-	columns.push_back(FileColumnHeader(L"类型", false));
 	columns.push_back(FileColumnHeader(L"大小", false));
+	columns.push_back(FileColumnHeader(L"类型", false));
 	columns[0].left = rect.fLeft;
 	columns[0].right = rect.fLeft + 460.f;
 	columns[1].left = columns[0].right;
-	columns[1].right = columns[1].left + 200.f;
+	columns[1].right = columns[1].left + 280.f;
 	columns[2].left = columns[1].right;
 	columns[2].right = columns[2].left + 200.f;
 	columns[3].left = columns[2].right;

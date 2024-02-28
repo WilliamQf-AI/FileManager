@@ -164,7 +164,7 @@ void ContentList::tabChange(TitleBarTab* tab)
 	auto zone = std::chrono::current_zone();
 	SHFILEINFO fileInfo = { 0 };
 	for (const auto& entry : std::filesystem::directory_iterator(tab->path)) {
-		auto fileName = entry.path().stem().wstring();
+		auto fileName = entry.path().filename().wstring();
 		auto fileTime = entry.last_write_time();
 		auto sysClock = std::chrono::clock_cast<std::chrono::system_clock>(entry.last_write_time());
 		auto zTime = std::chrono::zoned_time(zone, sysClock);
@@ -177,8 +177,8 @@ void ContentList::tabChange(TitleBarTab* tab)
 		{
 			typeStr = fileInfo.szTypeName;
 		}
-		int fileSize = std::filesystem::file_size(tab->path);
-		files.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime),FileColumn(typeStr),FileColumnSize(fileSize)});
+		unsigned long long fileSize = std::filesystem::file_size(entry.path()) /1024;
+		files.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime),FileColumnSize(fileSize),FileColumn(typeStr)});
 	}
 	totalHeight = 40 * files.size();
 	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {

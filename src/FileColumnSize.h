@@ -5,9 +5,9 @@
 class FileColumnSize:public FileColumn
 {
 public:
-	FileColumnSize(int& size);
+	FileColumnSize(unsigned long long& size);
 	~FileColumnSize();
-	int size;
+	unsigned long long size;
 	bool operator>(const FileColumn& other) const override;
 private:
 
