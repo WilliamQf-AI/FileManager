@@ -128,6 +128,9 @@ void ContentList::resize(const int& w, const int& h)
 		if (h < 40.f) h = 40.f;
 		scrollerRect.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
 	}
+	else {
+		scrollerRect.setXYWH(0, rect.fTop, 0, 0);
+	}
 }
 
 void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
@@ -157,6 +160,7 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 
 void ContentList::tabChange(TitleBarTab* tab)
 {
+	files.clear();
 	auto zone = std::chrono::current_zone();
 	SHFILEINFO fileInfo = { 0 };
 	for (const auto& entry : std::filesystem::directory_iterator(tab->path)) {
@@ -180,6 +184,14 @@ void ContentList::tabChange(TitleBarTab* tab)
 	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
 		return a[1] > b[1];
 		});
+	if (totalHeight > rect.height()) {
+		auto h = rect.height() * (rect.height() / totalHeight);
+		if (h < 40.f) h = 40.f;
+		scrollerRect.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
+	}
+	else {
+		scrollerRect.setXYWH(0, rect.fTop, 0, 0);
+	}
 }
 
 void ContentList::getRecentFiles()
@@ -199,16 +211,6 @@ void ContentList::getRecentFiles()
 		auto zTime = std::chrono::zoned_time(zone, sysClock);
 		auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
 		str = str.substr(0, str.find_last_of(L"."));
-
-
-		
-		std::wstring  typeStr;
-		if (SHGetFileInfo(entry.path().wstring().c_str(), 0, &fileInfo, sizeof(fileInfo),
-			SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX) != 0)
-		{
-			typeStr = fileInfo.szTypeName;
-			auto a = 1;
-		}
 
 
 		files.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime)});
