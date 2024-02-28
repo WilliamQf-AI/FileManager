@@ -10,6 +10,7 @@
 #include "ContentPanel.h"
 #include "FileColumnTime.h"
 #include "FileColumnSize.h"
+#include "FileColumnPath.h"
 #include "TitleBar.h"
 #include "TitleBarTab.h"
 #include "SystemIcon.h"
@@ -40,6 +41,7 @@ void ContentList::paint(SkCanvas* canvas)
 	SkPaint paint;
 	paint.setColor(0xFF555555);
 	paint.setAntiAlias(true);
+	auto rootPath = root->titleBar->tabs[root->titleBar->selectedTabIndex]->path.wstring();
 	for (auto& file : files)
 	{
 		for (size_t i = 0; i < columns.size(); i++)
@@ -48,9 +50,10 @@ void ContentList::paint(SkCanvas* canvas)
 			auto left = columns[i].left + paddingLeft;
 			canvas->clipRect(SkRect::MakeLTRB(left, y - 20, columns[i].right - paddingRight, y + 20));
 			if (i == 0) {
-				auto img = SystemIcon::getIcon(SIID_FOLDER, 26); //CSIDL_QUICKACCESS
+				auto str = std::format(L"{}\\{}",rootPath, file[i].text);
+				auto img = SystemIcon::getIcon(str, 24); //CSIDL_QUICKACCESS
 				canvas->drawImage(img, left, y - 18);
-				left += 32;
+				left += 34;
 			}
 			auto len = wcslen(file[i].text.data()) * 2;
 			canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16, left, y, *fontText, paint);
@@ -181,12 +184,13 @@ void ContentList::tabChange(TitleBarTab* tab)
 		fileTimeStr = fileTimeStr.substr(0, fileTimeStr.find_last_of(L"."));
 		std::wstring  typeStr;
 		unsigned long long fileSize{ 0 };
+		auto hr = SHGetFileInfo(entry.path().wstring().c_str(), 0, &fileInfo, sizeof(fileInfo),
+			SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX);
 		if (std::filesystem::is_directory(entry.path())) {
 			typeStr = L"文件夹";
 		}
 		else {
-			if (SHGetFileInfo(entry.path().wstring().c_str(), 0, &fileInfo, sizeof(fileInfo),
-				SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX) != 0)
+			if (hr)
 			{
 				//todo
 				//if ((fileInfo.dwAttributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) {  //
@@ -196,7 +200,11 @@ void ContentList::tabChange(TitleBarTab* tab)
 			}
 			fileSize = std::filesystem::file_size(entry.path()) / 1024;
 		}		
-		files.push_back({ FileColumn(fileName), FileColumnTime(fileTimeStr,fileTime),FileColumnSize(fileSize),FileColumn(typeStr)});
+		//auto p = entry.path().wstring();
+		//FileColumnPath fcp(fileName, p);
+		files.push_back({ FileColumn(fileName),
+			FileColumnTime(fileTimeStr,fileTime),
+			FileColumnSize(fileSize),FileColumn(typeStr)});
 	}
 	totalHeight = 40 * files.size();
 	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {

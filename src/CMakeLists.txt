@@ -7,6 +7,8 @@ set(SRC
     FileColumnTime.h
     FileColumnSize.cpp
     FileColumnSize.h
+    FileColumnPath.cpp
+    FileColumnPath.h
     FileColumnHeader.cpp
     FileColumnHeader.h
     ControlBase.cpp
