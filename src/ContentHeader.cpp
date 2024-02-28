@@ -65,19 +65,26 @@ void ContentHeader::resize(const int& w, const int& h)
 		root->contentPanel->rect.fTop,
 		root->contentPanel->rect.width(),
 		46.f);
-	columns[0].left = rect.fLeft;
-	columns[0].right = rect.fLeft + 460.f;
-	columns[1].left = columns[0].right;
-	columns[1].right = rect.fRight;
+	if (columns.size() > 0) {
+		columns[3].right = rect.fRight;
+	}
 }
 
 void ContentHeader::tabChange(TitleBarTab* tab)
 {
 	//columns.push_back(FileColumnHeader(L"最近使用的文件", false));
 	//columns.push_back(FileColumnHeader(L"使用时间", true));
-
+	columns.clear();
 	columns.push_back(FileColumnHeader(L"名称", false));
 	columns.push_back(FileColumnHeader(L"修改日期", true));
-	columns.push_back(FileColumnHeader(L"类型", true));
-	columns.push_back(FileColumnHeader(L"大小", true));
+	columns.push_back(FileColumnHeader(L"类型", false));
+	columns.push_back(FileColumnHeader(L"大小", false));
+	columns[0].left = rect.fLeft;
+	columns[0].right = rect.fLeft + 460.f;
+	columns[1].left = columns[0].right;
+	columns[1].right = columns[1].left + 200.f;
+	columns[2].left = columns[1].right;
+	columns[2].right = columns[2].left + 200.f;
+	columns[3].left = columns[2].right;
+	columns[3].right = rect.fRight;
 }

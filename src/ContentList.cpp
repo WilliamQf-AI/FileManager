@@ -9,6 +9,7 @@
 #include "WindowMain.h"
 #include "ContentPanel.h"
 #include "FileColumnTime.h"
+#include "FileColumnSize.h"
 #include "TitleBar.h"
 #include "TitleBarTab.h"
 
@@ -157,6 +158,7 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 void ContentList::tabChange(TitleBarTab* tab)
 {
 	auto zone = std::chrono::current_zone();
+	SHFILEINFO fileInfo = { 0 };
 	for (const auto& entry : std::filesystem::directory_iterator(tab->path)) {
 		auto fileName = entry.path().stem().wstring();
 		auto fileTime = entry.last_write_time();
@@ -165,7 +167,14 @@ void ContentList::tabChange(TitleBarTab* tab)
 		auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
 		str = str.substr(0, str.find_last_of(L"."));
 		
-		files.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime) });
+		std::wstring  typeStr;
+		if (SHGetFileInfo(entry.path().wstring().c_str(), 0, &fileInfo, sizeof(fileInfo),
+			SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX) != 0)
+		{
+			typeStr = fileInfo.szTypeName;
+		}
+		int fileSize = std::filesystem::file_size(tab->path);
+		files.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime),FileColumn(typeStr),FileColumnSize(fileSize)});
 	}
 	totalHeight = 40 * files.size();
 	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
@@ -198,6 +207,7 @@ void ContentList::getRecentFiles()
 			SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX) != 0)
 		{
 			typeStr = fileInfo.szTypeName;
+			auto a = 1;
 		}
 
 
