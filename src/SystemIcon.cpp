@@ -3,6 +3,7 @@
 #include "include/core/SkBitmap.h"
 #include <map>
 #include <vector>
+#include <functional>
 
 std::map<int, sk_sp<SkImage>> iconCache;
 
@@ -26,12 +27,19 @@ sk_sp<SkImage> SystemIcon::getIcon(SHSTOCKICONID id, const int& size)
 
 sk_sp<SkImage> SystemIcon::getIcon(std::wstring path, const int& size)
 {
+	std::hash<std::wstring> wstr_hash;
+	size_t id = wstr_hash(path);
+	if (iconCache.contains(id)) {
+		return iconCache[id];
+	}
 	SHFILEINFO fileInfo = { 0 };
 	auto hr = SHGetFileInfo(path.data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_ICON | SHGFI_SMALLICON);
 	if (!hr) {
 		return nullptr;
 	}
-	return getIcon(fileInfo.iIcon,fileInfo.hIcon, size);
+	auto img = iconToImg(fileInfo.hIcon, size);
+	iconCache.insert({ id, img });
+	return img;
 }
 
 sk_sp<SkImage> SystemIcon::getIcon(const int& index, const HICON icon, const int& size)
