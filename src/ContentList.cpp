@@ -12,6 +12,7 @@
 #include "FileColumnSize.h"
 #include "TitleBar.h"
 #include "TitleBarTab.h"
+#include "SystemIcon.h"
 
 ContentList::ContentList(WindowMain* root) :ControlBase(root)
 {
@@ -44,10 +45,15 @@ void ContentList::paint(SkCanvas* canvas)
 		for (size_t i = 0; i < columns.size(); i++)
 		{
 			canvas->save();
-			canvas->clipRect(SkRect::MakeLTRB(columns[i].left + paddingLeft, y - 20, columns[i].right - paddingRight, y + 20));
+			auto left = columns[i].left + paddingLeft;
+			canvas->clipRect(SkRect::MakeLTRB(left, y - 20, columns[i].right - paddingRight, y + 20));
+			if (i == 0) {
+				auto img = SystemIcon::getIcon(SIID_FOLDER, 26); //CSIDL_QUICKACCESS
+				canvas->drawImage(img, left, y - 18);
+				left += 32;
+			}
 			auto len = wcslen(file[i].text.data()) * 2;
-			canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16,
-				columns[i].left + paddingLeft, y, *fontText, paint);
+			canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16, left, y, *fontText, paint);
 			canvas->restore();
 		}
 		y += 40;
@@ -165,20 +171,32 @@ void ContentList::tabChange(TitleBarTab* tab)
 	SHFILEINFO fileInfo = { 0 };
 	for (const auto& entry : std::filesystem::directory_iterator(tab->path)) {
 		auto fileName = entry.path().filename().wstring();
-		auto fileTime = entry.last_write_time();
-		auto sysClock = std::chrono::clock_cast<std::chrono::system_clock>(entry.last_write_time());
-		auto zTime = std::chrono::zoned_time(zone, sysClock);
-		auto str = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
-		str = str.substr(0, str.find_last_of(L"."));
-		
-		std::wstring  typeStr;
-		if (SHGetFileInfo(entry.path().wstring().c_str(), 0, &fileInfo, sizeof(fileInfo),
-			SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX) != 0)
-		{
-			typeStr = fileInfo.szTypeName;
+		if (fileName == L"desktop.ini") {
+			continue;
 		}
-		unsigned long long fileSize = std::filesystem::file_size(entry.path()) /1024;
-		files.push_back({ FileColumn(fileName), FileColumnTime(str,fileTime),FileColumnSize(fileSize),FileColumn(typeStr)});
+		auto fileTime = entry.last_write_time();
+		auto sysClock = std::chrono::clock_cast<std::chrono::system_clock>(fileTime);
+		auto zTime = std::chrono::zoned_time(zone, sysClock);
+		auto fileTimeStr = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
+		fileTimeStr = fileTimeStr.substr(0, fileTimeStr.find_last_of(L"."));
+		std::wstring  typeStr;
+		unsigned long long fileSize{ 0 };
+		if (std::filesystem::is_directory(entry.path())) {
+			typeStr = L"文件夹";
+		}
+		else {
+			if (SHGetFileInfo(entry.path().wstring().c_str(), 0, &fileInfo, sizeof(fileInfo),
+				SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX) != 0)
+			{
+				//todo
+				//if ((fileInfo.dwAttributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) {  //
+				//	continue;
+				//}
+				typeStr = fileInfo.szTypeName;
+			}
+			fileSize = std::filesystem::file_size(entry.path()) / 1024;
+		}		
+		files.push_back({ FileColumn(fileName), FileColumnTime(fileTimeStr,fileTime),FileColumnSize(fileSize),FileColumn(typeStr)});
 	}
 	totalHeight = 40 * files.size();
 	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {

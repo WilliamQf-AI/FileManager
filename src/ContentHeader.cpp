@@ -82,7 +82,7 @@ void ContentHeader::tabChange(TitleBarTab* tab)
 	columns[0].left = rect.fLeft;
 	columns[0].right = rect.fLeft + 460.f;
 	columns[1].left = columns[0].right;
-	columns[1].right = columns[1].left + 280.f;
+	columns[1].right = columns[1].left + 260.f;
 	columns[2].left = columns[1].right;
 	columns[2].right = columns[2].left + 200.f;
 	columns[3].left = columns[2].right;

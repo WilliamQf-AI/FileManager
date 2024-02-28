@@ -1,3 +1,8 @@
+文件列表，最后一列的排序图标位置不对
+content list 第一个clipRect 有的时候没用
+title bar tab 画icon时 y的位置可以简化
+content list 横向滚动条
+
 content list 获取文件类型就去搞outlook了
 
 AddressBar input text,selected,cursor,enter key change.
