@@ -3,9 +3,13 @@
 #include "include/core/SkBitmap.h"
 #include <map>
 #include <vector>
+#include <format>
 #include <functional>
 
 std::map<int, sk_sp<SkImage>> iconCache;
+std::map<int, sk_sp<SkImage>> iconCache2;
+std::map<std::wstring, sk_sp<SkImage>> iconCache3;
+std::map<size_t, int> pathMap;
 
 SystemIcon::SystemIcon()
 {
@@ -17,43 +21,70 @@ SystemIcon::~SystemIcon()
 
 sk_sp<SkImage> SystemIcon::getIcon(SHSTOCKICONID id, const int& size)
 {
-	SHSTOCKICONINFO sii = { sizeof(SHSTOCKICONINFO) };
-	HRESULT hr = SHGetStockIconInfo(SIID_FOLDER, SHGSI_ICON | SHGSI_LARGEICON, &sii);
-	if (FAILED(hr)) {
-		return nullptr;
-	}
-	return getIcon(sii.iIcon,sii.hIcon,size);
-}
-
-sk_sp<SkImage> SystemIcon::getIcon(std::wstring path, const int& size)
-{
-	std::hash<std::wstring> wstr_hash;
-	size_t id = wstr_hash(path);
 	if (iconCache.contains(id)) {
 		return iconCache[id];
 	}
-	SHFILEINFO fileInfo = { 0 };
-	auto hr = SHGetFileInfo(path.data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_ICON | SHGFI_SMALLICON);
-	if (!hr) {
+	SHSTOCKICONINFO sii = { sizeof(SHSTOCKICONINFO) };
+	HRESULT hr = SHGetStockIconInfo(id, SHGSI_ICON | SHGSI_LARGEICON, &sii);
+	if (FAILED(hr)) {
 		return nullptr;
 	}
-	auto img = iconToImg(fileInfo.hIcon, size);
+	auto img = iconToImg(sii.hIcon, size);
 	iconCache.insert({ id, img });
 	return img;
 }
 
-sk_sp<SkImage> SystemIcon::getIcon(const int& index, const HICON icon, const int& size)
+sk_sp<SkImage> SystemIcon::getIcon(GUID& id, const std::wstring& key, const int& size)
 {
-	if (iconCache.contains(index)) {
-		return iconCache[index];
+	if (iconCache3.contains(key)) {
+		return iconCache3[key];
 	}
-	auto img = iconToImg(icon, size);
-	iconCache.insert({ index, img });
+	PWSTR pszPath;
+	HRESULT hr = SHGetKnownFolderPath(id, 0, NULL, &pszPath);
+	if (FAILED(hr)) {
+		CoTaskMemFree(pszPath);
+		return nullptr;
+	}
+	std::wstring pathStr(pszPath);
+	CoTaskMemFree(pszPath);
+	SHFILEINFO fileInfo = { 0 };
+	auto gr = SHGetFileInfo(pathStr.data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_ICON | SHGFI_SMALLICON);
+	if (!gr) {
+		return nullptr;
+	}
+	auto img = iconToImg(fileInfo.hIcon, size);
+	iconCache3.insert({ key, img });
 	return img;
 }
 
+sk_sp<SkImage> SystemIcon::getIcon(std::filesystem::path path, const int& size)
+{
+	if (std::filesystem::is_directory(path)) {
+		return getIcon(SIID_FOLDER, size);
+	}
 
-
+	std::hash<std::wstring> wstr_hash;
+	size_t id = wstr_hash(path.wstring());
+	if (pathMap.contains(id)) {
+		return iconCache2[pathMap[id]];
+	}
+	SHFILEINFO fileInfo = { 0 };
+	//auto hr = SHGetFileInfo(path.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_SYSICONINDEX);
+	//if (!hr) {
+	//	return nullptr;
+	//}
+	//if (iconCache2.contains(fileInfo.iIcon)) {
+	//	return iconCache2[fileInfo.iIcon];
+	//}
+	auto hr = SHGetFileInfo(path.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_ICON | SHGFI_SMALLICON);
+	if (!hr) {
+		return nullptr;
+	}
+	auto img = iconToImg(fileInfo.hIcon, size);
+	iconCache2.insert({ fileInfo.iIcon, img });
+	pathMap.insert({ id,fileInfo.iIcon });
+	return img;
+}
 void SystemIcon::reset()
 {
 	std::map<int, sk_sp<SkImage>>().swap(iconCache);

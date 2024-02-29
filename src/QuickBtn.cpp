@@ -29,8 +29,7 @@ void QuickBtn::paint(SkCanvas* canvas)
 						  FOLDERID_Downloads,FOLDERID_Pictures,FOLDERID_Documents };	
 	for (size_t i = 0; i < 6; i++)
 	{
-		auto str = getKnownFolderPath(ids[i]);
-		auto img = SystemIcon::getIcon(str, 24);
+		auto img = SystemIcon::getIcon(ids[i],names[i], 24);
 		canvas->drawImage(img, 10.f + 60 * i + 16.f, rect.fTop+16.f+12.f);
 		auto textLength = wcslen(names[i].data()) * 2;
 		auto fontText = App::GetFontText();

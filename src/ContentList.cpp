@@ -33,13 +33,12 @@ void ContentList::paint(SkCanvas* canvas)
 	auto paddingRight = parent->contentHeader->paddingRight;
 	auto columns = parent->contentHeader->columns;
 	auto fontText = App::GetFontText();
-	fontText->setSize(16.8);
+	fontText->setSize(18.f);
 	canvas->save();
 	canvas->clipRect(rect);
 	auto top = 0 - (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
 	auto y = top + rect.fTop + 32.f;
 	SkPaint paint;
-	paint.setColor(0xFF555555);
 	paint.setAntiAlias(true);
 	auto rootPath = root->titleBar->tabs[root->titleBar->selectedTabIndex]->path.wstring();
 	for (auto& file : files)
@@ -54,12 +53,16 @@ void ContentList::paint(SkCanvas* canvas)
 				auto img = SystemIcon::getIcon(str, 24); //CSIDL_QUICKACCESS
 				canvas->drawImage(img, left, y - 18);
 				left += 34;
+				paint.setColor(0xFF555555);
+			}
+			else {
+				paint.setColor(0xFF999999);
 			}
 			auto len = wcslen(file[i].text.data()) * 2;
 			canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16, left, y, *fontText, paint);
 			canvas->restore();
 		}
-		y += 40;
+		y += 48;
 	}
 	if (totalHeight > rect.height()) {
 		if (hoverScroller) {
@@ -150,7 +153,7 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 	if (!rect.contains(x, y)) {
 		return;
 	}
-	auto span = 12.f;
+	auto span = 16.f;
 	if (delta > 0) {
 		if (scrollerRect.fTop > rect.fTop) {
 			auto v = std::max(scrollerRect.fTop - span, rect.fTop);

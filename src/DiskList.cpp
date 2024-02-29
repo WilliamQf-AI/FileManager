@@ -33,7 +33,7 @@ void DiskList::paint(SkCanvas* canvas)
 	for (size_t i = 0; i < driveInfo.size(); i++)
 	{
 		auto str1 = std::format(L"{}:\\", std::get<0>(driveInfo[i]));
-		auto img = SystemIcon::getIcon(str1, 24);
+		auto img = SystemIcon::getIcon(SIID_DRIVEFIXED, 28);
 		if (hoverIndex == i) {
 			paint.setColor(0x221677ff);
 		}
@@ -41,7 +41,7 @@ void DiskList::paint(SkCanvas* canvas)
 			paint.setColor(0x101677ff);
 		}
 		canvas->drawRoundRect(itemRect, 6, 6, paint);
-		canvas->drawImage(img, itemRect.fLeft + 12, itemRect.fTop + 9.f);
+		canvas->drawImage(img, itemRect.fLeft + 12, itemRect.fTop + 3.f);
 		std::wstring str = std::format(L"本地磁盘({}:)", std::get<0>(driveInfo[i]));
 		auto textLength = wcslen(str.data()) * 2;
 		auto fontText = App::GetFontText();
@@ -53,7 +53,7 @@ void DiskList::paint(SkCanvas* canvas)
 			paint.setColor(0xFF666666);
 		}
 		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16,
-			itemRect.fLeft + 48.f, itemRect.fTop + 28.f, *fontText, paint);
+			itemRect.fLeft + 50.f, itemRect.fTop + 28.f, *fontText, paint);
 		itemRect.setXYWH(12.f, itemRect.fBottom + 8.f, rect.width() - 24.f, 46.f);
 	}
 }
