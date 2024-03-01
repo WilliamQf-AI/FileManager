@@ -15,5 +15,4 @@ public:
 	static void reset();
 private:
 	static sk_sp<SkImage> iconToImg(HICON icon);
-	static void initKnownPath();
 };

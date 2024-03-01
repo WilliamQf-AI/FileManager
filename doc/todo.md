@@ -1,3 +1,5 @@
+拿到系统分辨率，根据系统分辨率确定图标大小
+
 把PathInput和SearchInput的MouseOver转移到ToolBar内
 
 KonwnPath的路径和图标大小是不一样的

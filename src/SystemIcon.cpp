@@ -9,7 +9,6 @@
 std::map<int, sk_sp<SkImage>> iconCache;
 std::map<int, sk_sp<SkImage>> iconCache2;
 std::map<size_t, int> pathMap;
-std::map<std::wstring, std::wstring> knownPath;
 
 SystemIcon::SystemIcon()
 {
@@ -81,25 +80,4 @@ sk_sp<SkImage> SystemIcon::iconToImg(HICON icon)
 	bitmap.installPixels(pixmap);
 	auto img = bitmap.asImage();
 	return img;
-}
-
-void SystemIcon::initKnownPath()
-{
-	if (knownPath.empty()) {
-		return;
-	}	
-	std::vector<std::wstring> names{ L"桌面",L"音乐",L"视频",L"下载",L"图片",L"文档" };
-	std::vector<GUID> ids{ FOLDERID_Desktop,FOLDERID_Music,FOLDERID_Videos,
-						  FOLDERID_Downloads,FOLDERID_Pictures,FOLDERID_Documents };
-	for (size_t i = 0; i < names.size(); i++)
-	{
-		PWSTR pszPath;
-		HRESULT hr = SHGetKnownFolderPath(ids[i], 0, NULL, &pszPath);
-		if (FAILED(hr)) {
-			CoTaskMemFree(pszPath);
-		}
-		std::wstring pathStr(pszPath);
-		CoTaskMemFree(pszPath);
-		knownPath.insert({ names[i],pathStr });
-	}
 }
