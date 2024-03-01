@@ -17,7 +17,7 @@
 
 ContentList::ContentList(WindowMain* root) :ControlBase(root)
 {
-	auto func = std::bind(&ContentList::tabChange, this, std::placeholders::_1);
+	auto func = std::bind(&ContentList::tabChange, this, std::placeholders::_1, std::placeholders::_2);
 	root->titleBar->tabChangeEvents.push_back(std::move(func));
 }
 
@@ -170,12 +170,20 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 	}
 }
 
-void ContentList::tabChange(TitleBarTab* tab)
+void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 {
+	if (tab->path == tabNew->path) {
+		if (scrollerRect.fTop != rect.fTop) {
+			isDirty = true;
+			setScrollerRect();
+		}
+		return;
+	}
+	root->contentPanel->isDirty = true;
 	files.clear();
 	auto zone = std::chrono::current_zone();
 	SHFILEINFO fileInfo = { 0 };
-	for (const auto& entry : std::filesystem::directory_iterator(tab->path)) {
+	for (const auto& entry : std::filesystem::directory_iterator(tabNew->path)) {
 		auto fileName = entry.path().filename().wstring();
 		if (fileName == L"desktop.ini") {
 			continue;
@@ -213,14 +221,7 @@ void ContentList::tabChange(TitleBarTab* tab)
 	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
 		return a[1] > b[1];
 		});
-	if (totalHeight > rect.height()) {
-		auto h = rect.height() * (rect.height() / totalHeight);
-		if (h < 40.f) h = 40.f;
-		scrollerRect.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
-	}
-	else {
-		scrollerRect.setXYWH(0, rect.fTop, 0, 0);
-	}
+	setScrollerRect();
 }
 
 void ContentList::getRecentFiles()
@@ -248,4 +249,16 @@ void ContentList::getRecentFiles()
 	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
 		return a[1] > b[1];
 		});
+}
+
+void ContentList::setScrollerRect()
+{
+	if (totalHeight > rect.height()) {
+		auto h = rect.height() * (rect.height() / totalHeight);
+		if (h < 40.f) h = 40.f;
+		scrollerRect.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
+	}
+	else {
+		scrollerRect.setXYWH(0, rect.fTop, 0, 0);
+	}
 }

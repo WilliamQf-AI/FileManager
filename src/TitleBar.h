@@ -20,7 +20,7 @@ public:
     void addTab(std::filesystem::path&& path,bool needRefresh=true);
     std::shared_ptr<TitleBarBtns> btns;
     std::vector<std::shared_ptr<TitleBarTab>> tabs;
-    std::vector<std::function<void(TitleBarTab* tab)>> tabChangeEvents;
+    std::vector<std::function<void(TitleBarTab* tabOld, TitleBarTab* tabNew)>> tabChangeEvents;
     POINT startPos;
     bool draggingWindow{ false };
 private:

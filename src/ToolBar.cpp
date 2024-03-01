@@ -13,7 +13,7 @@ ToolBar::ToolBar(WindowMain* root) :ControlBase(root)
 	pathTool = std::make_shared<PathTool>(root);
 	pathInput = std::make_shared<PathInput>(root);
 	searchInput = std::make_shared<SearchInput>(root);
-	auto func = std::bind(&ToolBar::tabChange, this, std::placeholders::_1);
+	auto func = std::bind(&ToolBar::tabChange, this, std::placeholders::_1, std::placeholders::_2);
 	root->titleBar->tabChangeEvents.push_back(std::move(func));
 }
 
@@ -21,7 +21,7 @@ ToolBar::~ToolBar()
 {
 }
 
-void ToolBar::tabChange(TitleBarTab* tab)
+void ToolBar::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 {
 	pathInput->isDirty = true;
 	pathTool->isDirty = true;

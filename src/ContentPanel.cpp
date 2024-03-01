@@ -11,7 +11,7 @@
 
 ContentPanel::ContentPanel(WindowMain* root) :ControlBase(root)
 {
-	auto func = std::bind(&ContentPanel::tabChange, this, std::placeholders::_1);
+	auto func = std::bind(&ContentPanel::tabChange, this, std::placeholders::_1, std::placeholders::_2);
 	root->titleBar->tabChangeEvents.push_back(std::move(func));
 }
 
@@ -28,9 +28,6 @@ void ContentPanel::paint(SkCanvas* canvas)
 	auto it = std::find_if(root->titleBar->tabs.begin(), root->titleBar->tabs.end(), [](auto& item) {return item->isSelected; });
 	auto tab = *it;
 	if (!tab->path.empty()) {
-		contentHeader->isDirty = true;
-		contentList->isDirty = true;
-		contentBottom->isDirty = true;
 		return;
 	}
 	paint.setColor(0xFFFFFFFF);
@@ -67,21 +64,14 @@ void ContentPanel::resize(const int& w, const int& h)
 	//C:\Users\liuxiaolun\AppData\Roaming\Microsoft\Windows\Recent
 }
 
-void ContentPanel::tabChange(TitleBarTab* tab)
+void ContentPanel::tabChange(TitleBarTab* tabOld, TitleBarTab* tabNew)
 {
-	isDirty = true;
-	if (contentHeader) {
-		contentHeader->isDirty = true;
-		contentBottom->isDirty = true;
-		contentList->isDirty = true;
-	}
-	else
-	{
+	if (!contentHeader) {
 		contentHeader = std::make_shared<ContentHeader>(root);
 		contentBottom = std::make_shared<ContentBottom>(root);
 		contentList = std::make_shared<ContentList>(root);
+		contentHeader->resize(root->w, root->h);
+		contentBottom->resize(root->w, root->h);
+		contentList->resize(root->w, root->h);
 	}
-	contentHeader->resize(root->w, root->h);
-	contentBottom->resize(root->w, root->h);
-	contentList->resize(root->w, root->h);
 }

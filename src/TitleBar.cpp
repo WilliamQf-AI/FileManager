@@ -124,10 +124,11 @@ void TitleBar::closeTab(TitleBarTab* tab)
 	}
 	if (maxIndex > -1) {
 		tabs[maxIndex]->isSelected = true;
+		auto old = tabs[selectedTabIndex].get();
 		selectedTabIndex = maxIndex;
 		for (size_t i = 0; i < tabChangeEvents.size(); i++)
 		{
-			tabChangeEvents[i](tabs[maxIndex].get());
+			tabChangeEvents[i](old,tabs[maxIndex].get());
 		}
 	}
 	btns->isDirty = true;
@@ -156,11 +157,11 @@ void TitleBar::selectTab(const int& index)
 		}
 	}
 	tabs[index]->historyNum = tabs.size() - 1;
-	root->contentPanel->isDirty = true;
+	auto old = tabs[selectedTabIndex].get();
 	selectedTabIndex = index;
 	for (size_t i = 0; i < tabChangeEvents.size(); i++)
 	{
-		tabChangeEvents[i](tabs[selectedTabIndex].get());
+		tabChangeEvents[i](old,tabs[selectedTabIndex].get());
 	}
 	InvalidateRect(root->hwnd, nullptr, false);
 }
@@ -182,11 +183,12 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 	tab->historyNum = size;
 	tab->orderNum = size;
 	tabs.push_back(std::move(tab));
+	auto old = tabs[selectedTabIndex].get();
 	selectedTabIndex = size;
 	if (needRefresh) {
 		for (size_t i = 0; i < tabChangeEvents.size(); i++)
 		{
-			tabChangeEvents[i](tabs[selectedTabIndex].get());
+			tabChangeEvents[i](old,tabs[selectedTabIndex].get());
 		}
 		InvalidateRect(root->hwnd, nullptr, false);
 	}

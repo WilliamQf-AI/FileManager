@@ -19,7 +19,7 @@ public:
     ~ContentPanel();
     void paint(SkCanvas* canvas) override;
     void resize(const int& w, const int& h);
-    void tabChange(TitleBarTab* tab);
+    void tabChange(TitleBarTab* tab, TitleBarTab* tabNew);
     std::shared_ptr<ContentHeader> contentHeader;
     std::shared_ptr<ContentList> contentList;
     std::shared_ptr<ContentBottom> contentBottom;

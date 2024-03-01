@@ -19,11 +19,11 @@ public:
     void mouseDrag(const int& x, const int& y) override;
     void resize(const int& w, const int& h) override;
     void mouseWheel(const int& x, const int& y, const int& delta) override;
-    void tabChange(TitleBarTab* tab);
+    void tabChange(TitleBarTab* tab, TitleBarTab* tabNew);
 private:
     void getRecentFiles();
     std::vector<std::vector<FileColumn>> files;
-
+    void setScrollerRect();
     float totalHeight{ 0 };
     bool hoverScroller{ false };
     SkRect scrollerRect;

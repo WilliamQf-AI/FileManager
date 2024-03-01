@@ -8,7 +8,7 @@
 
 ContentHeader::ContentHeader(WindowMain* root) :ControlBase(root)
 {
-	auto func = std::bind(&ContentHeader::tabChange, this, std::placeholders::_1);
+	auto func = std::bind(&ContentHeader::tabChange, this, std::placeholders::_1, std::placeholders::_2);
 	root->titleBar->tabChangeEvents.push_back(std::move(func));
 }
 
@@ -70,7 +70,7 @@ void ContentHeader::resize(const int& w, const int& h)
 	}
 }
 
-void ContentHeader::tabChange(TitleBarTab* tab)
+void ContentHeader::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 {
 	//columns.push_back(FileColumnHeader(L"最近使用的文件", false));
 	//columns.push_back(FileColumnHeader(L"使用时间", true));

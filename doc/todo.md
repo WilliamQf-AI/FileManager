@@ -1,4 +1,6 @@
 如果两个tab指向的路径完全一样，那就没必要刷新
+标签页的图标要动态的
+contentList记住滚动位置，切换滚动条时要用
 icon cache 会持续增长
 文件列表，最后一列的排序图标位置不对
 content list 第一个clipRect 有的时候没用
