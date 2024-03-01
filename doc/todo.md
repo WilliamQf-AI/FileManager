@@ -1,3 +1,5 @@
+把PathInput和SearchInput的MouseOver转移到ToolBar内
+
 KonwnPath的路径和图标大小是不一样的
 
 标签页的图标要动态的

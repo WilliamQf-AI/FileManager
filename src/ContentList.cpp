@@ -181,6 +181,13 @@ void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	}
 	root->contentPanel->isDirty = true;
 	files.clear();
+	if (tabNew->path.empty()) {
+		return;
+	}
+	if (tab->path.empty()) {
+		root->contentPanel->contentHeader->isDirty = true;
+	}	
+	isDirty = true;
 	auto zone = std::chrono::current_zone();
 	SHFILEINFO fileInfo = { 0 };
 	for (const auto& entry : std::filesystem::directory_iterator(tabNew->path)) {

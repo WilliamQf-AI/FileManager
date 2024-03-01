@@ -12,15 +12,15 @@ class ContentList : public ControlBase
 public:
 	ContentList(WindowMain* root);
 	~ContentList();
+    void tabChange(TitleBarTab* tab, TitleBarTab* tabNew);
+    void resize(const int& w, const int& h) override;
+private:
     void paint(SkCanvas* canvas) override;
     void mouseMove(const int& x, const int& y) override;
     void mouseDown(const int& x, const int& y) override;
     void mouseUp(const int& x, const int& y) override;
     void mouseDrag(const int& x, const int& y) override;
-    void resize(const int& w, const int& h) override;
     void mouseWheel(const int& x, const int& y, const int& delta) override;
-    void tabChange(TitleBarTab* tab, TitleBarTab* tabNew);
-private:
     void getRecentFiles();
     std::vector<std::vector<FileColumn>> files;
     void setScrollerRect();

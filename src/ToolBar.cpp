@@ -41,3 +41,28 @@ void ToolBar::resize(const int& w, const int& h)
 	auto top = root->titleBar->rect.height();
 	rect.setXYWH(0.f, top, root->w, 60.f);
 }
+
+void ToolBar::mouseMove(const int& x, const int& y)
+{
+	int index{ -1 };
+	if (x > pathInput->rect.fRight && x < searchInput->rect.fLeft && y>rect.fTop && y < rect.fBottom) {
+		index = 0;
+	}
+	if (index != hoverIndex) {
+		hoverIndex = index;
+		if (index == 0) {
+			SetCursor(LoadCursor(nullptr, IDC_SIZEWE));
+		}
+		else {
+			SetCursor(LoadCursor(nullptr, IDC_ARROW));
+		}		
+	}
+}
+
+void ToolBar::mouseDown(const int& x, const int& y)
+{
+}
+
+void ToolBar::mouseDrag(const int& x, const int& y)
+{
+}
