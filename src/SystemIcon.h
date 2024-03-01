@@ -10,10 +10,10 @@ class SystemIcon
 public:
 	SystemIcon();
 	~SystemIcon();
-	static sk_sp<SkImage> getIcon(SHSTOCKICONID id,const int& size);
-	static sk_sp<SkImage> getIcon(std::filesystem::path path, const int& size);
+	static sk_sp<SkImage> getIcon(SHSTOCKICONID id);
+	static sk_sp<SkImage> getIcon(std::filesystem::path path);
 	static void reset();
 private:
-	static sk_sp<SkImage> iconToImg(HICON icon, const int& size);
+	static sk_sp<SkImage> iconToImg(HICON icon);
 	static void initKnownPath();
 };

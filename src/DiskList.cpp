@@ -33,7 +33,7 @@ void DiskList::paint(SkCanvas* canvas)
 	for (size_t i = 0; i < driveInfo.size(); i++)
 	{
 		auto str1 = std::format(L"{}:\\", std::get<0>(driveInfo[i]));
-		auto img = SystemIcon::getIcon(SIID_DRIVEFIXED, 28);
+		auto img = SystemIcon::getIcon(str1); //28
 		if (hoverIndex == i) {
 			paint.setColor(0x221677ff);
 		}

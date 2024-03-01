@@ -63,7 +63,7 @@ void TitleBarTab::paint(SkCanvas* canvas)
 		r.inset(4, 6);
 		canvas->drawRoundRect(r, 6, 6, paint);
 	}
-	auto img = SystemIcon::getIcon(path.wstring(), 22.f); //CSIDL_QUICKACCESS
+	auto img = SystemIcon::getIcon(path.wstring()); //22
 	auto r = SkRect::MakeXYWH(rect.fLeft + 8.f, rect.fTop + 11.f, 22.f, 22.f);
 	canvas->drawImageRect(img, r, { SkFilterMode::kLinear, SkMipmapMode::kLinear });
 

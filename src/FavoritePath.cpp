@@ -28,7 +28,7 @@ void FavoritePath::paint(SkCanvas* canvas)
 	auto top = 0 - (scrollerRect.fTop-rect.fTop) / rectHeight * totalHeight;
 	for (size_t i = 0; i < 26; i++)
 	{
-		auto img = SystemIcon::getIcon(SIID_FOLDER, 26); //CSIDL_QUICKACCESS		
+		auto img = SystemIcon::getIcon(SIID_FOLDER); //26
 		canvas->drawImage(img, 12, rect.fTop + top+ i*46 + 8);
 		std::wstring str = std::format(L"这是一条收藏的路径({}:)", i);
 		auto textLength = wcslen(str.data()) * 2;

@@ -19,22 +19,22 @@ SystemIcon::~SystemIcon()
 {
 }
 
-sk_sp<SkImage> SystemIcon::getIcon(SHSTOCKICONID id, const int& size)
+sk_sp<SkImage> SystemIcon::getIcon(SHSTOCKICONID id)
 {
 	if (iconCache.contains(id)) {
 		return iconCache[id];
 	}
 	SHSTOCKICONINFO sii = { sizeof(SHSTOCKICONINFO) };
-	HRESULT hr = SHGetStockIconInfo(id, SHGSI_ICON | SHGSI_LARGEICON, &sii);
+	HRESULT hr = SHGetStockIconInfo(id, SHGSI_ICON | SHGSI_SMALLICON, &sii);
 	if (FAILED(hr)) {
 		return nullptr;
 	}
-	auto img = iconToImg(sii.hIcon, size);
+	auto img = iconToImg(sii.hIcon);
 	iconCache.insert({ id, img });
 	return img;
 }
 
-sk_sp<SkImage> SystemIcon::getIcon(std::filesystem::path path, const int& size)
+sk_sp<SkImage> SystemIcon::getIcon(std::filesystem::path path)
 {
 	std::hash<std::wstring> wstr_hash;
 	size_t id = wstr_hash(path.wstring());
@@ -42,18 +42,11 @@ sk_sp<SkImage> SystemIcon::getIcon(std::filesystem::path path, const int& size)
 		return iconCache2[pathMap[id]];
 	}
 	SHFILEINFO fileInfo = { 0 };
-	//auto hr = SHGetFileInfo(path.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_SYSICONINDEX);
-	//if (!hr) {
-	//	return nullptr;
-	//}
-	//if (iconCache2.contains(fileInfo.iIcon)) {
-	//	return iconCache2[fileInfo.iIcon];
-	//}
-	auto hr = SHGetFileInfo(path.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_ICON | SHGFI_SMALLICON);
+	auto hr = SHGetFileInfo(path.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_ICON | SHGSI_SMALLICON);	
 	if (!hr) {
 		return nullptr;
 	}
-	auto img = iconToImg(fileInfo.hIcon, size);
+	auto img = iconToImg(fileInfo.hIcon);
 	iconCache2.insert({ fileInfo.iIcon, img });
 	pathMap.insert({ id,fileInfo.iIcon });
 	return img;
@@ -63,8 +56,9 @@ void SystemIcon::reset()
 	std::map<int, sk_sp<SkImage>>().swap(iconCache);
 }
 
-sk_sp<SkImage> SystemIcon::iconToImg(HICON icon, const int& size)
+sk_sp<SkImage> SystemIcon::iconToImg(HICON icon)
 {
+	auto size{ 24 };
 	HDC hdcScreen = GetDC(NULL);
 	HDC hdcMemory = CreateCompatibleDC(hdcScreen);
 	auto hBmp = CreateCompatibleBitmap(hdcScreen, size, size);
@@ -74,18 +68,13 @@ sk_sp<SkImage> SystemIcon::iconToImg(HICON icon, const int& size)
 	unsigned long dataSize = size * 4 * size;
 	pixSrcData.resize(dataSize);
 	BITMAPINFO info = { sizeof(BITMAPINFOHEADER), size, 0 - size, 1, 32, BI_RGB, dataSize, 0, 0, 0, 0 };
-	GetDIBits(hdcMemory, hBmp, 0, size, &pixSrcData.front(), &info, DIB_RGB_COLORS);
-
-
-	
+	GetDIBits(hdcMemory, hBmp, 0, size, &pixSrcData.front(), &info, DIB_RGB_COLORS);	
 	DeleteDC(hdcScreen);
 	DeleteDC(hdcMemory);
 	ReleaseDC(NULL, hdcScreen);
 	ReleaseDC(NULL, hdcMemory);
-	DestroyIcon(icon);  // 不要忘记释放图标资源
+	DestroyIcon(icon);
 	DeleteObject(hBmp);
-	
-
 	SkImageInfo imgInfo = SkImageInfo::MakeN32Premul(size, size);
 	SkPixmap pixmap(imgInfo, &pixSrcData.front(), size * 4);
 	SkBitmap bitmap;

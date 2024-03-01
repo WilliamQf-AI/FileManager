@@ -50,7 +50,7 @@ void ContentList::paint(SkCanvas* canvas)
 			canvas->clipRect(SkRect::MakeLTRB(left, y - 20, columns[i].right - paddingRight, y + 20));
 			if (i == 0) {
 				auto str = std::format(L"{}\\{}",rootPath, file[i].text);
-				auto img = SystemIcon::getIcon(str, 24); //CSIDL_QUICKACCESS
+				auto img = SystemIcon::getIcon(str); //24
 				canvas->drawImage(img, left, y - 18);
 				left += 34;
 				paint.setColor(0xFF555555);
