@@ -36,10 +36,12 @@ void ContentHeader::paint(SkCanvas* canvas)
 		paint.setColor(0xFFE8E8E8);
 		if (i != 0) {
 			canvas->drawLine(columns[i].left, rect.fTop, columns[i].left, rect.fBottom, paint);
-		}		
-		paint.setColor(0xFFBBBBBB);
-		auto icon = columns[i].isSort ? (const char*)u8"\ue606":(const char*)u8"\ue60f";
-		canvas->drawString(icon, columns[i].right - paddingRight, rect.fTop + 32.f, *font, paint);
+		}
+		if (columns[i].right - paddingRight - 60.f > columns[i].left) {
+			paint.setColor(0xFFBBBBBB);
+			auto icon = columns[i].isSort ? (const char*)u8"\ue606" : (const char*)u8"\ue60f";
+			canvas->drawString(icon, columns[i].right - paddingRight, rect.fTop + 32.f, *font, paint);
+		}
 	}
 }
 
@@ -86,5 +88,11 @@ void ContentHeader::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	columns[2].left = columns[1].right;
 	columns[2].right = columns[2].left + 200.f;
 	columns[3].left = columns[2].right;
-	columns[3].right = rect.fRight;
+	if (rect.fRight < columns[3].left) {
+		columns[3].right = columns[3].left;
+	}
+	else {
+		columns[3].right = rect.fRight;
+	}
+	
 }
