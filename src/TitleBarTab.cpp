@@ -63,8 +63,9 @@ void TitleBarTab::paint(SkCanvas* canvas)
 		r.inset(4, 6);
 		canvas->drawRoundRect(r, 6, 6, paint);
 	}
-	auto img = SystemIcon::getIcon(SIID_FOLDER,26); //CSIDL_QUICKACCESS
-	canvas->drawImage(img, rect.fLeft + 8.f, rect.centerY() - img->height() / 2);
+	auto img = SystemIcon::getIcon(path.wstring(), 22.f); //CSIDL_QUICKACCESS
+	auto r = SkRect::MakeXYWH(rect.fLeft + 8.f, rect.fTop + 11.f, 22.f, 22.f);
+	canvas->drawImageRect(img, r, { SkFilterMode::kLinear, SkMipmapMode::kLinear });
 
 	paint.setColor(0xFF666666);
 	auto textLength = wcslen(title.data()) * 2;
