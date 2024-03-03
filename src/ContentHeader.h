@@ -20,6 +20,7 @@ public:
     std::vector<FileColumnHeader> columns;
     float paddingLeft{ 18.f };
     float paddingRight{ 38.f };
+    float totalWidth{ 0.f };
 private:
 
 };

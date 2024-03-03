@@ -36,7 +36,7 @@ void ContentList::paint(SkCanvas* canvas)
 	fontText->setSize(18.f);
 	canvas->save();
 	canvas->clipRect(rect);
-	auto top = 0 - (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;	
+	auto top = 0 - (scrollerRight.fTop - rect.fTop) / rect.height() * totalHeight;
 	SkPaint paint;
 	paint.setAntiAlias(true);
 	if (hoverIndex > -1) {
@@ -76,7 +76,7 @@ void ContentList::paint(SkCanvas* canvas)
 		else {
 			paint.setColor(0x11333333);
 		}
-		canvas->drawRoundRect(scrollerRect, 3, 3, paint);
+		canvas->drawRoundRect(scrollerRight, 3, 3, paint);
 	}
 	canvas->restore();
 	paint.setColor(0xFFE8E8E8);
@@ -86,7 +86,7 @@ void ContentList::paint(SkCanvas* canvas)
 void ContentList::mouseMove(const int& x, const int& y)
 {
 	bool flag{ false };
-	if (scrollerRect.contains(x, y)) {
+	if (scrollerRight.contains(x, y)) {
 		flag = true;
 	}
 	if (flag != hoverScroller) {
@@ -99,7 +99,7 @@ void ContentList::mouseMove(const int& x, const int& y)
 	}
 	int index{ -1 };
 	if (rect.contains(x, y)) {		
-		auto top = (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
+		auto top = (scrollerRight.fTop - rect.fTop) / rect.height() * totalHeight;
 		index = (y - rect.fTop + top) / 48;
 	}
 	if (index != hoverIndex) {
@@ -118,7 +118,7 @@ void ContentList::mouseDown(const int& x, const int& y)
 
 void ContentList::mouseUp(const int& x, const int& y)
 {
-	if (!scrollerRect.contains(x, y)) {
+	if (!scrollerRight.contains(x, y)) {
 		if (hoverScroller) {
 			hoverScroller = false;
 			ReleaseCapture();
@@ -132,16 +132,16 @@ void ContentList::mouseDrag(const int& x, const int& y)
 	if (hoverScroller) {
 		float span = y - downY;
 		if (span > 0) {
-			if (scrollerRect.fBottom < rect.fBottom) {
-				auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
-				scrollerRect.offsetTo(rect.fRight - 16, scrollerRect.fTop + v - scrollerRect.fBottom);
+			if (scrollerRight.fBottom < rect.fBottom) {
+				auto v = std::min(scrollerRight.fBottom + span, rect.fBottom);
+				scrollerRight.offsetTo(rect.fRight - 16, scrollerRight.fTop + v - scrollerRight.fBottom);
 				repaint();
 			}
 		}
 		else {
-			if (scrollerRect.fTop > rect.fTop) {
-				auto v = std::max(scrollerRect.fTop + span, rect.fTop);
-				scrollerRect.offsetTo(rect.fRight - 16, v);
+			if (scrollerRight.fTop > rect.fTop) {
+				auto v = std::max(scrollerRight.fTop + span, rect.fTop);
+				scrollerRight.offsetTo(rect.fRight - 16, v);
 				repaint();
 			}
 		}
@@ -157,14 +157,8 @@ void ContentList::resize(const int& w, const int& h)
 		parent->rect.fRight,
 		parent->contentBottom->rect.fTop
 	);
-	if (totalHeight > rect.height()) {
-		auto h = rect.height() * (rect.height() / totalHeight);
-		if (h < 40.f) h = 40.f;
-		scrollerRect.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
-	}
-	else {
-		scrollerRect.setXYWH(0, rect.fTop, 0, 0);
-	}
+	setRightScroller();
+	setBottomScroller();
 }
 
 void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
@@ -177,19 +171,19 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 	}
 	auto span = 16.f;
 	if (delta > 0) {
-		if (scrollerRect.fTop > rect.fTop) {
-			auto v = std::max(scrollerRect.fTop - span, rect.fTop);
-			scrollerRect.offsetTo(rect.fRight - 16, v);
-			auto top = (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
+		if (scrollerRight.fTop > rect.fTop) {
+			auto v = std::max(scrollerRight.fTop - span, rect.fTop);
+			scrollerRight.offsetTo(rect.fRight - 16, v);
+			auto top = (scrollerRight.fTop - rect.fTop) / rect.height() * totalHeight;
 			hoverIndex = (y - rect.fTop + top) / 48;
 			repaint();
 		}
 	}
 	else {
-		if (scrollerRect.fBottom < rect.fBottom) {
-			auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
-			scrollerRect.offsetTo(rect.fRight - 16, scrollerRect.fTop + v - scrollerRect.fBottom);
-			auto top = (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
+		if (scrollerRight.fBottom < rect.fBottom) {
+			auto v = std::min(scrollerRight.fBottom + span, rect.fBottom);
+			scrollerRight.offsetTo(rect.fRight - 16, scrollerRight.fTop + v - scrollerRight.fBottom);
+			auto top = (scrollerRight.fTop - rect.fTop) / rect.height() * totalHeight;
 			hoverIndex = (y - rect.fTop + top) / 48;
 			repaint();
 		}
@@ -199,9 +193,9 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 {
 	if (tab->path == tabNew->path) {
-		if (scrollerRect.fTop != rect.fTop) {
+		if (scrollerRight.fTop != rect.fTop) {
 			isDirty = true;
-			setScrollerRect();
+			setRightScroller();
 		}
 		return;
 	}
@@ -254,7 +248,7 @@ void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
 		return a[1] > b[1];
 		});
-	setScrollerRect();
+	setRightScroller();
 }
 
 void ContentList::getRecentFiles()
@@ -284,14 +278,27 @@ void ContentList::getRecentFiles()
 		});
 }
 
-void ContentList::setScrollerRect()
+void ContentList::setRightScroller()
 {
 	if (totalHeight > rect.height()) {
 		auto h = rect.height() * (rect.height() / totalHeight);
 		if (h < 40.f) h = 40.f;
-		scrollerRect.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
+		scrollerRight.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
 	}
 	else {
-		scrollerRect.setXYWH(0, rect.fTop, 0, 0);
+		scrollerRight.setXYWH(0, rect.fTop, 0, 0);
+	}
+}
+
+void ContentList::setBottomScroller()
+{
+	auto totalWidth = root->contentPanel->contentHeader->totalWidth;
+	if (totalWidth > rect.width()) {
+		auto w = rect.width() * (rect.width() / totalWidth);
+		if (w < 80.f) w = 80.f;
+		scrollerBottom.setXYWH(rect.fLeft, rect.fBottom-16.f, w, 16);
+	}
+	else {
+		scrollerBottom.setXYWH(rect.fLeft, 0, 0, 0);
 	}
 }

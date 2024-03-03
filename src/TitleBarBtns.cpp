@@ -36,7 +36,7 @@ void TitleBarBtns::paint(SkCanvas *canvas)
 	auto iconCode = (const char *)u8"\ue6e8"; //最小化	
 	paint.setColor(0xFF888888);
 	auto left = rect.fLeft + 23.f;
-	auto top = rect.fTop + 36.f;
+	auto top = rect.fTop + 37.f;
 	canvas->drawString(iconCode, left, top, *font, paint);
 	iconCode = isMaximized? (const char*)u8"\ue6e9" : (const char*)u8"\ue6e5"; //最大化
 	canvas->drawString(iconCode, left +66.f, top, *font, paint);

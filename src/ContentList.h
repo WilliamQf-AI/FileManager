@@ -23,10 +23,12 @@ private:
     void mouseWheel(const int& x, const int& y, const int& delta) override;
     void getRecentFiles();
     std::vector<std::vector<FileColumn>> files;
-    void setScrollerRect();
+    void setRightScroller();
+    void setBottomScroller();
     float totalHeight{ 0 };
     bool hoverScroller{ false };
-    SkRect scrollerRect;
+    SkRect scrollerRight;
+    SkRect scrollerBottom;
     double downY{ 0.f };
     int hoverIndex{ -1 };
 };

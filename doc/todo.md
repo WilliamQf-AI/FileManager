@@ -1,5 +1,8 @@
 content list 横向滚动条
 文件列表右键菜单
+文件列表滚动条高度不能小于40，这里计算可能是有问题的，等做到C盘文件比较多的目录时，再看
+
+最近使用的文件应该怎么用（ContentHeaer应该在tabChange中初始化列信息吗，每次tabChange都重新初始化一遍）
 
 tab页不要盖住最小化按钮，单个tab要根据title bar剩余的空间自适应宽度
 KonwnPath的路径和图标大小是不一样的

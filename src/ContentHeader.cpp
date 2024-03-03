@@ -90,9 +90,9 @@ void ContentHeader::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	columns[3].left = columns[2].right;
 	if (rect.fRight < columns[3].left) {
 		columns[3].right = columns[3].left;
+		totalWidth = columns[3].left + 200.f;
 	}
 	else {
 		columns[3].right = rect.fRight;
-	}
-	
+	}	
 }
