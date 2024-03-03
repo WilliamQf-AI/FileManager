@@ -48,23 +48,24 @@ void ContentList::paint(SkCanvas* canvas)
 	for (size_t i = 0; i < columns.size(); i++)
 	{
 		auto y = top + rect.fTop + 32.f;
+		auto x = root->contentPanel->contentHeader->scrollerLeft + columns[i].left + paddingLeft;
 		canvas->save();
-		auto left = columns[i].left + paddingLeft;
-		canvas->clipRect(SkRect::MakeLTRB(left, y - 20, columns[i].right - paddingRight, rect.fBottom));
+		canvas->clipRect(SkRect::MakeLTRB(x, y - 20, 
+			root->contentPanel->contentHeader->scrollerLeft + columns[i].right - paddingRight, rect.fBottom));
 		for (size_t j = 0; j < files.size(); j++)
 		{
 			auto len = wcslen(files[j][i].text.data()) * 2;
 			if (i == 0) {
 				auto str = std::format(L"{}\\{}",rootPath, files[j][i].text);
 				auto img = SystemIcon::getIcon(str); //24
-				canvas->drawImage(img, left, y - 18);
+				canvas->drawImage(img, x, y - 18);
 				paint.setColor(0xFF555555);
-				canvas->drawSimpleText(files[j][i].text.data(), len, SkTextEncoding::kUTF16, left+34, y, *fontText, paint);
+				canvas->drawSimpleText(files[j][i].text.data(), len, SkTextEncoding::kUTF16, x+34, y, *fontText, paint);
 			}
 			else {
 				paint.setColor(0xFF999999);
-				canvas->drawSimpleText(files[j][i].text.data(), len, SkTextEncoding::kUTF16, left, y, *fontText, paint);
-			}			
+				canvas->drawSimpleText(files[j][i].text.data(), len, SkTextEncoding::kUTF16, x, y, *fontText, paint);
+			}
 			y += 48;
 		}
 		canvas->restore();
@@ -161,7 +162,30 @@ void ContentList::mouseDrag(const int& x, const int& y)
 		downY = y;
 	}
 	else if (hoverScroller == 1) {
-
+		float span = x - downX;
+		if (span > 0) {
+			if (scrollerBottom.fRight < rect.fRight) {
+				auto v = std::min(scrollerBottom.fRight + span, rect.fRight);
+				scrollerBottom.offsetTo(scrollerBottom.fLeft+v- scrollerBottom.fRight, rect.fBottom - 16);
+				root->contentPanel->contentHeader->scrollerLeft =
+					0 - (scrollerBottom.fLeft - rect.fLeft) / rect.width() * root->contentPanel->contentHeader->totalWidth;
+				isDirty = true;
+				root->contentPanel->contentHeader->isDirty = true;
+				InvalidateRect(root->hwnd, nullptr, false);
+			}
+		}
+		else {
+			if (scrollerBottom.fLeft > rect.fLeft) {
+				auto v = std::max(scrollerBottom.fLeft + span, rect.fLeft);
+				scrollerBottom.offsetTo(v, rect.fBottom - 16);
+				root->contentPanel->contentHeader->scrollerLeft =
+					0 - (scrollerBottom.fLeft - rect.fLeft) / rect.width() * root->contentPanel->contentHeader->totalWidth;
+				isDirty = true;
+				root->contentPanel->contentHeader->isDirty = true;
+				InvalidateRect(root->hwnd, nullptr, false);
+			}
+		}
+		downX = x;
 	}
 }
 

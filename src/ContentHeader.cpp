@@ -27,22 +27,25 @@ void ContentHeader::paint(SkCanvas* canvas)
 	auto font = App::GetFontIcon();
 	font->setSize(24.f);
 	paint.setAntiAlias(false);
+	canvas->save();
+	canvas->clipRect(rect);
 	for (size_t i = 0; i < columns.size(); i++)
 	{
 		paint.setColor(0xFF888888);
 		auto len = wcslen(columns[i].title.data()) * 2;
 		canvas->drawSimpleText(columns[i].title.data(), len, SkTextEncoding::kUTF16,
-			columns[i].left + paddingLeft, rect.fTop + 29.f, *fontText, paint);
+			scrollerLeft + columns[i].left + paddingLeft, rect.fTop + 29.f, *fontText, paint);
 		paint.setColor(0xFFE8E8E8);
 		if (i != 0) {
-			canvas->drawLine(columns[i].left, rect.fTop, columns[i].left, rect.fBottom, paint);
+			canvas->drawLine(scrollerLeft + columns[i].left, rect.fTop, scrollerLeft + columns[i].left, rect.fBottom, paint);
 		}
 		if (columns[i].right - paddingRight - 60.f > columns[i].left) {
 			paint.setColor(0xFFBBBBBB);
 			auto icon = columns[i].isSort ? (const char*)u8"\ue606" : (const char*)u8"\ue60f";
-			canvas->drawString(icon, columns[i].right - paddingRight, rect.fTop + 32.f, *font, paint);
+			canvas->drawString(icon, scrollerLeft + columns[i].right - paddingRight, rect.fTop + 32.f, *font, paint);
 		}
 	}
+	canvas->restore();
 }
 
 void ContentHeader::mouseMove(const int& x, const int& y)
@@ -89,8 +92,8 @@ void ContentHeader::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	columns[2].right = columns[2].left + 200.f;
 	columns[3].left = columns[2].right;
 	if (rect.fRight < columns[3].left) {
-		columns[3].right = columns[3].left;
-		totalWidth = columns[3].left + 200.f;
+		columns[3].right = columns[3].left +280.f;
+		totalWidth = 460.f + 260.f + 200.f + 280.f;
 	}
 	else {
 		columns[3].right = rect.fRight;
