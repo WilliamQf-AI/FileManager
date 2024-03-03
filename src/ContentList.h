@@ -26,9 +26,10 @@ private:
     void setRightScroller();
     void setBottomScroller();
     float totalHeight{ 0 };
-    bool hoverScroller{ false };
+    int hoverScroller{ -1 };
     SkRect scrollerRight;
     SkRect scrollerBottom;
-    double downY{ 0.f };
+    float downX{ 0.f };
+    float downY{ 0.f };
     int hoverIndex{ -1 };
 };

@@ -70,13 +70,22 @@ void ContentList::paint(SkCanvas* canvas)
 		canvas->restore();
 	}
 	if (totalHeight > rect.height()) {
-		if (hoverScroller) {
+		if (hoverScroller==0) {
 			paint.setColor(0xFFD3E3FD);
 		}
 		else {
 			paint.setColor(0x11333333);
 		}
 		canvas->drawRoundRect(scrollerRight, 3, 3, paint);
+	}
+	if (root->contentPanel->contentHeader->totalWidth > rect.width()) {
+		if (hoverScroller == 1) {
+			paint.setColor(0xFFD3E3FD);
+		}
+		else {
+			paint.setColor(0x11333333);
+		}
+		canvas->drawRoundRect(scrollerBottom, 3, 3, paint);
 	}
 	canvas->restore();
 	paint.setColor(0xFFE8E8E8);
@@ -85,15 +94,18 @@ void ContentList::paint(SkCanvas* canvas)
 
 void ContentList::mouseMove(const int& x, const int& y)
 {
-	bool flag{ false };
+	int flag{ -1 };
 	if (scrollerRight.contains(x, y)) {
-		flag = true;
+		flag = 0;
+	}
+	else if (scrollerBottom.contains(x, y)) {
+		flag = 1;
 	}
 	if (flag != hoverScroller) {
 		hoverScroller = flag;
 		repaint();
 	}
-	if (hoverScroller) {
+	if (hoverScroller>=0) {
 		hoverIndex = -1;
 		return;
 	}
@@ -110,8 +122,9 @@ void ContentList::mouseMove(const int& x, const int& y)
 
 void ContentList::mouseDown(const int& x, const int& y)
 {
+	downX = x;
 	downY = y;
-	if (hoverScroller) {
+	if (hoverScroller>=0) {
 		SetCapture(root->hwnd);
 	}
 }
@@ -119,8 +132,8 @@ void ContentList::mouseDown(const int& x, const int& y)
 void ContentList::mouseUp(const int& x, const int& y)
 {
 	if (!scrollerRight.contains(x, y)) {
-		if (hoverScroller) {
-			hoverScroller = false;
+		if (hoverScroller>=0) {
+			hoverScroller = -1;
 			ReleaseCapture();
 			repaint();
 		}
@@ -129,7 +142,7 @@ void ContentList::mouseUp(const int& x, const int& y)
 
 void ContentList::mouseDrag(const int& x, const int& y)
 {
-	if (hoverScroller) {
+	if (hoverScroller == 0) {
 		float span = y - downY;
 		if (span > 0) {
 			if (scrollerRight.fBottom < rect.fBottom) {
@@ -147,6 +160,9 @@ void ContentList::mouseDrag(const int& x, const int& y)
 		}
 		downY = y;
 	}
+	else if (hoverScroller == 1) {
+
+	}
 }
 
 void ContentList::resize(const int& w, const int& h)
@@ -157,8 +173,6 @@ void ContentList::resize(const int& w, const int& h)
 		parent->rect.fRight,
 		parent->contentBottom->rect.fTop
 	);
-	setRightScroller();
-	setBottomScroller();
 }
 
 void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
@@ -249,6 +263,7 @@ void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 		return a[1] > b[1];
 		});
 	setRightScroller();
+	setBottomScroller();
 }
 
 void ContentList::getRecentFiles()
