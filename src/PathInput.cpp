@@ -47,8 +47,6 @@ void PathInput::paint(SkCanvas* canvas)
 		canvas->drawSimpleText(pathStr.data(), textLength, SkTextEncoding::kUTF16,
 			rect.fLeft + 12.f, rect.fTop+27.f, *fontText, paint);
 	}
-
-
 }
 
 void PathInput::mouseDown(const int& x, const int& y)

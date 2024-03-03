@@ -1,12 +1,11 @@
 窗口名称
-滚动条应该：SetCapture(root->hwnd);ReleaseCapture();
-
+content list 滚动条应该：SetCapture(root->hwnd);ReleaseCapture();
+content list 横向滚动条
 
 tab页不要盖住最小化按钮，单个tab要根据title bar剩余的空间自适应宽度
 KonwnPath的路径和图标大小是不一样的
-contentList记住滚动位置，切换滚动条时要用
+contentList记住滚动位置，切换tab页时要用
 icon cache 会持续增长
-content list 横向滚动条
 两个输入框接收文本输入
 工具条几个工具按钮的功能：back, forward, up path, refresh
 监控文件目录的变化
