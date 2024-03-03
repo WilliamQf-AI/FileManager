@@ -1,6 +1,3 @@
-
-文件列表鼠标移入效果
-content list 滚动条应该：SetCapture(root->hwnd);ReleaseCapture();
 content list 横向滚动条
 文件列表右键菜单
 
@@ -20,6 +17,8 @@ icon cache 会持续增长
 拖拽排序列表的列
 最近使用过的文件
 双击标题栏最大化
+
+不断拖拽文件列表滚动条，任务管理器的内存还是会增高
 
 
 皮肤，主颜色，辅颜色，参考Canlendar

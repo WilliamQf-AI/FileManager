@@ -111,6 +111,9 @@ void ContentList::mouseMove(const int& x, const int& y)
 void ContentList::mouseDown(const int& x, const int& y)
 {
 	downY = y;
+	if (hoverScroller) {
+		SetCapture(root->hwnd);
+	}
 }
 
 void ContentList::mouseUp(const int& x, const int& y)
@@ -118,6 +121,7 @@ void ContentList::mouseUp(const int& x, const int& y)
 	if (!scrollerRect.contains(x, y)) {
 		if (hoverScroller) {
 			hoverScroller = false;
+			ReleaseCapture();
 			repaint();
 		}
 	}
