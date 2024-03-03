@@ -27,7 +27,7 @@ void SearchInput::paint(SkCanvas* canvas)
 	SkPaint paint;
 	auto font = App::GetFontIcon();
 	font->setSize(26.f); 
-	auto color = hoverIndex == 0 ? 0xFFE0E3EA : 0xFFECEFF7;
+	auto color = root->toolBar->hoverIndex == 5 ? 0xFFE0E3EA : 0xFFECEFF7;
 	paint.setColor(color);
 	canvas->drawRoundRect(rect, 6.f, 6.f, paint);
 
@@ -41,24 +41,6 @@ void SearchInput::paint(SkCanvas* canvas)
 	std::wstring str = L"Powered by Everything";
 	auto textLength = wcslen(str.data()) * 2;
 	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, rect.fLeft + 38, rect.fTop + 26, *fontText, paint);
-}
-
-void SearchInput::mouseMove(const int& x, const int& y)
-{
-	int index = -1;
-	if (rect.contains(x, y)) {
-		index = 0;
-	}
-	if (index != hoverIndex) {
-		if (index == 0) {
-			SetCursor(LoadCursor(nullptr, IDC_IBEAM));
-		}
-		else {
-			SetCursor(LoadCursor(nullptr, IDC_ARROW));
-		}
-		hoverIndex = index;
-		repaint();
-	}
 }
 
 void SearchInput::mouseDown(const int& x, const int& y)

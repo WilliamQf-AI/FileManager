@@ -45,17 +45,45 @@ void ToolBar::resize(const int& w, const int& h)
 void ToolBar::mouseMove(const int& x, const int& y)
 {
 	int index{ -1 };
-	if (x > pathInput->rect.fRight && x < searchInput->rect.fLeft && y>rect.fTop && y < rect.fBottom) {
-		index = 0;
+	if (rect.contains(x, y)) {
+		if (x > 8.f && pathTool->rect.contains(x, y)) {
+			index = (x - 8.f) / 50;
+		}
+		else if (pathInput->rect.contains(x, y)) {
+			index = 4;
+		}
+		else if (searchInput->rect.contains(x, y)) {
+			index = 5;
+		}
+		else if (x > pathInput->rect.fRight && x < searchInput->rect.fLeft) {
+			index = 6;
+		}
 	}
 	if (index != hoverIndex) {
-		hoverIndex = index;
-		if (index == 0) {
+		if (index == 4) {
+			SetCursor(LoadCursor(nullptr, IDC_IBEAM));
+			pathInput->repaint();
+		}
+		else if (index == 5) {
+			SetCursor(LoadCursor(nullptr, IDC_IBEAM));
+			searchInput->repaint();
+		}
+		else if (index == 6) {
 			SetCursor(LoadCursor(nullptr, IDC_SIZEWE));
 		}
 		else {
 			SetCursor(LoadCursor(nullptr, IDC_ARROW));
-		}		
+		}
+		if (hoverIndex < 4) {
+			pathTool->repaint();
+		}
+		else if (hoverIndex == 4) {
+			pathInput->repaint();
+		}
+		else if (hoverIndex == 5) {
+			searchInput->repaint();
+		}
+		hoverIndex = index;
 	}
 }
 
