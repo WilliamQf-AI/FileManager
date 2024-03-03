@@ -36,33 +36,34 @@ void ContentList::paint(SkCanvas* canvas)
 	fontText->setSize(18.f);
 	canvas->save();
 	canvas->clipRect(rect);
-	auto top = 0 - (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
-	auto y = top + rect.fTop + 32.f;
+	auto top = 0 - (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;	
 	SkPaint paint;
 	paint.setAntiAlias(true);
 	auto rootPath = root->titleBar->tabs[root->titleBar->selectedTabIndex]->path.wstring();
-	for (auto& file : files)
+	for (size_t i = 0; i < columns.size(); i++)
 	{
-		for (size_t i = 0; i < columns.size(); i++)
+		auto y = top + rect.fTop + 32.f;
+		canvas->save();
+		auto left = columns[i].left + paddingLeft;
+		canvas->clipRect(SkRect::MakeLTRB(left, y - 20, columns[i].right - paddingRight, rect.fBottom));
+		for (auto& file : files)
 		{
-			canvas->save();
-			auto left = columns[i].left + paddingLeft;
-			canvas->clipRect(SkRect::MakeLTRB(left, y - 20, columns[i].right - paddingRight, y + 20));
+			auto len = wcslen(file[i].text.data()) * 2;
 			if (i == 0) {
 				auto str = std::format(L"{}\\{}",rootPath, file[i].text);
 				auto img = SystemIcon::getIcon(str); //24
 				canvas->drawImage(img, left, y - 18);
-				left += 34;
 				paint.setColor(0xFF555555);
+				canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16, left+34, y, *fontText, paint);
 			}
 			else {
 				paint.setColor(0xFF999999);
+				canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16, left, y, *fontText, paint);
 			}
-			auto len = wcslen(file[i].text.data()) * 2;
-			canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16, left, y, *fontText, paint);
-			canvas->restore();
+			
+			y += 48;
 		}
-		y += 48;
+		canvas->restore();
 	}
 	if (totalHeight > rect.height()) {
 		if (hoverScroller) {

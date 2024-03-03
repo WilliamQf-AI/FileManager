@@ -1,3 +1,7 @@
+等高列表滚动条容器控件，要单独抽象一个出来
+文件列表ClipRect锁定区域值得优化，
+
+
 拿到系统分辨率，根据系统分辨率确定图标大小
 
 把PathInput和SearchInput的MouseOver转移到ToolBar内
