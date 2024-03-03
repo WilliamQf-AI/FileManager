@@ -48,6 +48,20 @@ void TitleBar::mouseDown(const int& x, const int& y)
 	}
 	auto it = std::find_if(tabs.begin(), tabs.end(), [](auto& item) {return item->hoverIndex != -1; });
 	if (it == tabs.end()) {
+		auto span = std::chrono::system_clock::now() - mouseDownTime;
+		auto msCount = std::chrono::duration_cast<std::chrono::milliseconds>(span).count();
+		if (msCount < 380) {
+			auto isMaximized = IsZoomed(root->hwnd) != 0;
+			if (isMaximized) {
+				PostMessage(root->hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+				root->isMouseDown = false;
+			}
+			else {
+				PostMessage(root->hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+			}
+			return;
+		}
+		mouseDownTime = std::chrono::system_clock::now();
 		GetCursorPos(&startPos);
 		ScreenToClient(root->hwnd, &startPos);
 		SetCapture(root->hwnd);

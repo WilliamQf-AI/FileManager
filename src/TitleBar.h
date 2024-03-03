@@ -9,6 +9,7 @@
 #include "TitleBarTab.h"
 #include "filesystem"
 #include "functional"
+#include <chrono>
 
 class WindowMain;
 class TitleBar : public ControlBase
@@ -32,4 +33,5 @@ private:
     void resize(const int& w, const int& h) override;
     void closeTab(TitleBarTab* tab);
     void selectTab(const int& index);
+    std::chrono::system_clock::time_point mouseDownTime;
 };

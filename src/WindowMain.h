@@ -46,8 +46,8 @@ private:
     SkAutoMalloc surfaceMemory;
     sk_sp<SkSurface> surface;
     int nctest(const int& x,const int& y);
-    void mouseMove(const int& x, const int& y);
     void mouseLeave();
+    void mouseMove(const int& x, const int& y);
     void mouseDown(const int& x, const int& y);
     void mouseUp(const int& x, const int& y);
     void mouseWheel(const int& x, const int& y,const int& delta);
