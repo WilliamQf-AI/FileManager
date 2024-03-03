@@ -28,4 +28,5 @@ private:
     bool hoverScroller{ false };
     SkRect scrollerRect;
     double downY{ 0.f };
+    int hoverIndex{ -1 };
 };

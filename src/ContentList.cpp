@@ -39,6 +39,11 @@ void ContentList::paint(SkCanvas* canvas)
 	auto top = 0 - (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;	
 	SkPaint paint;
 	paint.setAntiAlias(true);
+	if (hoverIndex > -1) {
+		auto y = top + rect.fTop + hoverIndex*48.f;
+		paint.setColor(0xFFD3E3FD);
+		canvas->drawRect(SkRect::MakeLTRB(rect.fLeft, y, rect.fRight, y + 48.f), paint);
+	}
 	auto rootPath = root->titleBar->tabs[root->titleBar->selectedTabIndex]->path.wstring();
 	for (size_t i = 0; i < columns.size(); i++)
 	{
@@ -46,19 +51,19 @@ void ContentList::paint(SkCanvas* canvas)
 		canvas->save();
 		auto left = columns[i].left + paddingLeft;
 		canvas->clipRect(SkRect::MakeLTRB(left, y - 20, columns[i].right - paddingRight, rect.fBottom));
-		for (auto& file : files)
+		for (size_t j = 0; j < files.size(); j++)
 		{
-			auto len = wcslen(file[i].text.data()) * 2;
+			auto len = wcslen(files[j][i].text.data()) * 2;
 			if (i == 0) {
-				auto str = std::format(L"{}\\{}",rootPath, file[i].text);
+				auto str = std::format(L"{}\\{}",rootPath, files[j][i].text);
 				auto img = SystemIcon::getIcon(str); //24
 				canvas->drawImage(img, left, y - 18);
 				paint.setColor(0xFF555555);
-				canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16, left+34, y, *fontText, paint);
+				canvas->drawSimpleText(files[j][i].text.data(), len, SkTextEncoding::kUTF16, left+34, y, *fontText, paint);
 			}
 			else {
 				paint.setColor(0xFF999999);
-				canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16, left, y, *fontText, paint);
+				canvas->drawSimpleText(files[j][i].text.data(), len, SkTextEncoding::kUTF16, left, y, *fontText, paint);
 			}			
 			y += 48;
 		}
@@ -86,6 +91,20 @@ void ContentList::mouseMove(const int& x, const int& y)
 	}
 	if (flag != hoverScroller) {
 		hoverScroller = flag;
+		hoverIndex = -1;
+		repaint();
+	}
+	if (hoverScroller) {
+		return;
+	}
+	int index{ -1 };
+	if (rect.contains(x, y)) {		
+		auto top = (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
+		index = (y - rect.fTop + top) / 48;
+	}
+	if (index != hoverIndex) {
+		hoverScroller = flag;
+		hoverIndex = index;
 		repaint();
 	}
 }
@@ -158,6 +177,8 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 		if (scrollerRect.fTop > rect.fTop) {
 			auto v = std::max(scrollerRect.fTop - span, rect.fTop);
 			scrollerRect.offsetTo(rect.fRight - 16, v);
+			auto top = (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
+			hoverIndex = (y - rect.fTop + top) / 48;
 			repaint();
 		}
 	}
@@ -165,6 +186,8 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 		if (scrollerRect.fBottom < rect.fBottom) {
 			auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
 			scrollerRect.offsetTo(rect.fRight - 16, scrollerRect.fTop + v - scrollerRect.fBottom);
+			auto top = (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
+			hoverIndex = (y - rect.fTop + top) / 48;
 			repaint();
 		}
 	}

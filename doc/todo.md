@@ -1,5 +1,8 @@
+
+文件列表鼠标移入效果
 content list 滚动条应该：SetCapture(root->hwnd);ReleaseCapture();
 content list 横向滚动条
+文件列表右键菜单
 
 tab页不要盖住最小化按钮，单个tab要根据title bar剩余的空间自适应宽度
 KonwnPath的路径和图标大小是不一样的
