@@ -1,4 +1,3 @@
-窗口名称
 content list 滚动条应该：SetCapture(root->hwnd);ReleaseCapture();
 content list 横向滚动条
 

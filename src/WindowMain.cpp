@@ -298,7 +298,8 @@ void WindowMain::onGetMaxMinMizeInfo(MINMAXINFO* mminfo)
 void WindowMain::initWindow()
 {
     static int num = 0;
-    std::wstring className = std::format(L"FileManager{}", num++);
+    std::wstring winName = L"FileManager";
+    auto clsName = std::format(L"{}_{}", winName, num++);
     auto hinstance = GetModuleHandle(NULL);
     WNDCLASSEX wcx{};
     wcx.cbSize = sizeof(wcx);
@@ -309,7 +310,7 @@ void WindowMain::initWindow()
     wcx.hIcon = LoadIcon(hinstance, IDI_APPLICATION);
     wcx.hCursor = LoadCursor(hinstance, IDC_ARROW);
     wcx.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-    wcx.lpszClassName = className.c_str();
+    wcx.lpszClassName = clsName.c_str();
     if (!RegisterClassEx(&wcx))
     {
         return;
@@ -318,7 +319,7 @@ void WindowMain::initWindow()
     SystemParametersInfo(SPI_GETWORKAREA, 0, &screenRect, 0);
     auto x = (screenRect.right - w) / 2;
     auto y = (screenRect.bottom - h) / 2;
-    this->hwnd = CreateWindowEx(WS_EX_APPWINDOW, className.c_str(), className.c_str(), WS_VISIBLE ,
+    this->hwnd = CreateWindowEx(WS_EX_APPWINDOW, clsName.c_str(), winName.c_str(), WS_VISIBLE ,
                                 x, y, w, h, NULL, NULL, hinstance, static_cast<LPVOID>(this));    
     DWMNCRENDERINGPOLICY policy = DWMNCRP_ENABLED;
     DwmSetWindowAttribute(hwnd, DWMWA_NCRENDERING_POLICY, &policy, sizeof(policy));
