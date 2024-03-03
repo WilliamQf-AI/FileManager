@@ -91,10 +91,10 @@ void ContentList::mouseMove(const int& x, const int& y)
 	}
 	if (flag != hoverScroller) {
 		hoverScroller = flag;
-		hoverIndex = -1;
 		repaint();
 	}
 	if (hoverScroller) {
+		hoverIndex = -1;
 		return;
 	}
 	int index{ -1 };
@@ -103,7 +103,6 @@ void ContentList::mouseMove(const int& x, const int& y)
 		index = (y - rect.fTop + top) / 48;
 	}
 	if (index != hoverIndex) {
-		hoverScroller = flag;
 		hoverIndex = index;
 		repaint();
 	}

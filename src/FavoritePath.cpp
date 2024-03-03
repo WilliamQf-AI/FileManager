@@ -28,14 +28,19 @@ void FavoritePath::paint(SkCanvas* canvas)
 	auto top = 0 - (scrollerRect.fTop-rect.fTop) / rectHeight * totalHeight;
 	for (size_t i = 0; i < 26; i++)
 	{
+		auto y = rect.fTop + top + i * 46;
+		if (i == hoverIndex) {
+			paint.setColor(0xFFD3E3FD);
+			canvas->drawRect(SkRect::MakeLTRB(rect.fLeft, y, rect.fRight, y + 46.f), paint);
+		}
 		auto img = SystemIcon::getIcon(SIID_FOLDER); //26
-		canvas->drawImage(img, 12, rect.fTop + top+ i*46 + 8);
+		canvas->drawImage(img, 12, y + 12);
 		std::wstring str = std::format(L"这是一条收藏的路径({}:)", i);
 		auto textLength = wcslen(str.data()) * 2;
 		auto fontText = App::GetFontText();
 		fontText->setSize(16.6f);
 		paint.setColor(0xFF333333);
-		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, 42, rect.fTop + top+ i * 46 + 26, *fontText, paint);
+		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, 42, y + 29, *fontText, paint);
 	}
 	if (totalHeight > rectHeight) {
 		if (hoverScroller) {
@@ -57,6 +62,19 @@ void FavoritePath::mouseMove(const int& x, const int& y)
 	}
 	if (flag != hoverScroller) {
 		hoverScroller = flag;
+		repaint();
+	}
+	if (hoverScroller) {
+		hoverIndex = -1;
+		return;
+	}
+	int index{ -1 };
+	if (rect.contains(x, y)) {
+		auto top = (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
+		index = (y - rect.fTop + top) / 46;
+	}
+	if (index != hoverIndex) {
+		hoverIndex = index;
 		repaint();
 	}
 }
@@ -115,6 +133,8 @@ void FavoritePath::mouseWheel(const int& x, const int& y,const int& delta)
 		if (scrollerRect.fTop > rect.fTop) {
 			auto v = std::max(scrollerRect.fTop - span, rect.fTop);
 			scrollerRect.offsetTo(rect.fRight - 8, v);
+			auto top = (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
+			hoverIndex = (y - rect.fTop + top) / 46;
 			repaint();
 		}
 	}
@@ -122,6 +142,8 @@ void FavoritePath::mouseWheel(const int& x, const int& y,const int& delta)
 		if (scrollerRect.fBottom < rect.fBottom) {
 			auto v = std::min(scrollerRect.fBottom + span, rect.fBottom);
 			scrollerRect.offsetTo(rect.fRight - 8, scrollerRect.fTop + v - scrollerRect.fBottom);
+			auto top = (scrollerRect.fTop - rect.fTop) / rect.height() * totalHeight;
+			hoverIndex = (y - rect.fTop + top) / 46;
 			repaint();
 		}
 	}

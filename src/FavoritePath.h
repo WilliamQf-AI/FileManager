@@ -22,4 +22,5 @@ private:
 	bool hoverScroller{ false };
 	double top{ 0.f };
 	double downY{ 0.f };
+	int hoverIndex{ -1 };
 };
