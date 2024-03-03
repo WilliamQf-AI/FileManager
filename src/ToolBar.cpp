@@ -75,22 +75,51 @@ void ToolBar::mouseMove(const int& x, const int& y)
 			SetCursor(LoadCursor(nullptr, IDC_ARROW));
 		}
 		if (hoverIndex < 4) {
-			pathTool->repaint();
+			pathTool->isDirty = true;
 		}
 		else if (hoverIndex == 4) {
-			pathInput->repaint();
+			pathInput->isDirty = true;
 		}
 		else if (hoverIndex == 5) {
-			searchInput->repaint();
+			searchInput->isDirty = true;
 		}
 		hoverIndex = index;
+		InvalidateRect(root->hwnd, nullptr, false);
 	}
 }
 
 void ToolBar::mouseDown(const int& x, const int& y)
 {
+	if (hoverIndex == 6) {
+		SetCapture(root->hwnd);
+		mouseDownX = x;
+	}
 }
 
 void ToolBar::mouseDrag(const int& x, const int& y)
 {
+	if (hoverIndex == 6) {
+		auto span = x - mouseDownX;
+		auto right = pathInput->rect.fRight + span;
+		auto left = searchInput->rect.fLeft + span;
+		if (right < pathInput->rect.fLeft + 120) {
+			mouseDownX = x;
+			return;
+		}
+		if (left > searchInput->rect.fRight - 120) {
+			mouseDownX = x;
+			return;
+		}
+		pathInput->rect.setLTRB( pathInput->rect.fLeft,pathInput->rect.fTop, right, pathInput->rect.fBottom );
+		searchInput->rect.setLTRB(left,searchInput->rect.fTop,searchInput->rect.fRight,searchInput->rect.fBottom);
+		pathInput->isDirty = true;
+		searchInput->isDirty = true;
+		InvalidateRect(root->hwnd, nullptr, false);
+		mouseDownX = x;
+	}
+}
+
+void ToolBar::mouseUp(const int& x, const int& y)
+{
+	ReleaseCapture();
 }

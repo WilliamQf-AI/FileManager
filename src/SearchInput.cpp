@@ -25,6 +25,9 @@ void SearchInput::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
 	SkPaint paint;
+	paint.setColor(0xFFFFFFFF);
+	//拖拽改变两个输入框大小的时候，要重绘一下输入框中间的部分
+	canvas->drawRect(SkRect::MakeXYWH(root->toolBar->pathInput->rect.fRight, rect.fTop, rect.fLeft, rect.height()), paint);
 	auto font = App::GetFontIcon();
 	font->setSize(26.f); 
 	auto color = root->toolBar->hoverIndex == 5 ? 0xFFE0E3EA : 0xFFECEFF7;
@@ -35,12 +38,14 @@ void SearchInput::paint(SkCanvas* canvas)
 	auto iconCode = (const char*)u8"\ue6a6";
 	canvas->drawString(iconCode, rect.fLeft+8.f, rect.fTop + 29, *font, paint);
 
-	paint.setColor(0xFFBBBBBB);
-	auto fontText = App::GetFontText();
-	fontText->setSize(16.f);
-	std::wstring str = L"Powered by Everything";
-	auto textLength = wcslen(str.data()) * 2;
-	canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, rect.fLeft + 38, rect.fTop + 26, *fontText, paint);
+	if (rect.width() > 226.f) {
+		paint.setColor(0xFFBBBBBB);
+		auto fontText = App::GetFontText();
+		fontText->setSize(16.f);
+		std::wstring str = L"Powered by Everything";
+		auto textLength = wcslen(str.data()) * 2;
+		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, rect.fLeft + 38, rect.fTop + 26, *fontText, paint);
+	}
 }
 
 void SearchInput::mouseDown(const int& x, const int& y)

@@ -59,8 +59,7 @@ void ContentList::paint(SkCanvas* canvas)
 			else {
 				paint.setColor(0xFF999999);
 				canvas->drawSimpleText(file[i].text.data(), len, SkTextEncoding::kUTF16, left, y, *fontText, paint);
-			}
-			
+			}			
 			y += 48;
 		}
 		canvas->restore();

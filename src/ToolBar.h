@@ -21,10 +21,12 @@ public:
     std::shared_ptr<PathInput> pathInput;
     std::shared_ptr<SearchInput> searchInput;
     int hoverIndex{ -1 };
+    int mouseDownX{ -1 };
 private:
     void paint(SkCanvas* canvas) override;
     void resize(const int& w, const int& h) override;
     void mouseMove(const int& x, const int& y) override;
     void mouseDown(const int& x, const int& y) override;
     void mouseDrag(const int& x, const int& y) override;
+    void mouseUp(const int& x, const int& y) override;
 };

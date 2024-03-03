@@ -25,9 +25,9 @@ void PathInput::resize(const int& w, const int& h)
 void PathInput::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
+	SkPaint paint;
 	auto font = App::GetFontIcon();
 	font->setSize(26.f);
-	SkPaint paint;
 	auto color = root->toolBar->hoverIndex == 4 ? 0xFFE0E3EA : 0xFFECEFF7;
 	paint.setColor(color);
 	canvas->drawRoundRect(rect, 6.f, 6.f, paint);
@@ -47,6 +47,8 @@ void PathInput::paint(SkCanvas* canvas)
 		canvas->drawSimpleText(pathStr.data(), textLength, SkTextEncoding::kUTF16,
 			rect.fLeft + 12.f, rect.fTop+27.f, *fontText, paint);
 	}
+
+
 }
 
 void PathInput::mouseDown(const int& x, const int& y)

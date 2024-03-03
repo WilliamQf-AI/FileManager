@@ -1,10 +1,4 @@
-等高列表滚动条容器控件，要单独抽象一个出来
-文件列表ClipRect锁定区域值得优化，
-
-
-拿到系统分辨率，根据系统分辨率确定图标大小
-
-把PathInput和SearchInput的MouseOver转移到ToolBar内
+拖拽改变PathInput和SearchInput的宽度
 
 KonwnPath的路径和图标大小是不一样的
 
@@ -30,6 +24,9 @@ window name
 
 TitleBar selected index.这要结合拖拽tab页功能一起做
 Deskttop翻译成桌面
+
+等高列表滚动条容器控件，要单独抽象一个出来
+拿到系统分辨率，根据系统分辨率确定图标大小
 
 滚动条应该：SetCapture(root->hwnd);ReleaseCapture();
 
