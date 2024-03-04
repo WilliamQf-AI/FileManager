@@ -70,15 +70,20 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	auto r = SkRect::MakeXYWH(rect.fLeft + 8.f, rect.fTop + 11.f, 22.f, 22.f);
 	canvas->drawImageRect(img, r, { SkFilterMode::kLinear, SkMipmapMode::kLinear });
 
+	canvas->save();
+	canvas->clipRect(SkRect::MakeLTRB(rect.fLeft + 34.f, rect.fTop, rect.fRight - 34.f, rect.fBottom));
 	paint.setColor(0xFF666666);
 	auto textLength = wcslen(title.data()) * 2;
 	auto fontText = App::GetFontText();
 	fontText->setSize(16.f);
 	canvas->drawSimpleText(title.data(), textLength, SkTextEncoding::kUTF16, 
 		rect.fLeft+34.f, rect.centerY()+4.5, *fontText, paint);
+	canvas->restore();
+
+
 	if (hoverIndex == 1) { //close
 		paint.setColor(0x18000000);
-		SkRect closeRect = SkRect::MakeXYWH(rect.fRight - 8.f - 26.f, rect.fTop + 10.f, 26.f, 26.f);
+		SkRect closeRect = SkRect::MakeXYWH(rect.fRight - 34.f, rect.fTop + 10.f, 26.f, 26.f);
 		canvas->drawRoundRect(closeRect, 6, 6, paint);
 		paint.setColor(0xFF666666);
 	}
@@ -90,8 +95,5 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	font->setSize(18.f);
 	paint.setAntiAlias(false);	
 	auto iconCode = (const char*)u8"\ue6e7"; 
-	canvas->drawString(iconCode, 
-		rect.fRight - 8.f - 22.f,
-		rect.fTop + 10.f + 20.f,
-		*font, paint);
+	canvas->drawString(iconCode, rect.fRight - 30.f, rect.fTop + 30.f, *font, paint);
 }

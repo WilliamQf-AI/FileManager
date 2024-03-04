@@ -193,22 +193,30 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 	}
 	auto tab = std::make_shared<TitleBarTab>(root, path);
 	auto size = tabs.size();
-	tab->rect.setXYWH(12.f + size * 200.f + size * 3.f, 10.f, 200.f, 46.f);
+	tab->rect.setXYWH(12.f + size * 203.f, 10.f, 200.f, 46.f);
 	tab->historyNum = size;
 	tab->orderNum = size;
 	tabs.push_back(std::move(tab));
 	auto old = tabs[selectedTabIndex].get();
 	selectedTabIndex = size;
 	if (needRefresh) {
-		for (size_t i = 0; i < tabChangeEvents.size(); i++)
-		{
-			tabChangeEvents[i](old,tabs[selectedTabIndex].get());
+		if (tabs[tabs.size() - 1]->rect.fRight > btns->rect.fLeft - 60.f) {
+			auto w = (btns->rect.fLeft - 60.f - 12.f) / tabs.size();
+			for (size_t i = 0; i < tabs.size(); i++)
+			{
+				tabs[i]->rect.setXYWH(12.f + i * w, 10.f, w, 46.f);
+				tabs[i]->isDirty = true;
+			}
 		}
+		//for (size_t i = 0; i < tabChangeEvents.size(); i++)
+		//{
+		//	tabChangeEvents[i](old,tabs[selectedTabIndex].get());
+		//}
 		InvalidateRect(root->hwnd, nullptr, false);
 	}
 }
 
 TitleBarTab* TitleBar::getCurTab()
 {
-	return root->titleBar->tabs[root->titleBar->selectedTabIndex].get();
+	return tabs[selectedTabIndex].get();
 }
