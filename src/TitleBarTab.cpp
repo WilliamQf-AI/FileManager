@@ -73,11 +73,10 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	canvas->save();
 	canvas->clipRect(SkRect::MakeLTRB(rect.fLeft + 34.f, rect.fTop, rect.fRight - 34.f, rect.fBottom));
 	paint.setColor(0xFF666666);
-	auto textLength = wcslen(title.data()) * 2;
+	auto len = wcslen(title.data()) * 2;
 	auto fontText = App::GetFontText();
 	fontText->setSize(16.f);
-	canvas->drawSimpleText(title.data(), textLength, SkTextEncoding::kUTF16, 
-		rect.fLeft+34.f, rect.centerY()+4.5, *fontText, paint);
+	canvas->drawSimpleText(title.data(), len, SkTextEncoding::kUTF16, rect.fLeft+34.f, rect.fTop+28.f, *fontText, paint);
 	canvas->restore();
 
 

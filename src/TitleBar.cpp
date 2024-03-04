@@ -208,10 +208,10 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 				tabs[i]->isDirty = true;
 			}
 		}
-		//for (size_t i = 0; i < tabChangeEvents.size(); i++)
-		//{
-		//	tabChangeEvents[i](old,tabs[selectedTabIndex].get());
-		//}
+		for (size_t i = 0; i < tabChangeEvents.size(); i++)
+		{
+			tabChangeEvents[i](old,tabs[selectedTabIndex].get());
+		}
 		InvalidateRect(root->hwnd, nullptr, false);
 	}
 }

@@ -1,5 +1,5 @@
-tab标签太多了，显示会有问题
-在新标签页种打开
+
+
 titleBarTab画文字时，rect.centerY()
 如果一个文件的文件名太长，titletabbar显示肯定会出问题
 双击文件列表中的行，打开文件
@@ -30,7 +30,7 @@ icon cache 会持续增长
 nctest else setCursor有点问题
 
 不断拖拽文件列表滚动条，任务管理器的内存还是会增高
-
+同样路径的标签，不再打开新标签页，在新标签页种打开目录
 
 皮肤，主颜色，辅颜色，参考Canlendar
 
