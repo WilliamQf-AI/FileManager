@@ -15,6 +15,9 @@ TitleBarTab::TitleBarTab(WindowMain* root, std::filesystem::path& path) :Control
 	else {
 		title = path.filename().wstring();		
 	}
+	if (title.empty()) {
+		title = path.wstring();
+	}
 }
 
 TitleBarTab::~TitleBarTab()

@@ -44,7 +44,7 @@ void ContentList::paint(SkCanvas* canvas)
 		paint.setColor(0xFFD3E3FD);
 		canvas->drawRect(SkRect::MakeLTRB(rect.fLeft, y, rect.fRight, y + 48.f), paint);
 	}
-	auto rootPath = root->titleBar->getCurTab()->path.wstring();
+	auto rootPath = root->titleBar->getCurTab()->path;
 	for (size_t i = 0; i < columns.size(); i++)
 	{
 		auto y = top + rect.fTop + 32.f;
@@ -56,8 +56,8 @@ void ContentList::paint(SkCanvas* canvas)
 		{
 			auto len = wcslen(files[j][i].text.data()) * 2;
 			if (i == 0) {
-				auto str = std::format(L"{}\\{}",rootPath, files[j][i].text);
-				auto img = SystemIcon::getIcon(str); //24
+				auto filePath = std::filesystem::path(rootPath).append(files[j][i].text);
+				auto img = SystemIcon::getIcon(filePath); //24
 				canvas->drawImage(img, x, y - 18);
 				paint.setColor(0xFF555555);
 				canvas->drawSimpleText(files[j][i].text.data(), len, SkTextEncoding::kUTF16, x+34, y, *fontText, paint);

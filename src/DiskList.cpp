@@ -2,6 +2,7 @@
 #include "WindowMain.h"
 #include "SystemIcon.h"
 #include "App.h"
+#include "TitleBar.h"
 
 DiskList::DiskList(WindowMain* root) :ControlBase(root)
 {
@@ -32,8 +33,7 @@ void DiskList::paint(SkCanvas* canvas)
 	SkRect itemRect = SkRect::MakeXYWH(12.f, y, rect.width() - 24.f, 46.f);
 	for (size_t i = 0; i < driveInfo.size(); i++)
 	{
-		auto str1 = std::format(L"{}:\\", std::get<0>(driveInfo[i]));
-		auto img = SystemIcon::getIcon(str1); //28
+		auto img = SystemIcon::getIcon(std::format(L"{}:\\", std::get<0>(driveInfo[i]))); //28
 		if (hoverIndex == i) {
 			paint.setColor(0x221677ff);
 		}
@@ -85,4 +85,8 @@ void DiskList::mouseMove(const int& x, const int& y)
 
 void DiskList::mouseDown(const int& x, const int& y)
 {
+	if (hoverIndex >= 0) {
+		auto pathStr = std::format(L"{}:\\", std::get<0>(driveInfo[hoverIndex]));
+		root->titleBar->addTab(pathStr);
+	}
 }
