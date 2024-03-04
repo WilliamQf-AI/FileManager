@@ -44,7 +44,7 @@ void ContentList::paint(SkCanvas* canvas)
 		paint.setColor(0xFFD3E3FD);
 		canvas->drawRect(SkRect::MakeLTRB(rect.fLeft, y, rect.fRight, y + 48.f), paint);
 	}
-	auto rootPath = root->titleBar->tabs[root->titleBar->selectedTabIndex]->path.wstring();
+	auto rootPath = root->titleBar->getCurTab()->path.wstring();
 	for (size_t i = 0; i < columns.size(); i++)
 	{
 		auto y = top + rect.fTop + 32.f;
@@ -95,6 +95,9 @@ void ContentList::paint(SkCanvas* canvas)
 
 void ContentList::mouseMove(const int& x, const int& y)
 {
+	if (root->titleBar->getCurTab()->path.empty()) {
+		return;
+	}
 	int flag{ -1 };
 	if (scrollerRight.contains(x, y)) {
 		flag = 0;
@@ -114,6 +117,9 @@ void ContentList::mouseMove(const int& x, const int& y)
 	if (rect.contains(x, y)) {		
 		auto top = (scrollerRight.fTop - rect.fTop) / rect.height() * totalHeight;
 		index = (y - rect.fTop + top) / 48;
+		if (index >= files.size()) {
+			index = -1;
+		}
 	}
 	if (index != hoverIndex) {
 		hoverIndex = index;
@@ -192,15 +198,23 @@ void ContentList::mouseDrag(const int& x, const int& y)
 void ContentList::resize(const int& w, const int& h)
 {
 	auto parent = (ContentPanel*)root->contentPanel.get();
+	bool flag = rect.isEmpty();
 	rect.setLTRB(parent->rect.fLeft+1,
 		parent->contentHeader->rect.fBottom+1,
 		parent->rect.fRight,
 		parent->contentBottom->rect.fTop
 	);
+	if (!flag) {
+		setRightScroller();
+		setBottomScroller();
+	}
 }
 
 void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 {
+	if (root->titleBar->getCurTab()->path.empty()) {
+		return;
+	}
 	if (totalHeight <= rect.height()) {
 		return;
 	}
@@ -237,14 +251,15 @@ void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 		}
 		return;
 	}
-	root->contentPanel->isDirty = true;
 	files.clear();
 	if (tabNew->path.empty()) {
+		totalHeight = 0;
+		root->contentPanel->isDirty = true;
 		return;
 	}
 	if (tab->path.empty()) {
 		root->contentPanel->contentHeader->isDirty = true;
-	}	
+	}
 	isDirty = true;
 	auto zone = std::chrono::current_zone();
 	SHFILEINFO fileInfo = { 0 };

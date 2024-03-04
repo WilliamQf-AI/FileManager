@@ -207,3 +207,8 @@ void TitleBar::addTab(std::filesystem::path&& path, bool needRefresh)
 		InvalidateRect(root->hwnd, nullptr, false);
 	}
 }
+
+TitleBarTab* TitleBar::getCurTab()
+{
+	return root->titleBar->tabs[root->titleBar->selectedTabIndex].get();
+}
