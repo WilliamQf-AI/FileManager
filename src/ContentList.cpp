@@ -265,7 +265,7 @@ void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	SHFILEINFO fileInfo = { 0 };
 	for (const auto& entry : std::filesystem::directory_iterator(tabNew->path)) {
 		auto fileName = entry.path().filename().wstring();
-		if (fileName == L"desktop.ini") {
+		if (fileName == L"desktop.ini" || fileName == L"DfsrPrivate") {
 			continue;
 		}
 		auto fileTime = entry.last_write_time();
