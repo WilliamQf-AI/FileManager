@@ -73,11 +73,16 @@ void ContentHeader::mouseMove(const int& x, const int& y)
 
 void ContentHeader::mouseDown(const int& x, const int& y)
 {
+	if (hoverIndex < 0) {
+		return;
+	}
+	SetCapture(root->hwnd);
 	mouseDownX = x;
 }
 
 void ContentHeader::mouseUp(const int& x, const int& y)
 {
+	ReleaseCapture();
 }
 
 void ContentHeader::mouseDrag(const int& x, const int& y)
@@ -124,9 +129,10 @@ void ContentHeader::mouseDrag(const int& x, const int& y)
 			}
 		}
 	}
-	mouseDownX = x;
 	isDirty = true;
+	root->contentPanel->contentList->isDirty = true;
 	InvalidateRect(root->hwnd, nullptr, false);
+	mouseDownX = x;
 	return;
 	
 }
