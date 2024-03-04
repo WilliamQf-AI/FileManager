@@ -50,10 +50,30 @@ void ContentHeader::paint(SkCanvas* canvas)
 
 void ContentHeader::mouseMove(const int& x, const int& y)
 {
+	int index{ -1 };
+	if (rect.contains(x, y)) {
+		for (size_t i = 0; i < columns.size()-1; i++)
+		{
+			if (x<columns[i].right + 6 && x>columns[i].right - 6) {
+				index = i;
+				break;
+			}
+		}
+	}
+	if (index != hoverIndex) {		
+		if (index > -1) {
+			SetCursor(LoadCursor(nullptr, IDC_SIZEWE));
+		}
+		else {
+			SetCursor(LoadCursor(nullptr, IDC_ARROW));
+		}
+		hoverIndex = index;
+	}
 }
 
 void ContentHeader::mouseDown(const int& x, const int& y)
 {
+	mouseDownX = x;
 }
 
 void ContentHeader::mouseUp(const int& x, const int& y)
@@ -62,6 +82,53 @@ void ContentHeader::mouseUp(const int& x, const int& y)
 
 void ContentHeader::mouseDrag(const int& x, const int& y)
 {
+	if (hoverIndex < 0) {
+		return;
+	}
+	float span = x - mouseDownX;	
+	if (span < 0) {
+		for (int i = hoverIndex; i >=0; i--)
+		{
+			auto spanRemain = columns[i].right - columns[i].left - columns[i].minWidth;		
+			if (spanRemain > 0 - span) {
+				columns[i].right += span;
+				columns[i + 1].left += span;
+				break;
+			}
+			else if(spanRemain == 0) {
+				continue;
+			}
+			else {
+				columns[i].right -= spanRemain;
+				columns[i + 1].left -= spanRemain;
+				span += spanRemain;
+			}
+		}
+	}
+	else {
+		for (int i = hoverIndex+1; i < columns.size(); i++)
+		{
+			auto spanRemain = columns[i].right - columns[i].left - columns[i].minWidth;
+			if (spanRemain > span) {
+				columns[i-1].right += span;
+				columns[i].left += span;
+				break;
+			}
+			else if (spanRemain == 0) {
+				continue;
+			}
+			else {
+				columns[i-1].right += spanRemain;
+				columns[i].left += spanRemain;
+				span -= spanRemain;
+			}
+		}
+	}
+	mouseDownX = x;
+	isDirty = true;
+	InvalidateRect(root->hwnd, nullptr, false);
+	return;
+	
 }
 
 void ContentHeader::resize(const int& w, const int& h)
@@ -80,10 +147,10 @@ void ContentHeader::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	//columns.push_back(FileColumnHeader(L"最近使用的文件", false));
 	//columns.push_back(FileColumnHeader(L"使用时间", true));
 	columns.clear();
-	columns.push_back(FileColumnHeader(L"名称", false));
-	columns.push_back(FileColumnHeader(L"修改日期", true));
-	columns.push_back(FileColumnHeader(L"大小", false));
-	columns.push_back(FileColumnHeader(L"类型", false));
+	columns.push_back(FileColumnHeader(L"名称", false,380.f));
+	columns.push_back(FileColumnHeader(L"修改日期", true,260.f));
+	columns.push_back(FileColumnHeader(L"大小", false,200.f));
+	columns.push_back(FileColumnHeader(L"类型", false,280.f));
 	columns[0].left = rect.fLeft;
 	columns[0].right = rect.fLeft + 460.f;
 	columns[1].left = columns[0].right;

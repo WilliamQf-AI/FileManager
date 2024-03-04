@@ -22,6 +22,8 @@ public:
     float paddingRight{ 38.f };
     float totalWidth{ 0.f };
     float scrollerLeft{ 0.f };
+    int hoverIndex{ -1 };
+    int mouseDownX{ 0 };
 private:
 
 };
