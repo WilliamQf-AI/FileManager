@@ -51,6 +51,7 @@ private:
     void mouseDown(const int& x, const int& y);
     void mouseUp(const int& x, const int& y);
     void mouseWheel(const int& x, const int& y,const int& delta);
+    void onTimeout(const unsigned int& id);
     void onClose();
     void onGetMaxMinMizeInfo(MINMAXINFO* mminfo);
 };

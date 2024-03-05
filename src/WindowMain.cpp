@@ -121,6 +121,10 @@ LRESULT CALLBACK WindowMain::RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wPar
             obj->mouseWheel(pt.x, pt.y, GET_WHEEL_DELTA_WPARAM(wParam));
             break;
         }
+        case WM_TIMER: {
+            obj->onTimeout(wParam);
+            break;
+        }
         case WM_DEBUG_MESSAGE: {
             return true;
         }
@@ -230,6 +234,13 @@ void WindowMain::mouseUp(const int& x, const int& y)
     for (auto& obj : ctrls)
     {
         obj->mouseUp(x, y);
+    }
+}
+void WindowMain::onTimeout(const unsigned int& id)
+{
+    for (auto& obj : ctrls)
+    {
+        obj->timeout(id);
     }
 }
 void WindowMain::mouseWheel(const int& x, const int& y,const int& delta)

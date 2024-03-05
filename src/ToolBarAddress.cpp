@@ -7,6 +7,9 @@
 
 ToolBarAddress::ToolBarAddress(WindowMain* root) : ToolBarInputBase(root)
 {
+	paddingLeft = 14.f;
+	paddingRight = 38.f;
+	hoverIndexVal = 4;
 }
 
 ToolBarAddress::~ToolBarAddress()

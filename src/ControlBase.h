@@ -23,6 +23,7 @@ public:
 	virtual void mouseUp(const int& x, const int& y) {};
 	virtual void mouseDrag(const int& x, const int& y) {};
 	virtual void mouseWheel(const int&, const int&, const int&) {};
+	virtual void timeout(const unsigned int& id) {};
 	SkRect rect;
 	WindowMain* root;
 	bool isDirty{ true };

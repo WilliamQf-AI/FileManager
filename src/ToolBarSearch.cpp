@@ -6,6 +6,9 @@
 
 ToolBarSearch::ToolBarSearch(WindowMain* root) : ToolBarInputBase(root)
 {
+	paddingLeft = 38.f;
+	paddingRight = 18.f;
+	hoverIndexVal = 5;
 }
 
 ToolBarSearch::~ToolBarSearch()
@@ -34,7 +37,7 @@ void ToolBarSearch::paint2(SkCanvas* canvas)
 	auto iconCode = (const char*)u8"\ue6a6";
 	canvas->drawString(iconCode, rect.fLeft+8.f, rect.fTop + 29, *font, paint);
 
-	if (rect.width() > 226.f) {
+	if (!isFocus && rect.width() > 226.f) {
 		paint.setColor(0xFFBBBBBB);
 		auto fontText = App::GetFontText();
 		fontText->setSize(16.f);

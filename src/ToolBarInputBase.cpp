@@ -23,9 +23,13 @@ void ToolBarInputBase::paint(SkCanvas* canvas)
 		paint.setStrokeWidth(1.5f);
 		paint.setColor(0xFF0B57D0);
 		canvas->drawRoundRect(rect.makeInset(1.5f, 1.5f), 6.f, 6.f, paint);
+		if (showTextCursor) {
+			canvas->drawLine(rect.fLeft + paddingLeft, rect.fTop + 8.f,
+				rect.fLeft + paddingLeft, rect.fBottom - 8.f, paint);
+		}
 	}
 	else {
-		if (root->toolBar->hoverIndex == 4 || root->toolBar->hoverIndex == 5) {
+		if (root->toolBar->hoverIndex == hoverIndexVal) {
 			paint.setColor(0xFFE0E3EA);
 		}
 		else {
@@ -47,6 +51,19 @@ void ToolBarInputBase::mouseDown(const int& x, const int& y)
 	}
 	if (flag != isFocus) {
 		isFocus = flag;
+		showTextCursor = true;
 		repaint();
+		if (isFocus) {
+			SetTimer(root->hwnd, timerID, 600, (TIMERPROC)nullptr);
+		}
+		else {
+			KillTimer(root->hwnd, timerID);
+		}
 	}
+}
+
+void ToolBarInputBase::timeout(const unsigned int& id)
+{
+	showTextCursor = !showTextCursor;
+	repaint();
 }
