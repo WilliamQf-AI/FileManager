@@ -42,7 +42,7 @@ void ContentList::paint(SkCanvas* canvas)
 	paint.setAntiAlias(true);
 	if (hoverIndex > -1) {
 		auto y = top + rect.fTop + hoverIndex*48.f;
-		paint.setColor(0xFFD3E3FD);
+		paint.setColor(0x101677ff);
 		canvas->drawRect(SkRect::MakeLTRB(rect.fLeft, y, rect.fRight, y + 48.f), paint);
 	}
 	for (size_t i = 0; i < columns.size(); i++)

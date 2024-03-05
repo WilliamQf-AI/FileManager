@@ -2,6 +2,7 @@
 #include <string>
 #include <format>
 #include <Windows.h>
+#include <Shobjidl.h>
 #include <include/core/SkPaint.h>
 
 #include "WindowMain.h"
@@ -12,6 +13,10 @@
 FavoritePath::FavoritePath(WindowMain* root) :ControlBase(root)
 {
 	totalHeight = 46 * 26;
+
+
+	PWSTR quickAccessPath = nullptr;
+	HRESULT hr = SHGetKnownFolderPath(FOLDERID_Profile, 0, NULL, &quickAccessPath);
 }
 
 FavoritePath::~FavoritePath()
@@ -30,7 +35,7 @@ void FavoritePath::paint(SkCanvas* canvas)
 	{
 		auto y = rect.fTop + top + i * 46;
 		if (i == hoverIndex) {
-			paint.setColor(0xFFD3E3FD);
+			paint.setColor(0x101677ff);
 			canvas->drawRect(SkRect::MakeLTRB(rect.fLeft, y, rect.fRight, y + 46.f), paint);
 		}
 		auto img = SystemIcon::getIcon(SIID_FOLDER); //26
@@ -158,3 +163,43 @@ void FavoritePath::resize(const int& w, const int& h)
 		scrollerRect.setXYWH(rect.fRight - 8, rect.fTop, 8, h);
 	}
 }
+
+
+//#include <Shobjidl.h>
+//#pragma comment(lib, "Shell32.lib")
+//HRESULT GetQuickAccessItems(IShellItemArray** ppItems)
+//{
+//	IShellItem* desktop;
+//	HRESULT hr = SHGetDesktopFolder(&desktop);
+//	if (SUCCEEDED(hr))
+//	{
+//		PIDLIST_ABSOLUTE pidlRoot;
+//		hr = desktop->Get PID(L"::{679F85CB-0220-4080-B29B-5540CC05AABF}", &pidlRoot); // 快速访问的PIDL
+//		if (SUCCEEDED(hr))
+//		{
+//			hr = SHCreateItemFromIDList(pidlRoot, IID_PPV_ARGS(ppItems));
+//			CoTaskMemFree(pidlRoot);
+//		}
+//		desktop->Release();
+//	}
+//	return hr;
+//}
+
+
+
+
+//for (UINT i = 0; ; ++i)
+//{
+//	IShellItem* pItem;
+//	hr = pItems->GetItemAt(i, &pItem);
+//	if (hr == E_BOUNDS)
+//		break; // 已经遍历完所有项
+//	LPWSTR pszPath;
+//	hr = pItem->GetDisplayName(SIGDN_DESKTOPABSOLUTEEDITING, &pszPath);
+//	if (SUCCEEDED(hr))
+//	{
+//		wprintf(L"Path: %s\n", pszPath);
+//		CoTaskMemFree(pszPath);
+//	}
+//	pItem->Release();
+//}
