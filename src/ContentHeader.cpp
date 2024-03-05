@@ -34,15 +34,15 @@ void ContentHeader::paint(SkCanvas* canvas)
 		paint.setColor(0xFF888888);
 		auto len = wcslen(columns[i].title.data()) * 2;
 		canvas->drawSimpleText(columns[i].title.data(), len, SkTextEncoding::kUTF16,
-			scrollerLeft + columns[i].left + paddingLeft, rect.fTop + 29.f, *fontText, paint);
+			scrollerLeft + columns[i].left + padding, rect.fTop + 29.f, *fontText, paint);
 		paint.setColor(0xFFE8E8E8);
 		if (i != 0) {
 			canvas->drawLine(scrollerLeft + columns[i].left, rect.fTop, scrollerLeft + columns[i].left, rect.fBottom, paint);
 		}
-		if (columns[i].right - paddingRight - 60.f > columns[i].left) {
+		if (columns[i].right - padding - 60.f > columns[i].left) {
 			paint.setColor(0xFFBBBBBB);
 			auto icon = columns[i].isSort ? (const char*)u8"\ue606" : (const char*)u8"\ue60f";
-			canvas->drawString(icon, scrollerLeft + columns[i].right - paddingRight, rect.fTop + 32.f, *font, paint);
+			canvas->drawString(icon, scrollerLeft + columns[i].right - padding-18.f, rect.fTop + 32.f, *font, paint);
 		}
 	}
 	canvas->restore();
@@ -92,42 +92,20 @@ void ContentHeader::mouseDrag(const int& x, const int& y)
 	}
 	float span = x - mouseDownX;	
 	if (span < 0) {
-		for (int i = hoverIndex; i >=0; i--)
-		{
-			auto spanRemain = columns[i].right - columns[i].left - columns[i].minWidth;		
-			if (spanRemain > 0 - span) {
-				columns[i].right += span;
-				columns[i + 1].left += span;
-				break;
-			}
-			else if(spanRemain == 0) {
-				continue;
-			}
-			else {
-				columns[i].right -= spanRemain;
-				columns[i + 1].left -= spanRemain;
-				span += spanRemain;
-			}
+		auto remain = columns[hoverIndex].right - columns[hoverIndex].left- columns[hoverIndex].minWidth;
+		if (remain <=0) {
+			return;
 		}
+		span = 0-std::min(remain, 0-span);
+		columns[hoverIndex].right += span;
 	}
 	else {
-		for (int i = hoverIndex+1; i < columns.size(); i++)
-		{
-			auto spanRemain = columns[i].right - columns[i].left - columns[i].minWidth;
-			if (spanRemain > span) {
-				columns[i-1].right += span;
-				columns[i].left += span;
-				break;
-			}
-			else if (spanRemain == 0) {
-				continue;
-			}
-			else {
-				columns[i-1].right += spanRemain;
-				columns[i].left += spanRemain;
-				span -= spanRemain;
-			}
-		}
+		columns[hoverIndex].right += span;
+	}
+	for (size_t i = hoverIndex + 1; i < columns.size(); i++)
+	{
+		columns[i].right += span;
+		columns[i].left += span;
 	}
 	isDirty = true;
 	root->contentPanel->contentList->isDirty = true;
@@ -154,7 +132,7 @@ void ContentHeader::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	//columns.push_back(FileColumnHeader(L"使用时间", true));
 	columns.clear();
 	columns.push_back(FileColumnHeader(L"名称", false,380.f));
-	columns.push_back(FileColumnHeader(L"修改日期", true,260.f));
+	columns.push_back(FileColumnHeader(L"修改日期", true,238.f));
 	columns.push_back(FileColumnHeader(L"大小", false,200.f));
 	columns.push_back(FileColumnHeader(L"类型", false,280.f));
 	columns[0].left = rect.fLeft;

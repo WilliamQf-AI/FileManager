@@ -10,5 +10,5 @@ public:
 	unsigned long long size;
 	bool operator>(const FileColumn& other) const override;
 private:
-
+	std::wstring getText(unsigned long long& size);
 };

@@ -29,8 +29,6 @@ void ContentList::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
 	auto parent = (ContentPanel*)root->contentPanel.get();
-	auto paddingLeft = parent->contentHeader->paddingLeft;
-	auto paddingRight = parent->contentHeader->paddingRight;
 	auto columns = parent->contentHeader->columns;
 	auto fontText = App::GetFontText();
 	fontText->setSize(18.f);
@@ -48,10 +46,11 @@ void ContentList::paint(SkCanvas* canvas)
 	for (size_t i = 0; i < columns.size(); i++)
 	{
 		auto y = top + rect.fTop + 32.f;
-		auto x = root->contentPanel->contentHeader->scrollerLeft + columns[i].left + paddingLeft;
+		auto x = root->contentPanel->contentHeader->scrollerLeft + columns[i].left + parent->contentHeader->padding;
 		canvas->save();
 		canvas->clipRect(SkRect::MakeLTRB(x, y - 20, 
-			root->contentPanel->contentHeader->scrollerLeft + columns[i].right - paddingRight, rect.fBottom));
+			root->contentPanel->contentHeader->scrollerLeft + columns[i].right - parent->contentHeader->padding, 
+			rect.fBottom));
 		for (size_t j = 0; j < files.size(); j++)
 		{
 			auto len = wcslen(files[j][i].text.data()) * 2;

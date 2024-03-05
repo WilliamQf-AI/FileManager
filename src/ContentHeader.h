@@ -18,8 +18,7 @@ public:
     void resize(const int& w, const int& h) override;
     void tabChange(TitleBarTab* tab, TitleBarTab* tabNew);
     std::vector<FileColumnHeader> columns;
-    float paddingLeft{ 18.f };
-    float paddingRight{ 38.f };
+    float padding{ 18.f };
     float totalWidth{ 0.f };
     float scrollerLeft{ 0.f };
     int hoverIndex{ -1 };
