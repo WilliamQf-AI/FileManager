@@ -42,7 +42,6 @@ void ContentList::paint(SkCanvas* canvas)
 		paint.setColor(0xFFD3E3FD);
 		canvas->drawRect(SkRect::MakeLTRB(rect.fLeft, y, rect.fRight, y + 48.f), paint);
 	}
-	auto rootPath = root->titleBar->getCurTab()->path;
 	for (size_t i = 0; i < columns.size(); i++)
 	{
 		auto y = top + rect.fTop + 32.f;
@@ -55,7 +54,7 @@ void ContentList::paint(SkCanvas* canvas)
 		{
 			auto len = wcslen(files[j][i].text.data()) * 2;
 			if (i == 0) {
-				auto filePath = std::filesystem::path(rootPath).append(files[j][i].text);
+				auto filePath = std::filesystem::path(root->titleBar->getCurTab()->path).append(files[j][i].text);
 				auto img = SystemIcon::getIcon(filePath); //24
 				canvas->drawImage(img, x, y - 18);
 				paint.setColor(0xFF555555);
@@ -132,6 +131,29 @@ void ContentList::mouseDown(const int& x, const int& y)
 	downY = y;
 	if (hoverScroller>=0) {
 		SetCapture(root->hwnd);
+	}
+	if (hoverIndex >= 0) {
+		auto span = std::chrono::system_clock::now() - mouseDownTime;
+		auto msCount = std::chrono::duration_cast<std::chrono::milliseconds>(span).count();
+		if (msCount < 380) {
+			auto filePath = std::filesystem::path(root->titleBar->getCurTab()->path).append(files[hoverIndex][0].text);
+			if (std::filesystem::is_directory(filePath)) {
+
+			}
+			else {
+				HINSTANCE result = ShellExecute(NULL, L"open", filePath.wstring().data(), NULL, NULL, SW_SHOW);
+				if ((INT_PTR)result > 32)
+				{
+					// 成功打开了文件
+				}
+				else
+				{
+					//todo
+					DWORD error = GetLastError();
+				}
+			}
+		}
+		mouseDownTime = std::chrono::system_clock::now();
 	}
 }
 
