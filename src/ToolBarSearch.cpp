@@ -1,10 +1,10 @@
-#include "ToolBarSearch.h"
+ï»¿#include "ToolBarSearch.h"
 #include "WindowMain.h"
 #include "ToolBar.h"
 #include "ToolBarAddress.h"
 #include "App.h"
 
-ToolBarSearch::ToolBarSearch(WindowMain* root) : ControlBase(root)
+ToolBarSearch::ToolBarSearch(WindowMain* root) : ToolBarInputBase(root)
 {
 }
 
@@ -21,19 +21,15 @@ void ToolBarSearch::resize(const int& w, const int& h)
 	rect.setLTRB(left, top, root->w-16.f, bottom);
 }
 
-void ToolBarSearch::paint(SkCanvas* canvas)
+void ToolBarSearch::paint2(SkCanvas* canvas)
 {
-	if (!needPaint(canvas)) return;
 	SkPaint paint;
 	paint.setColor(0xFFFFFFFF);
-	//ÍÏ×§¸Ä±äÁ½¸öÊäÈë¿ò´óÐ¡µÄÊ±ºò£¬ÒªÖØ»æÒ»ÏÂÊäÈë¿òÖÐ¼äµÄ²¿·Ö
-	canvas->drawRect(SkRect::MakeXYWH(root->toolBar->pathInput->rect.fRight, rect.fTop, rect.fLeft, rect.height()), paint);
-	auto font = App::GetFontIcon();
-	font->setSize(26.f); 
-	auto color = root->toolBar->hoverIndex == 5 ? 0xFFE0E3EA : 0xFFECEFF7;
-	paint.setColor(color);
-	canvas->drawRoundRect(rect, 6.f, 6.f, paint);
+	//æ‹–æ‹½æ”¹å˜ä¸¤ä¸ªè¾“å…¥æ¡†å¤§å°çš„æ—¶å€™ï¼Œè¦é‡ç»˜ä¸€ä¸‹è¾“å…¥æ¡†ä¸­é—´çš„éƒ¨åˆ†
+	canvas->drawRect(SkRect::MakeLTRB(root->toolBar->pathInput->rect.fRight, rect.fTop, rect.fLeft, rect.fBottom), paint);
 
+	auto font = App::GetFontIcon();
+	font->setSize(26.f);
 	paint.setColor(0xFF999999);
 	auto iconCode = (const char*)u8"\ue6a6";
 	canvas->drawString(iconCode, rect.fLeft+8.f, rect.fTop + 29, *font, paint);
@@ -46,8 +42,4 @@ void ToolBarSearch::paint(SkCanvas* canvas)
 		auto textLength = wcslen(str.data()) * 2;
 		canvas->drawSimpleText(str.data(), textLength, SkTextEncoding::kUTF16, rect.fLeft + 38, rect.fTop + 26, *fontText, paint);
 	}
-}
-
-void ToolBarSearch::mouseDown(const int& x, const int& y)
-{
 }

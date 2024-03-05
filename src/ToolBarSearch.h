@@ -1,14 +1,13 @@
 #pragma once
-#include "ControlBase.h"
+#include "ToolBarInputBase.h"
 
-class ToolBarSearch :public ControlBase
+class ToolBarSearch :public ToolBarInputBase
 {
 public:
 	ToolBarSearch(WindowMain* root);
 	~ToolBarSearch();
 private:
 	void resize(const int& w, const int& h) override;
-	void paint(SkCanvas* canvas) override;
-	void mouseDown(const int& x, const int& y) override;
+	void paint2(SkCanvas* canvas) override;
 };
 
