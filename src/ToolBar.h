@@ -17,9 +17,9 @@ public:
     ToolBar(WindowMain* root);
     ~ToolBar();
     void tabChange(TitleBarTab* tab, TitleBarTab* tabNew);
-    std::shared_ptr<ToolBarBtn> pathTool;
-    std::shared_ptr<ToolBarAddress> pathInput;
-    std::shared_ptr<ToolBarSearch> searchInput;
+    std::shared_ptr<ToolBarBtn> toolBarBtn;
+    std::shared_ptr<ToolBarAddress> toolBarAddress;
+    std::shared_ptr<ToolBarSearch> toolBarSearch;
     int hoverIndex{ -1 };
     int mouseDownX{ -1 };
 private:

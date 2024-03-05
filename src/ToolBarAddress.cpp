@@ -10,6 +10,7 @@ ToolBarAddress::ToolBarAddress(WindowMain* root) : ToolBarInputBase(root)
 	paddingLeft = 14.f;
 	paddingRight = 68.f;
 	hoverIndexVal = 4;
+	timerID = WM_APP + 2;
 }
 
 ToolBarAddress::~ToolBarAddress()
@@ -20,7 +21,7 @@ void ToolBarAddress::resize(const int& w, const int& h)
 {
 	isDirty = true;
 	auto top = root->toolBar->rect.fTop + 10.f;
-	auto left = root->toolBar->pathTool->rect.width() + 12.f;
+	auto left = root->toolBar->toolBarBtn->rect.width() + 12.f;
 	auto width = (root->w - left) / 3 * 2 - 12.f;
 	rect.setXYWH(left, top, width, 40.f);
 }

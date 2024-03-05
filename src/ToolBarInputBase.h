@@ -16,8 +16,8 @@ protected:
 	float paddingLeft{ 0.f };
 	float paddingRight{ 0.f };
 	int hoverIndexVal{ -1 };
+	int timerID{ 0 };
 private:
 	void timeout(const unsigned int& id);
-	int timerID{ WM_APP + 3 };
 	bool showTextCursor{ false };
 };

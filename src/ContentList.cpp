@@ -145,7 +145,7 @@ void ContentList::mouseDown(const int& x, const int& y)
 				tab->path = filePath;
 				getFiles(filePath);
 				tab->isDirty = true;
-				root->toolBar->pathInput->isDirty = true;
+				root->toolBar->toolBarAddress->isDirty = true;
 				isDirty = true;
 				InvalidateRect(root->hwnd, nullptr, false);
 			}

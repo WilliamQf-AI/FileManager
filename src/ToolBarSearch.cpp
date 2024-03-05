@@ -8,7 +8,8 @@ ToolBarSearch::ToolBarSearch(WindowMain* root) : ToolBarInputBase(root)
 {
 	paddingLeft = 39.f;
 	paddingRight = 18.f;
-	hoverIndexVal = 5;
+	hoverIndexVal = 8;
+	timerID = WM_APP + 1;
 }
 
 ToolBarSearch::~ToolBarSearch()
@@ -19,8 +20,8 @@ void ToolBarSearch::resize(const int& w, const int& h)
 {
 	isDirty = true;
 	auto top = root->toolBar->rect.fTop+10.f;
-	auto left = root->toolBar->pathInput->rect.fRight+12.f;
-	auto bottom = root->toolBar->pathInput->rect.fBottom;
+	auto left = root->toolBar->toolBarAddress->rect.fRight+12.f;
+	auto bottom = root->toolBar->toolBarAddress->rect.fBottom;
 	rect.setLTRB(left, top, root->w-16.f, bottom);
 }
 
@@ -29,7 +30,7 @@ void ToolBarSearch::paint2(SkCanvas* canvas)
 	SkPaint paint;
 	paint.setColor(0xFFFFFFFF);
 	//拖拽改变两个输入框大小的时候，要重绘一下输入框中间的部分
-	canvas->drawRect(SkRect::MakeLTRB(root->toolBar->pathInput->rect.fRight, rect.fTop, rect.fLeft, rect.fBottom), paint);
+	canvas->drawRect(SkRect::MakeLTRB(root->toolBar->toolBarAddress->rect.fRight, rect.fTop, rect.fLeft, rect.fBottom), paint);
 
 	auto font = App::GetFontIcon();
 	font->setSize(26.f);

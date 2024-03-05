@@ -10,9 +10,9 @@
 
 ToolBar::ToolBar(WindowMain* root) :ControlBase(root)
 {
-	pathTool = std::make_shared<ToolBarBtn>(root);
-	pathInput = std::make_shared<ToolBarAddress>(root);
-	searchInput = std::make_shared<ToolBarSearch>(root);
+	toolBarBtn = std::make_shared<ToolBarBtn>(root);
+	toolBarAddress = std::make_shared<ToolBarAddress>(root);
+	toolBarSearch = std::make_shared<ToolBarSearch>(root);
 	auto func = std::bind(&ToolBar::tabChange, this, std::placeholders::_1, std::placeholders::_2);
 	root->titleBar->tabChangeEvents.push_back(std::move(func));
 }
@@ -23,8 +23,8 @@ ToolBar::~ToolBar()
 
 void ToolBar::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 {
-	pathInput->isDirty = true;
-	pathTool->isDirty = true;
+	toolBarAddress->isDirty = true;
+	toolBarBtn->isDirty = true;
 }
 
 void ToolBar::paint(SkCanvas* canvas)
@@ -46,42 +46,51 @@ void ToolBar::mouseMove(const int& x, const int& y)
 {
 	int index{ -1 };
 	if (rect.contains(x, y)) {
-		if (x > 8.f && pathTool->rect.contains(x, y)) {
+		if (x > 8.f && toolBarBtn->rect.contains(x, y)) {
 			index = (x - 8.f) / 50;
 		}
-		else if (pathInput->rect.contains(x, y)) {
-			index = 4;
+		else if (toolBarAddress->rect.contains(x, y)) {
+			if (x < toolBarAddress->rect.fRight - 80) {
+				index = 4;
+			}
+			else if (x < toolBarAddress->rect.fRight - 40) {
+				index = 5;
+			}
+			else {
+				index = 6;
+			}
+			
 		}
-		else if (searchInput->rect.contains(x, y)) {
-			index = 5;
+		else if (x > toolBarAddress->rect.fRight && x < toolBarSearch->rect.fLeft) {
+			index = 7;
 		}
-		else if (x > pathInput->rect.fRight && x < searchInput->rect.fLeft) {
-			index = 6;
+		else if (toolBarSearch->rect.contains(x, y)) {
+			index = 8;
 		}
 	}
 	if (index != hoverIndex) {
 		if (index == 4) {
 			SetCursor(LoadCursor(nullptr, IDC_IBEAM));
-			pathInput->repaint();
+			toolBarAddress->repaint();
 		}
-		else if (index == 5) {
+		else if (index == 8) {
 			SetCursor(LoadCursor(nullptr, IDC_IBEAM));
-			searchInput->repaint();
+			toolBarSearch->repaint();
 		}
-		else if (index == 6) {
+		else if (index == 7) {
 			SetCursor(LoadCursor(nullptr, IDC_SIZEWE));
 		}
 		else {
 			SetCursor(LoadCursor(nullptr, IDC_ARROW));
 		}
 		if (hoverIndex < 4) {
-			pathTool->isDirty = true;
+			toolBarBtn->isDirty = true;
 		}
-		else if (hoverIndex == 4) {
-			pathInput->isDirty = true;
+		else if (hoverIndex < 7) {
+			toolBarAddress->isDirty = true;
 		}
-		else if (hoverIndex == 5) {
-			searchInput->isDirty = true;
+		else if (hoverIndex == 8) {
+			toolBarSearch->isDirty = true;
 		}
 		hoverIndex = index;
 		InvalidateRect(root->hwnd, nullptr, false);
@@ -90,7 +99,7 @@ void ToolBar::mouseMove(const int& x, const int& y)
 
 void ToolBar::mouseDown(const int& x, const int& y)
 {
-	if (hoverIndex == 6) {
+	if (hoverIndex == 7) {
 		SetCapture(root->hwnd);
 		mouseDownX = x;
 	}
@@ -98,22 +107,22 @@ void ToolBar::mouseDown(const int& x, const int& y)
 
 void ToolBar::mouseDrag(const int& x, const int& y)
 {
-	if (hoverIndex == 6) {
+	if (hoverIndex == 7) {
 		auto span = x - mouseDownX;
-		auto right = pathInput->rect.fRight + span;
-		auto left = searchInput->rect.fLeft + span;
-		if (right < pathInput->rect.fLeft + 120) {
+		auto right = toolBarAddress->rect.fRight + span;
+		auto left = toolBarSearch->rect.fLeft + span;
+		if (right < toolBarAddress->rect.fLeft + 120) {
 			mouseDownX = x;
 			return;
 		}
-		if (left > searchInput->rect.fRight - 120) {
+		if (left > toolBarSearch->rect.fRight - 120) {
 			mouseDownX = x;
 			return;
 		}
-		pathInput->rect.setLTRB( pathInput->rect.fLeft,pathInput->rect.fTop, right, pathInput->rect.fBottom );
-		searchInput->rect.setLTRB(left,searchInput->rect.fTop,searchInput->rect.fRight,searchInput->rect.fBottom);
-		pathInput->isDirty = true;
-		searchInput->isDirty = true;
+		toolBarAddress->rect.setLTRB( toolBarAddress->rect.fLeft,toolBarAddress->rect.fTop, right, toolBarAddress->rect.fBottom );
+		toolBarSearch->rect.setLTRB(left,toolBarSearch->rect.fTop,toolBarSearch->rect.fRight,toolBarSearch->rect.fBottom);
+		toolBarAddress->isDirty = true;
+		toolBarSearch->isDirty = true;
 		InvalidateRect(root->hwnd, nullptr, false);
 		mouseDownX = x;
 	}
