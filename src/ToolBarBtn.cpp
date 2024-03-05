@@ -1,25 +1,25 @@
-#include "PathTool.h"
+#include "ToolBarBtn.h"
 #include "WindowMain.h"
 #include "ToolBar.h"
 #include "App.h"
 #include "TitleBar.h"
 
-PathTool::PathTool(WindowMain* root) : ControlBase(root)
+ToolBarBtn::ToolBarBtn(WindowMain* root) : ControlBase(root)
 {
 }
 
-PathTool::~PathTool()
+ToolBarBtn::~ToolBarBtn()
 {
 }
 
-void PathTool::resize(const int& w, const int& h)
+void ToolBarBtn::resize(const int& w, const int& h)
 {
 	isDirty = true;
 	auto top = root->toolBar->rect.fTop;
 	rect.setXYWH(0.f, top, 200.f, 59.f);
 }
 
-void PathTool::paint(SkCanvas* canvas)
+void ToolBarBtn::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
 	SkPaint paint;
@@ -45,7 +45,7 @@ void PathTool::paint(SkCanvas* canvas)
 	}
 }
 
-void PathTool::mouseDown(const int& x, const int& y)
+void ToolBarBtn::mouseDown(const int& x, const int& y)
 {
 	if (root->toolBar->hoverIndex >= 0) {
 		auto tab = root->titleBar->tabs[root->titleBar->selectedTabIndex].get();

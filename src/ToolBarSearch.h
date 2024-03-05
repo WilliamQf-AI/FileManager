@@ -1,11 +1,11 @@
 #pragma once
 #include "ControlBase.h"
 
-class SearchInput :public ControlBase
+class ToolBarSearch :public ControlBase
 {
 public:
-	SearchInput(WindowMain* root);
-	~SearchInput();
+	ToolBarSearch(WindowMain* root);
+	~ToolBarSearch();
 private:
 	void resize(const int& w, const int& h) override;
 	void paint(SkCanvas* canvas) override;

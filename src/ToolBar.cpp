@@ -2,17 +2,17 @@
 #include "WindowMain.h"
 #include "App.h"
 #include "TitleBar.h"
-#include "PathTool.h"
-#include "PathInput.h"
-#include "SearchInput.h"
+#include "ToolBarBtn.h"
+#include "ToolBarAddress.h"
+#include "ToolBarSearch.h"
 #include "TitleBar.h"
 #include "TitleBarTab.h"
 
 ToolBar::ToolBar(WindowMain* root) :ControlBase(root)
 {
-	pathTool = std::make_shared<PathTool>(root);
-	pathInput = std::make_shared<PathInput>(root);
-	searchInput = std::make_shared<SearchInput>(root);
+	pathTool = std::make_shared<ToolBarBtn>(root);
+	pathInput = std::make_shared<ToolBarAddress>(root);
+	searchInput = std::make_shared<ToolBarSearch>(root);
 	auto func = std::bind(&ToolBar::tabChange, this, std::placeholders::_1, std::placeholders::_2);
 	root->titleBar->tabChangeEvents.push_back(std::move(func));
 }

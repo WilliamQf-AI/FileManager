@@ -26,12 +26,14 @@ set(SRC
     TitleBarBtns.h
     ToolBar.cpp
     ToolBar.h
-    PathTool.cpp
-    PathTool.h
-    PathInput.cpp
-    PathInput.h
-    SearchInput.cpp
-    SearchInput.h
+    ToolBarInputBase.cpp
+    ToolBarInputBase.h
+    ToolBarAddress.cpp
+    ToolBarAddress.h
+    ToolBarSearch.cpp
+    ToolBarSearch.h
+    ToolBarBtn.cpp
+    ToolBarBtn.h
     LeftPanel.cpp
     LeftPanel.h
     QuickBtn.cpp

@@ -1,11 +1,11 @@
 #pragma once
 #include "ControlBase.h"
 
-class PathTool:public ControlBase
+class ToolBarBtn :public ControlBase
 {
 public:
-	PathTool(WindowMain* root);
-	~PathTool();
+	ToolBarBtn(WindowMain* root);
+	~ToolBarBtn();
 
 private:
 	void resize(const int& w, const int& h) override;

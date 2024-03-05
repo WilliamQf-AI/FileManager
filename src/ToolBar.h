@@ -7,9 +7,9 @@
 #include "ControlBase.h"
 
 class WindowMain;
-class PathTool;
-class PathInput;
-class SearchInput;
+class ToolBarBtn;
+class ToolBarAddress;
+class ToolBarSearch;
 class TitleBarTab;
 class ToolBar : public ControlBase
 {
@@ -17,9 +17,9 @@ public:
     ToolBar(WindowMain* root);
     ~ToolBar();
     void tabChange(TitleBarTab* tab, TitleBarTab* tabNew);
-    std::shared_ptr<PathTool> pathTool;
-    std::shared_ptr<PathInput> pathInput;
-    std::shared_ptr<SearchInput> searchInput;
+    std::shared_ptr<ToolBarBtn> pathTool;
+    std::shared_ptr<ToolBarAddress> pathInput;
+    std::shared_ptr<ToolBarSearch> searchInput;
     int hoverIndex{ -1 };
     int mouseDownX{ -1 };
 private:

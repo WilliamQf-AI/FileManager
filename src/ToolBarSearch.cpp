@@ -1,18 +1,18 @@
-#include "SearchInput.h"
+#include "ToolBarSearch.h"
 #include "WindowMain.h"
 #include "ToolBar.h"
-#include "PathInput.h"
+#include "ToolBarAddress.h"
 #include "App.h"
 
-SearchInput::SearchInput(WindowMain* root) : ControlBase(root)
+ToolBarSearch::ToolBarSearch(WindowMain* root) : ControlBase(root)
 {
 }
 
-SearchInput::~SearchInput()
+ToolBarSearch::~ToolBarSearch()
 {
 }
 
-void SearchInput::resize(const int& w, const int& h)
+void ToolBarSearch::resize(const int& w, const int& h)
 {
 	isDirty = true;
 	auto top = root->toolBar->rect.fTop+10.f;
@@ -21,7 +21,7 @@ void SearchInput::resize(const int& w, const int& h)
 	rect.setLTRB(left, top, root->w-16.f, bottom);
 }
 
-void SearchInput::paint(SkCanvas* canvas)
+void ToolBarSearch::paint(SkCanvas* canvas)
 {
 	if (!needPaint(canvas)) return;
 	SkPaint paint;
@@ -48,6 +48,6 @@ void SearchInput::paint(SkCanvas* canvas)
 	}
 }
 
-void SearchInput::mouseDown(const int& x, const int& y)
+void ToolBarSearch::mouseDown(const int& x, const int& y)
 {
 }

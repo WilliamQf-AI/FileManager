@@ -16,7 +16,7 @@
 #include "TitleBarTab.h"
 #include "SystemIcon.h"
 #include "ToolBar.h"
-#include "PathInput.h"
+#include "ToolBarAddress.h"
 
 ContentList::ContentList(WindowMain* root) :ControlBase(root)
 {
