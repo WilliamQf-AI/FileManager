@@ -50,10 +50,10 @@ void ToolBar::mouseMove(const int& x, const int& y)
 			index = (x - 8.f) / 50;
 		}
 		else if (toolBarAddress->rect.contains(x, y)) {
-			if (x < toolBarAddress->rect.fRight - 80) {
+			if (x < toolBarAddress->rect.fRight - 72) {
 				index = 4;
 			}
-			else if (x < toolBarAddress->rect.fRight - 40) {
+			else if (x < toolBarAddress->rect.fRight - 38) {
 				index = 5;
 			}
 			else {
@@ -71,11 +71,15 @@ void ToolBar::mouseMove(const int& x, const int& y)
 	if (index != hoverIndex) {
 		if (index == 4) {
 			SetCursor(LoadCursor(nullptr, IDC_IBEAM));
-			toolBarAddress->repaint();
+			toolBarAddress->isDirty = true;
+		}
+		else if (index == 5 || index == 6) {
+			SetCursor(LoadCursor(nullptr, IDC_ARROW));
+			toolBarAddress->isDirty = true;
 		}
 		else if (index == 8) {
 			SetCursor(LoadCursor(nullptr, IDC_IBEAM));
-			toolBarSearch->repaint();
+			toolBarSearch->isDirty = true;
 		}
 		else if (index == 7) {
 			SetCursor(LoadCursor(nullptr, IDC_SIZEWE));

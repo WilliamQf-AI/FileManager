@@ -30,11 +30,30 @@ void ToolBarAddress::paint2(SkCanvas* canvas)
 	SkPaint paint;
 	auto font = App::GetFontIcon();
 	font->setSize(26.f);
-	paint.setColor(0xFF999999);
+	if (root->toolBar->hoverIndex == 5) {
+		paint.setColor(0xFFE0E3EA);
+		auto r = SkRect::MakeLTRB(rect.fRight - 72, rect.fTop + 7, rect.fRight - 42, rect.fBottom - 7);
+		canvas->drawRoundRect(r,3.f,3.f,paint);
+		paint.setColor(0xFF333333);
+	}
+	else {
+		paint.setColor(0xFF999999);
+	}
 	auto iconCode = (const char*)u8"\ue611";
 	canvas->drawString(iconCode, rect.fRight - 70, rect.fTop + 29, *font, paint);
+	if (root->toolBar->hoverIndex == 6) {
+		paint.setColor(0xFFE0E3EA);
+		auto r = SkRect::MakeLTRB(rect.fRight - 38, rect.fTop + 7, rect.fRight - 8, rect.fBottom - 7);
+		canvas->drawRoundRect(r, 3.f, 3.f, paint);
+		paint.setColor(0xFF333333);
+	}
+	else {
+		paint.setColor(0xFF999999);
+	}
 	iconCode = (const char*)u8"\ue764";
 	canvas->drawString(iconCode, rect.fRight - 36, rect.fTop + 29, *font, paint);
+
+
 	auto tab = root->titleBar->getCurTab();
 	if (!tab->path.empty()) {
 		auto color = root->toolBar->hoverIndex == 4 ? 0xFF333333 : 0xFF666666;
