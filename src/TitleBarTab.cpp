@@ -9,15 +9,6 @@
 
 TitleBarTab::TitleBarTab(WindowMain* root, std::filesystem::path& path) :ControlBase(root),path{path}
 {
-	if (path.empty()) {
-		title = L"主页";
-	}
-	else {
-		title = path.filename().wstring();		
-	}
-	if (title.empty()) {
-		title = path.wstring();
-	}
 }
 
 TitleBarTab::~TitleBarTab()
@@ -69,10 +60,10 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	auto img = SystemIcon::getIcon(path.wstring()); //22
 	auto r = SkRect::MakeXYWH(rect.fLeft + 8.f, rect.fTop + 11.f, 22.f, 22.f);
 	canvas->drawImageRect(img, r, { SkFilterMode::kLinear, SkMipmapMode::kLinear });
-
 	canvas->save();
 	canvas->clipRect(SkRect::MakeLTRB(rect.fLeft + 34.f, rect.fTop, rect.fRight - 34.f, rect.fBottom));
 	paint.setColor(0xFF666666);
+	std::wstring title = getTitle();
 	auto len = wcslen(title.data()) * 2;
 	auto fontText = App::GetFontText();
 	fontText->setSize(16.f);
@@ -95,4 +86,19 @@ void TitleBarTab::paint(SkCanvas* canvas)
 	paint.setAntiAlias(false);	
 	auto iconCode = (const char*)u8"\ue6e7"; 
 	canvas->drawString(iconCode, rect.fRight - 30.f, rect.fTop + 30.f, *font, paint);
+}
+
+std::wstring TitleBarTab::getTitle()
+{
+	std::wstring title;
+	if (path.empty()) {
+		title = L"主页";
+	}
+	else {
+		title = path.filename().wstring();
+	}
+	if (title.empty()) {
+		title = path.wstring();
+	}
+	return title;
 }

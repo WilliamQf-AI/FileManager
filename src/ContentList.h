@@ -22,6 +22,7 @@ private:
     void mouseDrag(const int& x, const int& y) override;
     void mouseWheel(const int& x, const int& y, const int& delta) override;
     void getRecentFiles();
+    void getFiles(std::filesystem::path& path);
     std::vector<std::vector<FileColumn>> files;
     void setRightScroller();
     void setBottomScroller();

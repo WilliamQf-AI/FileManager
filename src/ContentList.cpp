@@ -136,9 +136,14 @@ void ContentList::mouseDown(const int& x, const int& y)
 		auto span = std::chrono::system_clock::now() - mouseDownTime;
 		auto msCount = std::chrono::duration_cast<std::chrono::milliseconds>(span).count();
 		if (msCount < 380) {
-			auto filePath = std::filesystem::path(root->titleBar->getCurTab()->path).append(files[hoverIndex][0].text);
+			auto tab = root->titleBar->getCurTab();
+			auto filePath = std::filesystem::path(tab->path).append(files[hoverIndex][0].text);
 			if (std::filesystem::is_directory(filePath)) {
-
+				tab->path = filePath;
+				getFiles(filePath);
+				tab->isDirty = true;
+				isDirty = true;
+				InvalidateRect(root->hwnd, nullptr, false);
 			}
 			else {
 				HINSTANCE result = ShellExecute(NULL, L"open", filePath.wstring().data(), NULL, NULL, SW_SHOW);
@@ -272,7 +277,6 @@ void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 		}
 		return;
 	}
-	files.clear();
 	if (tabNew->path.empty()) {
 		totalHeight = 0;
 		root->contentPanel->isDirty = true;
@@ -281,49 +285,7 @@ void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	if (tab->path.empty()) {
 		root->contentPanel->contentHeader->isDirty = true;
 	}
-	isDirty = true;
-	auto zone = std::chrono::current_zone();
-	SHFILEINFO fileInfo = { 0 };
-	for (const auto& entry : std::filesystem::directory_iterator(tabNew->path)) {
-		auto fileName = entry.path().filename().wstring();
-		if (fileName == L"desktop.ini" || fileName == L"DfsrPrivate") {
-			continue;
-		}
-		auto fileTime = entry.last_write_time();
-		auto sysClock = std::chrono::clock_cast<std::chrono::system_clock>(fileTime);
-		auto zTime = std::chrono::zoned_time(zone, sysClock);
-		auto fileTimeStr = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
-		fileTimeStr = fileTimeStr.substr(0, fileTimeStr.find_last_of(L"."));
-		std::wstring  typeStr;
-		unsigned long long fileSize{ 0 };
-		auto hr = SHGetFileInfo(entry.path().wstring().c_str(), 0, &fileInfo, sizeof(fileInfo),
-			SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX);
-		if (std::filesystem::is_directory(entry.path())) {
-			typeStr = L"文件夹";
-		}
-		else {
-			if (hr)
-			{
-				//todo
-				//if ((fileInfo.dwAttributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) {  //
-				//	continue;
-				//}
-				typeStr = fileInfo.szTypeName;
-			}
-			fileSize = std::filesystem::file_size(entry.path()) / 1024;
-		}		
-		//auto p = entry.path().wstring();
-		//FileColumnPath fcp(fileName, p);
-		files.push_back({ FileColumn(fileName),
-			FileColumnTime(fileTimeStr,fileTime),
-			FileColumnSize(fileSize),FileColumn(typeStr)});
-	}
-	totalHeight = 40 * files.size();
-	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
-		return a[1] > b[1];
-		});
-	setRightScroller();
-	setBottomScroller();
+	getFiles(tabNew->path);
 }
 
 void ContentList::getRecentFiles()
@@ -351,6 +313,52 @@ void ContentList::getRecentFiles()
 	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
 		return a[1] > b[1];
 		});
+}
+
+void ContentList::getFiles(std::filesystem::path& path)
+{
+	files.clear();
+	isDirty = true;
+	auto zone = std::chrono::current_zone();
+	SHFILEINFO fileInfo = { 0 };
+	for (const auto& entry : std::filesystem::directory_iterator(path)) {
+		auto fileName = entry.path().filename().wstring();
+		if (fileName == L"desktop.ini" || fileName == L"DfsrPrivate") {
+			continue;
+		}
+		auto fileTime = entry.last_write_time();
+		auto sysClock = std::chrono::clock_cast<std::chrono::system_clock>(fileTime);
+		auto zTime = std::chrono::zoned_time(zone, sysClock);
+		auto fileTimeStr = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
+		fileTimeStr = fileTimeStr.substr(0, fileTimeStr.find_last_of(L"."));
+		std::wstring  typeStr;
+		unsigned long long fileSize{ 0 };
+		auto hr = SHGetFileInfo(entry.path().wstring().c_str(), 0, &fileInfo, sizeof(fileInfo),
+			SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX);
+		if (std::filesystem::is_directory(entry.path())) {
+			typeStr = L"文件夹";
+		}
+		else {
+			if (hr)
+			{
+				//todo
+				//if ((fileInfo.dwAttributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) {  //
+				//	continue;
+				//}
+				typeStr = fileInfo.szTypeName;
+			}
+			fileSize = std::filesystem::file_size(entry.path()) / 1024;
+		}
+		files.push_back({ FileColumn(fileName),
+			FileColumnTime(fileTimeStr,fileTime),
+			FileColumnSize(fileSize),FileColumn(typeStr) });
+	}
+	totalHeight = 40 * files.size();
+	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
+		return a[1] > b[1];
+		});
+	setRightScroller();
+	setBottomScroller();
 }
 
 void ContentList::setRightScroller()

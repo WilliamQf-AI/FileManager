@@ -18,11 +18,11 @@ public:
     bool hoverChange(const int& x, const int& y);
     bool isSelected{ true };
     int hoverIndex{ -1 };
-    std::wstring title;
     std::filesystem::path path;
     int historyNum;
     int orderNum;
 private:
     void resize(const int& w, const int& h) override;
     void paint(SkCanvas* canvas) override;
+    std::wstring getTitle();
 };
