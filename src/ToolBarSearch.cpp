@@ -6,7 +6,7 @@
 
 ToolBarSearch::ToolBarSearch(WindowMain* root) : ToolBarInputBase(root)
 {
-	paddingLeft = 38.f;
+	paddingLeft = 39.f;
 	paddingRight = 18.f;
 	hoverIndexVal = 5;
 }
