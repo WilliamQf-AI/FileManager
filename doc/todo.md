@@ -3,10 +3,15 @@
 两个input需要clip rect
 路径输入框内还有两个按钮呢
 
+C盘，纵向滚动条的问题
+
 小窗口拖动文件类型列的时候有问题
 QuickBtn进入文档，双击文件列表中的my video，会导致崩溃
 
 快捷方式图标，重绘后快捷方式图标左下角的小箭头不见了
+开始显示文件列表时，没必要排序
+
+用模板简化FileColumn、FileColumnTime、FileColumnSize的代码
 
 文件列表status bar
 系统设置，显示在窗口右下

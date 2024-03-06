@@ -1,6 +1,7 @@
 set(SRC
     SystemIcon.cpp
     SystemIcon.h
+    Column.h
     FileColumn.cpp
     FileColumn.h
     FileColumnTime.cpp

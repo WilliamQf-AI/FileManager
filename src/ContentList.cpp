@@ -332,39 +332,46 @@ void ContentList::getFiles(std::filesystem::path& path)
 	{
 		do
 		{
-			if (wcscmp(data.cFileName, L".") != 0 && wcscmp(data.cFileName, L"..") != 0)
-			{
-				std::wstring fileName(data.cFileName);
-				FILETIME fTime;
-				FileTimeToLocalFileTime(&data.ftLastWriteTime, &fTime);
-				SYSTEMTIME fileTime;
-				FileTimeToSystemTime(&fTime, &fileTime);
-				auto entry = path;
-				entry.append(fileName);
-				std::wstring  typeStr;
-				auto hr = SHGetFileInfo(entry.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_TYPENAME);
-				if (std::filesystem::is_directory(entry)) {
-					typeStr = L"文件夹";
-				}
-				else {
-					if (hr)
-					{
-						//todo
-						//if ((fileInfo.dwAttributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) {  //
-						//	continue;
-						//}
-						typeStr = fileInfo.szTypeName;
-					}
-				}
-				ULARGE_INTEGER fileSize;
-				fileSize.HighPart = data.nFileSizeHigh;
-				fileSize.LowPart = data.nFileSizeLow;
-				files.push_back({ FileColumn(fileName),
-					FileColumnTime(fileTime),
-					FileColumnSize(fileSize.QuadPart),
-					FileColumn(typeStr) });
-
+			if (wcscmp(data.cFileName, L".") == 0 || wcscmp(data.cFileName, L"..") == 0) {
+				continue;
 			}
+			if ((data.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM))
+			{
+				//(data.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) || 
+				continue;
+			}
+			std::wstring fileName(data.cFileName);
+			FILETIME fTime;
+			FileTimeToLocalFileTime(&data.ftLastWriteTime, &fTime);
+			SYSTEMTIME fileTime;
+			FileTimeToSystemTime(&fTime, &fileTime);
+			auto entry = path;
+			entry.append(fileName);
+			std::wstring  typeStr;
+			auto hr = SHGetFileInfo(entry.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_TYPENAME);
+			if (std::filesystem::is_directory(entry)) {
+				typeStr = L"文件夹";
+			}
+			else {
+				if (hr)
+				{
+					//todo
+					//if ((fileInfo.dwAttributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) {  //
+					//	continue;
+					//}
+					typeStr = fileInfo.szTypeName;
+				}
+			}
+
+			ULARGE_INTEGER fileSize;
+			fileSize.HighPart = data.nFileSizeHigh;
+			fileSize.LowPart = data.nFileSizeLow;
+
+			files.push_back({ FileColumn(fileName),
+				FileColumnTime(fileTime),
+				FileColumnSize(fileSize.QuadPart),
+				FileColumn(typeStr) });
+			
 		} while (FindNextFile(hFind, &data));
 	}
 	FindClose(hFind);
