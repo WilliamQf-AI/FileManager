@@ -7,18 +7,12 @@ class ColumnBase
 public:
 	ColumnBase() {};
 	~ColumnBase() {};
-	virtual bool operator>(const ColumnBase& other) const { return false; };
-	virtual std::wstring getText() { return std::wstring(); };
+	virtual bool operator>(const ColumnBase& other) const = 0;
+	virtual std::wstring getText() = 0;
 private:
 
 };
 
-/// <summary>
-/// todo 这个类没用上
-/// 因为：循环显示列内容的时候，会有太多类型判断了
-/// 
-/// </summary>
-/// <typeparam name="T"></typeparam>
 template<typename T>
 class Column:public ColumnBase
 {
