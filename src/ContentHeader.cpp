@@ -78,6 +78,11 @@ void ContentHeader::mouseDown(const int& x, const int& y)
 	}
 	SetCapture(root->hwnd);
 	mouseDownX = x;
+
+
+	//std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
+	//	return a[1] > b[1];
+	//	});
 }
 
 void ContentHeader::mouseUp(const int& x, const int& y)
@@ -131,8 +136,8 @@ void ContentHeader::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	//columns.push_back(FileColumnHeader(L"最近使用的文件", false));
 	//columns.push_back(FileColumnHeader(L"使用时间", true));
 	columns.clear();
-	columns.push_back(FileColumnHeader(L"名称", false,380.f));
-	columns.push_back(FileColumnHeader(L"修改日期", true,238.f));
+	columns.push_back(FileColumnHeader(L"名称", true,380.f));
+	columns.push_back(FileColumnHeader(L"修改日期", false,238.f));
 	columns.push_back(FileColumnHeader(L"大小", false,200.f));
 	columns.push_back(FileColumnHeader(L"类型", false,280.f));
 	columns[0].left = rect.fLeft;

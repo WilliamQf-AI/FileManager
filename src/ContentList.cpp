@@ -33,8 +33,8 @@ void ContentList::paint(SkCanvas* canvas)
 	auto fontText = App::GetFontText();
 	fontText->setSize(18.f);
 	canvas->save();
-	canvas->clipRect(rect);
-	auto top = 0 - (scrollerRight.fTop - rect.fTop) / rect.height() * totalHeight;
+	canvas->clipRect(rect);	
+	auto top = 0 - (scrollerRight.fTop - rect.fTop);
 	SkPaint paint;
 	paint.setAntiAlias(true);
 	if (hoverIndex > -1) {
@@ -58,11 +58,22 @@ void ContentList::paint(SkCanvas* canvas)
 				auto filePath = std::filesystem::path(root->titleBar->getCurTab()->path).append(text);
 				auto img = SystemIcon::getIcon(filePath); //24
 				canvas->drawImage(img, x, y - 18);
-				paint.setColor(0xFF555555);
+				if (j == hoverIndex) {
+					paint.setColor(0xFF000000);
+				}
+				else {
+					paint.setColor(0xFF555555);
+				}
+				
 				canvas->drawSimpleText(text.data(), len, SkTextEncoding::kUTF16, x+34, y, *fontText, paint);
 			}
 			else {
-				paint.setColor(0xFF999999);
+				if (j == hoverIndex) {
+					paint.setColor(0xFF000000);
+				}
+				else {
+					paint.setColor(0xFF999999);
+				}
 				canvas->drawSimpleText(text.data(), len, SkTextEncoding::kUTF16, x, y, *fontText, paint);
 			}
 			y += 48;
@@ -243,16 +254,10 @@ void ContentList::resize(const int& w, const int& h)
 
 void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 {
-	if (root->titleBar->getCurTab()->path.empty()) {
+	if (totalHeight <= rect.height() || !rect.contains(x, y) || root->titleBar->getCurTab()->path.empty()) {
 		return;
 	}
-	if (totalHeight <= rect.height()) {
-		return;
-	}
-	if (!rect.contains(x, y)) {
-		return;
-	}
-	auto span = 16.f;
+	auto span = 42.f;
 	if (delta > 0) {
 		if (scrollerRight.fTop > rect.fTop) {
 			auto v = std::max(scrollerRight.fTop - span, rect.fTop);
@@ -264,8 +269,8 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 	}
 	else {
 		if (scrollerRight.fBottom < rect.fBottom) {
-			auto v = std::min(scrollerRight.fBottom + span, rect.fBottom);
-			scrollerRight.offsetTo(rect.fRight - 16, scrollerRight.fTop + v - scrollerRight.fBottom);
+			auto v = std::min(span, rect.fBottom - scrollerRight.fBottom);
+			scrollerRight.offsetTo(rect.fRight - 16, scrollerRight.fTop + v);
 			auto top = (scrollerRight.fTop - rect.fTop) / rect.height() * totalHeight;
 			hoverIndex = (y - rect.fTop + top) / 48;
 			repaint();
@@ -345,31 +350,25 @@ void ContentList::getFiles(std::filesystem::path& path)
 			FileTimeToSystemTime(&fTime, &fileTime);
 			auto entry = path;
 			entry.append(fileName);
-			std::wstring  typeStr;
-			auto hr = SHGetFileInfo(entry.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_TYPENAME);
+			std::wstring  typeStr;			
 			if (std::filesystem::is_directory(entry)) {
 				typeStr = L"文件夹";
 			}
 			else {
+				//此处可以顺手得到ICON和ICONINDEX
+				auto hr = SHGetFileInfo(entry.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_TYPENAME); 
 				if (hr)
 				{
-					//todo
-					//if ((fileInfo.dwAttributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) {  //
-					//	continue;
-					//}
 					typeStr = fileInfo.szTypeName;
+				}
+				else {
+					typeStr = L"";
 				}
 			}
 
 			ULARGE_INTEGER fileSize;
 			fileSize.HighPart = data.nFileSizeHigh;
 			fileSize.LowPart = data.nFileSizeLow;
-
-
-			std::shared_ptr<ColumnBase> c = std::make_shared<Column<SYSTEMTIME>>(fileTime);
-			auto a = c->getText();
-
-
 			files.push_back({ std::make_shared<Column<std::wstring>>(fileName),
 				std::make_shared<Column<SYSTEMTIME>>(fileTime),
 				std::make_shared<Column<unsigned long long>>(fileSize.QuadPart),
@@ -379,58 +378,15 @@ void ContentList::getFiles(std::filesystem::path& path)
 		} while (FindNextFile(hFind, &data));
 	}
 	FindClose(hFind);
-
-
-
-
-	//SHFILEINFO fileInfo = { 0 };
-	//for (const auto& entry : std::filesystem::directory_iterator(path)) {
-	//	if (entry.is_symlink()) {
-	//		continue;
-	//	}
-	//	auto fileName = entry.path().filename().wstring();
-	//	if (fileName == L"desktop.ini" || fileName == L"DfsrPrivate") {
-	//		continue;
-	//	}
-	//	auto fileTime = entry.last_write_time();
-	//	auto sysClock = std::chrono::clock_cast<std::chrono::system_clock>(fileTime);
-	//	auto zTime = std::chrono::zoned_time(zone, sysClock);
-	//	auto fileTimeStr = std::format(L"{:%Y-%m-%d %H:%M:%S}", zTime);
-	//	fileTimeStr = fileTimeStr.substr(0, fileTimeStr.find_last_of(L"."));
-	//	std::wstring  typeStr;
-	//	unsigned long long fileSize{ 0 };
-	//	auto hr = SHGetFileInfo(entry.path().wstring().c_str(), 0, &fileInfo, sizeof(fileInfo),
-	//		SHGFI_USEFILEATTRIBUTES | SHGFI_TYPENAME | SHGFI_SYSICONINDEX);
-	//	if (std::filesystem::is_directory(entry.path())) {
-	//		typeStr = L"文件夹";
-	//	}
-	//	else {
-	//		if (hr)
-	//		{
-	//			//todo
-	//			//if ((fileInfo.dwAttributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) {  //
-	//			//	continue;
-	//			//}
-	//			typeStr = fileInfo.szTypeName;
-	//		}
-	//		fileSize = std::filesystem::file_size(entry.path()) / 1024;
-	//	}
-	//	files.push_back({ FileColumn(fileName),
-	//		FileColumnTime(fileTimeStr,fileTime),
-	//		FileColumnSize(fileSize),FileColumn(typeStr) });
-	//}
-	totalHeight = 40 * files.size();
-	std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
-		return a[1] > b[1];
-		});
 	setRightScroller();
 	setBottomScroller();
 }
 
 void ContentList::setRightScroller()
 {
+	totalHeight = 40 * files.size();
 	if (totalHeight > rect.height()) {
-		auto h = rect.height() * (rect.height() / totalHeight);
+		auto h = rect.height() - (totalHeight - rect.height());
 		if (h < 40.f) h = 40.f;
 		scrollerRight.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
 	}
