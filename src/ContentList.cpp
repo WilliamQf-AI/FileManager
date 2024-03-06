@@ -33,8 +33,9 @@ void ContentList::paint(SkCanvas* canvas)
 	auto fontText = App::GetFontText();
 	fontText->setSize(18.f);
 	canvas->save();
-	canvas->clipRect(rect);	
-	auto top = 0 - (scrollerRight.fTop - rect.fTop);
+	canvas->clipRect(rect);
+	
+	auto top = 0- (scrollerRight.fTop - rect.fTop) / (rect.height()-scrollerRight.height()) * totalHeight;
 	SkPaint paint;
 	paint.setAntiAlias(true);
 	if (hoverIndex > -1) {
@@ -257,7 +258,7 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 	if (totalHeight <= rect.height() || !rect.contains(x, y) || root->titleBar->getCurTab()->path.empty()) {
 		return;
 	}
-	auto span = 42.f;
+	auto span = 16.f;
 	if (delta > 0) {
 		if (scrollerRight.fTop > rect.fTop) {
 			auto v = std::max(scrollerRight.fTop - span, rect.fTop);
@@ -330,7 +331,7 @@ void ContentList::getFiles(std::filesystem::path& path)
 
 	SHFILEINFO fileInfo{ 0 };
 	WIN32_FIND_DATA data;
-	HANDLE hFind = FindFirstFile((path.wstring()+ L"\\*").data(), &data);
+	HANDLE hFind = FindFirstFile(L"C:\\Windows\\System32\\*", &data);
 	if (hFind != INVALID_HANDLE_VALUE)
 	{
 		do
@@ -348,23 +349,23 @@ void ContentList::getFiles(std::filesystem::path& path)
 			FileTimeToLocalFileTime(&data.ftLastWriteTime, &fTime);
 			SYSTEMTIME fileTime;
 			FileTimeToSystemTime(&fTime, &fileTime);
-			auto entry = path;
-			entry.append(fileName);
-			std::wstring  typeStr;			
-			if (std::filesystem::is_directory(entry)) {
-				typeStr = L"文件夹";
-			}
-			else {
-				//此处可以顺手得到ICON和ICONINDEX
-				auto hr = SHGetFileInfo(entry.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_TYPENAME); 
-				if (hr)
-				{
-					typeStr = fileInfo.szTypeName;
-				}
-				else {
-					typeStr = L"";
-				}
-			}
+			std::wstring  typeStr;
+			//auto entry = path;
+			//entry.append(fileName);		
+			//if (std::filesystem::is_directory(entry)) {
+			//	typeStr = L"文件夹";
+			//}
+			//else {
+			//	//此处可以顺手得到ICON和ICONINDEX
+			//	auto hr = SHGetFileInfo(entry.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_TYPENAME); 
+			//	if (hr)
+			//	{
+			//		typeStr = fileInfo.szTypeName;
+			//	}
+			//	else {
+			//		typeStr = L"";
+			//	}
+			//}
 
 			ULARGE_INTEGER fileSize;
 			fileSize.HighPart = data.nFileSizeHigh;
@@ -386,7 +387,7 @@ void ContentList::setRightScroller()
 {
 	totalHeight = 40 * files.size();
 	if (totalHeight > rect.height()) {
-		auto h = rect.height() - (totalHeight - rect.height());
+		auto h = rect.height() * (rect.height() / totalHeight);
 		if (h < 40.f) h = 40.f;
 		scrollerRight.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
 	}
