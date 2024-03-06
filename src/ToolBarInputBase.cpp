@@ -44,6 +44,13 @@ void ToolBarInputBase::mouseDown(const int& x, const int& y)
 {
 	bool flag{ false };
 	if (rect.contains(x, y)) {
+		auto span = std::chrono::system_clock::now() - mouseDownTime;
+		auto msCount = std::chrono::duration_cast<std::chrono::milliseconds>(span).count();
+		if (msCount < 380) {
+			//todo
+			return;
+		}
+		mouseDownTime = std::chrono::system_clock::now();
 		flag = true;
 	}
 	else {
@@ -54,7 +61,9 @@ void ToolBarInputBase::mouseDown(const int& x, const int& y)
 		showTextCursor = true;
 		repaint();
 		if (isFocus) {
+
 			SetTimer(root->hwnd, timerID, 600, (TIMERPROC)nullptr);
+			setImm(x, y);
 		}
 		else {
 			KillTimer(root->hwnd, timerID);
@@ -66,4 +75,22 @@ void ToolBarInputBase::timeout(const unsigned int& id)
 {
 	showTextCursor = !showTextCursor;
 	repaint();
+}
+
+void ToolBarInputBase::setImm(const int& x, const int& y)
+{
+	if (HIMC himc = ImmGetContext(root->hwnd))
+	{
+		COMPOSITIONFORM comp = {};
+		comp.ptCurrentPos.x = x;
+		comp.ptCurrentPos.y = y;
+		comp.dwStyle = CFS_FORCE_POSITION;
+		ImmSetCompositionWindow(himc, &comp);
+		CANDIDATEFORM cand = {};
+		cand.dwStyle = CFS_CANDIDATEPOS;
+		cand.ptCurrentPos.x = x;
+		cand.ptCurrentPos.y = y;
+		ImmSetCandidateWindow(himc, &cand);
+		ImmReleaseContext(root->hwnd, himc);
+	}
 }

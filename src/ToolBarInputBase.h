@@ -20,4 +20,6 @@ protected:
 private:
 	void timeout(const unsigned int& id);
 	bool showTextCursor{ false };
+	void setImm(const int& x, const int& y);
+	std::chrono::system_clock::time_point mouseDownTime;
 };
