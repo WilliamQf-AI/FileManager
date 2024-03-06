@@ -350,6 +350,16 @@ void ContentList::getFiles(std::filesystem::path& path)
 			SYSTEMTIME fileTime;
 			FileTimeToSystemTime(&fTime, &fileTime);
 			std::wstring  typeStr;
+
+
+			size_t dotPos = fileName.rfind(L'.');
+			if (dotPos != std::wstring::npos) {
+				typeStr = fileName.substr(dotPos + 1); //TXT
+				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(),toupper);
+			}
+
+
+
 			//auto entry = path;
 			//entry.append(fileName);		
 			//if (std::filesystem::is_directory(entry)) {
