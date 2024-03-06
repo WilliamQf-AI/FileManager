@@ -9,9 +9,6 @@
 #include "App.h"
 #include "WindowMain.h"
 #include "ContentPanel.h"
-#include "FileColumnTime.h"
-#include "FileColumnSize.h"
-#include "FileColumnPath.h"
 #include "TitleBar.h"
 #include "TitleBarTab.h"
 #include "SystemIcon.h"
@@ -55,17 +52,18 @@ void ContentList::paint(SkCanvas* canvas)
 			rect.fBottom));
 		for (size_t j = 0; j < files.size(); j++)
 		{
-			auto len = wcslen(files[j][i].text.data()) * 2;
+			auto text = files[j][i]->getText();
+			auto len = wcslen(text.data()) * 2;
 			if (i == 0) {
-				auto filePath = std::filesystem::path(root->titleBar->getCurTab()->path).append(files[j][i].text);
+				auto filePath = std::filesystem::path(root->titleBar->getCurTab()->path).append(text);
 				auto img = SystemIcon::getIcon(filePath); //24
 				canvas->drawImage(img, x, y - 18);
 				paint.setColor(0xFF555555);
-				canvas->drawSimpleText(files[j][i].text.data(), len, SkTextEncoding::kUTF16, x+34, y, *fontText, paint);
+				canvas->drawSimpleText(text.data(), len, SkTextEncoding::kUTF16, x+34, y, *fontText, paint);
 			}
 			else {
 				paint.setColor(0xFF999999);
-				canvas->drawSimpleText(files[j][i].text.data(), len, SkTextEncoding::kUTF16, x, y, *fontText, paint);
+				canvas->drawSimpleText(text.data(), len, SkTextEncoding::kUTF16, x, y, *fontText, paint);
 			}
 			y += 48;
 		}
@@ -140,7 +138,7 @@ void ContentList::mouseDown(const int& x, const int& y)
 		auto msCount = std::chrono::duration_cast<std::chrono::milliseconds>(span).count();
 		if (msCount < 380) {
 			auto tab = root->titleBar->getCurTab();
-			auto filePath = std::filesystem::path(tab->path).append(files[hoverIndex][0].text);
+			auto filePath = std::filesystem::path(tab->path).append(files[hoverIndex][0]->getText());
 			if (std::filesystem::is_directory(filePath)) {
 				tab->path = filePath;
 				getFiles(filePath);
@@ -367,10 +365,16 @@ void ContentList::getFiles(std::filesystem::path& path)
 			fileSize.HighPart = data.nFileSizeHigh;
 			fileSize.LowPart = data.nFileSizeLow;
 
-			files.push_back({ FileColumn(fileName),
-				FileColumnTime(fileTime),
-				FileColumnSize(fileSize.QuadPart),
-				FileColumn(typeStr) });
+
+			std::shared_ptr<ColumnBase> c = std::make_shared<Column<SYSTEMTIME>>(fileTime);
+			auto a = c->getText();
+
+
+			files.push_back({ std::make_shared<Column<std::wstring>>(fileName),
+				std::make_shared<Column<SYSTEMTIME>>(fileTime),
+				std::make_shared<Column<unsigned long long>>(fileSize.QuadPart),
+				std::make_shared<Column<std::wstring>>(typeStr)
+				});
 			
 		} while (FindNextFile(hFind, &data));
 	}

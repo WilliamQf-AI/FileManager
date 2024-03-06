@@ -1,8 +1,26 @@
-#include <string>
+﻿#include <string>
 #include <Windows.h>
 
+
+class ColumnBase
+{
+public:
+	ColumnBase() {};
+	~ColumnBase() {};
+	virtual bool operator>(const ColumnBase& other) const { return false; };
+	virtual std::wstring getText() { return std::wstring(); };
+private:
+
+};
+
+/// <summary>
+/// todo 这个类没用上
+/// 因为：循环显示列内容的时候，会有太多类型判断了
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
 template<typename T>
-class Column
+class Column:public ColumnBase
 {
 public:
 	Column(T& val) :val{val} {
@@ -11,48 +29,49 @@ public:
 	~Column() {
 
 	}
-	bool operator>(const Column& other) const
+	virtual bool operator>(const ColumnBase& other) const override
 	{
+		const Column<T>& temp = static_cast<const Column<T>&>(other);
 		if constexpr (std::is_same_v<T, SYSTEMTIME>) {
-			if (val.wYear > other.val.wYear) return true;
-			if (val.wYear < other.val.wYear) return false;
-			if (val.wMonth > other.val.wMonth) return true;
-			if (val.wMonth < other.val.wMonth) return false;
-			if (val.wDay > other.val.wDay) return true;
-			if (val.wDay < other.val.wDay) return false;
-			if (val.wHour > other.val.wHour) return true;
-			if (val.wHour < other.val.wHour) return false;
-			if (val.wMinute > other.val.wMinute) return true;
-			if (val.wMinute < other.val.wMinute) return false;
-			if (val.wSecond > other.val.wSecond) return true;
-			if (val.wSecond < other.val.wSecond) return false;
-			if (val.wMilliseconds > other.val.wMilliseconds) return true;
+			if (val.wYear > temp.val.wYear) return true;
+			if (val.wYear < temp.val.wYear) return false;
+			if (val.wMonth > temp.val.wMonth) return true;
+			if (val.wMonth < temp.val.wMonth) return false;
+			if (val.wDay > temp.val.wDay) return true;
+			if (val.wDay < temp.val.wDay) return false;
+			if (val.wHour > temp.val.wHour) return true;
+			if (val.wHour < temp.val.wHour) return false;
+			if (val.wMinute > temp.val.wMinute) return true;
+			if (val.wMinute < temp.val.wMinute) return false;
+			if (val.wSecond > temp.val.wSecond) return true;
+			if (val.wSecond < temp.val.wSecond) return false;
+			if (val.wMilliseconds > temp.val.wMilliseconds) return true;
 			return false;
 		}
 		else {
-			return val > other.val;
+			return val > temp.val;
 		}
 	}
-	std::wstring getText() {
+	virtual std::wstring getText() override {
 		if constexpr (std::is_same_v<T, unsigned long long>) {
 			if (val == 0) {
 				return std::wstring();
 			}
 			else if (val < 1024) {
-				return std::format(L"{} KB", T);
+				return std::format(L"{} KB", val);
 			}
 			else if (val < 1048576) { //1G
-				return std::format(L"{} MB", T / 1024);
+				return std::format(L"{} MB", val / 1024);
 			}
 			else {
-				return std::format(L"{} GB", T / 1048576);
+				return std::format(L"{} GB", val / 1048576);
 			}
 		}
 		else if constexpr (std::is_same_v<T, SYSTEMTIME>) {
-			return std::format(L"{}-{}-{} {}:{}:{}", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond);
+			return std::format(L"{}-{}-{} {}:{}:{}", val.wYear, val.wMonth, val.wDay, val.wHour, val.wMinute, val.wSecond);
 		}
 		else {
-			return T;
+			return val;
 		}
 	}
 private:

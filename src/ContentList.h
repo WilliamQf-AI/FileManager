@@ -2,7 +2,7 @@
 #include "ControlBase.h"
 #include "include/core/SkCanvas.h"
 #include <filesystem>
-#include "FileColumn.h"
+#include "Column.h"
 
 class WindowMain;
 class TitleBarTab;
@@ -22,7 +22,7 @@ private:
     void mouseWheel(const int& x, const int& y, const int& delta) override;
     void getRecentFiles();
     void getFiles(std::filesystem::path& path);
-    std::vector<std::vector<FileColumn>> files;
+    std::vector<std::vector<std::shared_ptr<ColumnBase>>> files;
     void setRightScroller();
     void setBottomScroller();
     float totalHeight{ 0 };

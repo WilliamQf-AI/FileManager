@@ -2,14 +2,6 @@ set(SRC
     SystemIcon.cpp
     SystemIcon.h
     Column.h
-    FileColumn.cpp
-    FileColumn.h
-    FileColumnTime.cpp
-    FileColumnTime.h
-    FileColumnSize.cpp
-    FileColumnSize.h
-    FileColumnPath.cpp
-    FileColumnPath.h
     FileColumnHeader.cpp
     FileColumnHeader.h
     ControlBase.cpp
