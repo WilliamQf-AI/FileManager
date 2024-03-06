@@ -1,14 +1,14 @@
 #pragma once
 #include "FileColumn.h"
-#include <filesystem>
+#include <Windows.h>
 
 class FileColumnTime:public FileColumn
 {
 public:
-	FileColumnTime(std::wstring& text, std::filesystem::file_time_type& time);
+	FileColumnTime(SYSTEMTIME& time);
 	~FileColumnTime();
-	std::filesystem::file_time_type time;
+	SYSTEMTIME time;
 	bool operator>(const FileColumn& other) const override;
 private:
-
+	std::wstring getText(SYSTEMTIME& time);
 };
