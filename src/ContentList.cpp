@@ -267,7 +267,8 @@ void ContentList::setBottomScroller()
 void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 {
 	if (tab->path == tabNew->path) {
-		if (scrollerRight.fTop != rect.fTop) {
+		if (offsetTop != 0) {
+			offsetTop = 0;
 			isDirty = true;
 			setRightScroller();
 		}
@@ -281,6 +282,7 @@ void ContentList::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
 	if (tab->path.empty()) {
 		root->contentPanel->contentHeader->isDirty = true;
 	}
+	offsetTop = 0;
 	getFiles(tabNew->path);
 }
 
