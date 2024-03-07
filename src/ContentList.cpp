@@ -189,48 +189,16 @@ void ContentList::mouseUp(const int& x, const int& y)
 
 void ContentList::mouseDrag(const int& x, const int& y)
 {
-	if (hoverScroller == 0) {
+	if (hoverScroller == 0) { //右侧滚动条
 		float span = y - downY;
-		if (span > 0) {
-			if (scrollerRight.fBottom < rect.fBottom) {
-				auto v = std::min(scrollerRight.fBottom + span, rect.fBottom);
-				scrollerRight.offsetTo(rect.fRight - 16, scrollerRight.fTop + v - scrollerRight.fBottom);
-				repaint();
-			}
-		}
-		else {
-			if (scrollerRight.fTop > rect.fTop) {
-				auto v = std::max(scrollerRight.fTop + span, rect.fTop);
-				scrollerRight.offsetTo(rect.fRight - 16, v);
-				repaint();
-			}
-		}
+		rightScrollerMove(span);
+		hoverIndex = (y - rect.fTop + offsetTop) / lineHieght;
+		repaint();
 		downY = y;
 	}
-	else if (hoverScroller == 1) {
+	else if (hoverScroller == 1) { //下方滚动条
 		float span = x - downX;
-		if (span > 0) {
-			if (scrollerBottom.fRight < rect.fRight) {
-				auto v = std::min(scrollerBottom.fRight + span, rect.fRight);
-				scrollerBottom.offsetTo(scrollerBottom.fLeft+v- scrollerBottom.fRight, rect.fBottom - 16);
-				root->contentPanel->contentHeader->scrollerLeft =
-					0 - (scrollerBottom.fLeft - rect.fLeft) / rect.width() * root->contentPanel->contentHeader->totalWidth;
-				isDirty = true;
-				root->contentPanel->contentHeader->isDirty = true;
-				InvalidateRect(root->hwnd, nullptr, false);
-			}
-		}
-		else {
-			if (scrollerBottom.fLeft > rect.fLeft) {
-				auto v = std::max(scrollerBottom.fLeft + span, rect.fLeft);
-				scrollerBottom.offsetTo(v, rect.fBottom - 16);
-				root->contentPanel->contentHeader->scrollerLeft =
-					0 - (scrollerBottom.fLeft - rect.fLeft) / rect.width() * root->contentPanel->contentHeader->totalWidth;
-				isDirty = true;
-				root->contentPanel->contentHeader->isDirty = true;
-				InvalidateRect(root->hwnd, nullptr, false);
-			}
-		}
+		bottomScrollerMove(span);
 		downX = x;
 	}
 }
@@ -263,26 +231,7 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 	if (totalHeight <= rect.height() || !rect.contains(x, y) || root->titleBar->getCurTab()->path.empty()) {
 		return;
 	}
-	if (delta > 0) {
-		if (offsetTop == 0) {
-			return;
-		}
-		offsetTop -= wheelSpan;
-		if (offsetTop < 0) {
-			offsetTop = 0;
-		}
-	}
-	else {
-		if (offsetTop + rect.height() == totalHeight) {
-			return;
-		}
-		offsetTop += wheelSpan;
-		if (offsetTop + rect.height() > totalHeight) {
-			offsetTop = totalHeight - rect.height();
-		}
-	}
-	auto scroolerRightTop = offsetTop / (totalHeight - rect.height()) * (rect.height() - scrollerRight.height());
-	scrollerRight.offsetTo(rect.fRight - 16, rect.fTop + scroolerRightTop);
+	rightScrollerMove(delta > 0 ? -16.f : 16.f);
 	hoverIndex = (y - rect.fTop + offsetTop) / lineHieght;
 	repaint();
 }
@@ -357,6 +306,56 @@ void ContentList::getRecentFiles()
 	//std::sort(files.begin(), files.end(), [](const auto& a, const auto& b) {
 	//	return a[1] > b[1];
 	//	});
+}
+
+void ContentList::rightScrollerMove(const float& span)
+{
+	if (span < 0) {
+		if (offsetTop == 0) {
+			return;
+		}
+		offsetTop += span;
+		if (offsetTop < 0) {
+			offsetTop = 0;
+		}
+	}
+	else {
+		if (offsetTop + rect.height() == totalHeight) {
+			return;
+		}
+		offsetTop += span;
+		if (offsetTop + rect.height() > totalHeight) {
+			offsetTop = totalHeight - rect.height();
+		}
+	}
+	auto scroolerRightTop = offsetTop / (totalHeight - rect.height()) * (rect.height() - scrollerRight.height());
+	scrollerRight.offsetTo(rect.fRight - 16, rect.fTop + scroolerRightTop);
+}
+
+void ContentList::bottomScrollerMove(const float& span)
+{
+	if (span > 0) {
+		if (scrollerBottom.fRight < rect.fRight) {
+			auto v = std::min(scrollerBottom.fRight + span, rect.fRight);
+			scrollerBottom.offsetTo(scrollerBottom.fLeft + v - scrollerBottom.fRight, rect.fBottom - 16);
+			root->contentPanel->contentHeader->scrollerLeft =
+				0 - (scrollerBottom.fLeft - rect.fLeft) / rect.width() * root->contentPanel->contentHeader->totalWidth;
+			isDirty = true;
+			root->contentPanel->contentHeader->isDirty = true;
+			InvalidateRect(root->hwnd, nullptr, false);
+		}
+	}
+	else {
+		if (scrollerBottom.fLeft > rect.fLeft) {
+			auto v = std::max(scrollerBottom.fLeft + span, rect.fLeft);
+			scrollerBottom.offsetTo(v, rect.fBottom - 16);
+			root->contentPanel->contentHeader->scrollerLeft =
+				0 - (scrollerBottom.fLeft - rect.fLeft) / rect.width() * root->contentPanel->contentHeader->totalWidth;
+			isDirty = true;
+			root->contentPanel->contentHeader->isDirty = true;
+			InvalidateRect(root->hwnd, nullptr, false);
+		}
+	}
 }
 
 void ContentList::getFiles(std::filesystem::path& path)

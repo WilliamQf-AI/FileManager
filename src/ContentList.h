@@ -21,6 +21,8 @@ private:
     void mouseDrag(const int& x, const int& y) override;
     void mouseWheel(const int& x, const int& y, const int& delta) override;
     void getRecentFiles();
+    void rightScrollerMove(const float& span);
+    void bottomScrollerMove(const float& span);
     void getFiles(std::filesystem::path& path);
     std::vector<std::vector<std::shared_ptr<ColumnBase>>> files;
     void setRightScroller();
@@ -33,7 +35,6 @@ private:
     float downY{ 0.f };
     int hoverIndex{ -1 };
     float lineHieght{ 48.f };
-    float wheelSpan{ 16.f };
     float scrollerMiniSize{ 60.f };
     float offsetTop{ 0.f };
     std::chrono::system_clock::time_point mouseDownTime;
