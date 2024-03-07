@@ -24,8 +24,7 @@ void ToolBarInputBase::paint(SkCanvas* canvas)
 		paint.setColor(0xFF0B57D0);
 		canvas->drawRoundRect(rect.makeInset(1.5f, 1.5f), 6.f, 6.f, paint);
 		if (showTextCursor) {
-			canvas->drawLine(rect.fLeft + paddingLeft, rect.fTop + 8.f,
-				rect.fLeft + paddingLeft, rect.fBottom - 8.f, paint);
+			canvas->drawLine(textCursorPos, rect.fTop + 8.f,textCursorPos, rect.fBottom - 8.f, paint);
 		}
 	}
 	else {
@@ -43,7 +42,7 @@ void ToolBarInputBase::paint(SkCanvas* canvas)
 void ToolBarInputBase::mouseDown(const int& x, const int& y)
 {
 	bool flag{ false };
-	if (rect.contains(x, y)) {
+	if (root->toolBar->hoverIndex == hoverIndexVal) {
 		auto span = std::chrono::system_clock::now() - mouseDownTime;
 		auto msCount = std::chrono::duration_cast<std::chrono::milliseconds>(span).count();
 		if (msCount < 380) {
@@ -59,15 +58,18 @@ void ToolBarInputBase::mouseDown(const int& x, const int& y)
 	if (flag != isFocus) {
 		isFocus = flag;
 		showTextCursor = true;
-		repaint();
 		if (isFocus) {
-
 			SetTimer(root->hwnd, timerID, 600, (TIMERPROC)nullptr);
 			setImm(x, y);
 		}
 		else {
 			KillTimer(root->hwnd, timerID);
+			repaint();
 		}
+	}
+	if (isFocus) {
+		setTextCursorPos(x);
+		repaint();
 	}
 }
 
@@ -93,4 +95,42 @@ void ToolBarInputBase::setImm(const int& x, const int& y)
 		ImmSetCandidateWindow(himc, &cand);
 		ImmReleaseContext(root->hwnd, himc);
 	}
+}
+
+void ToolBarInputBase::setTextCursorPos(const int& x)
+{
+	SkRect r;
+	auto font = App::GetFontText();
+	font->setSize(16.f);
+	auto length = wcslen(address.data()) * 2;
+	font->measureText(address.data(), length, SkTextEncoding::kUTF16, &r);
+	auto temp = rect.fLeft + paddingLeft + r.fLeft + r.width();
+	if (x > temp) {
+		textCursorPos = temp;
+	}
+	else {
+		textCursorPos = rect.fLeft + paddingLeft;
+	}
+
+	//for (size_t i = 0; i < lines[lineIndex].length() + 1; i++)
+	//{
+	//	auto str = lines[lineIndex].substr(0, i);
+	//	auto data = str.data();
+	//	auto length = wcslen(data) * 2;
+	//	font->measureText(data, length, SkTextEncoding::kUTF16, &Rect);
+	//	if (Rect.right() > width) {
+	//		float half = (Rect.right() - right) / 2 + right;
+	//		if (half > width) {
+	//			wordIndex = i - 1;
+	//		}
+	//		else
+	//		{
+	//			wordIndex = i;
+	//		}
+	//		flag = true;
+	//		break;
+	//	}
+	//	right = Rect.right();
+	//}
+	//return 0.0f;
 }

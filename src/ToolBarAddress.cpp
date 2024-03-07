@@ -4,9 +4,14 @@
 #include "ToolBarBtn.h"
 #include "App.h"
 #include "TitleBar.h"
+#include "TitleBar.h"
+#include "TitleBarTab.h"
 
 ToolBarAddress::ToolBarAddress(WindowMain* root) : ToolBarInputBase(root)
 {
+	auto func = std::bind(&ToolBarAddress::tabChange, this, std::placeholders::_1, std::placeholders::_2);
+	root->titleBar->tabChangeEvents.push_back(std::move(func));
+
 	paddingLeft = 14.f;
 	paddingRight = 68.f;
 	hoverIndexVal = 4;
@@ -15,6 +20,11 @@ ToolBarAddress::ToolBarAddress(WindowMain* root) : ToolBarInputBase(root)
 
 ToolBarAddress::~ToolBarAddress()
 {
+}
+
+void ToolBarAddress::tabChange(TitleBarTab* tab, TitleBarTab* tabNew)
+{
+	address = tabNew->path.wstring();
 }
 
 void ToolBarAddress::resize(const int& w, const int& h)
@@ -52,17 +62,14 @@ void ToolBarAddress::paint2(SkCanvas* canvas)
 	}
 	iconCode = (const char*)u8"\ue764";
 	canvas->drawString(iconCode, rect.fRight - 36, rect.fTop + 29, *font, paint);
-
-
-	auto tab = root->titleBar->getCurTab();
-	if (!tab->path.empty()) {
-		auto color = root->toolBar->hoverIndex == 4 ? 0xFF333333 : 0xFF666666;
-		paint.setColor(color);
-		auto fontText = App::GetFontText();
-		fontText->setSize(16.f);
-		auto pathStr = tab->path.wstring();
-		auto textLength = wcslen(pathStr.data()) * 2;
-		canvas->drawSimpleText(pathStr.data(), textLength, SkTextEncoding::kUTF16,
-			rect.fLeft + 12.f, rect.fTop + 27.f, *fontText, paint);
+	if (address.empty()) {
+		return;
 	}
+	auto color = root->toolBar->hoverIndex == 4 ? 0xFF333333 : 0xFF666666;
+	paint.setColor(color);
+	auto fontText = App::GetFontText();
+	fontText->setSize(16.f);
+	auto len = wcslen(address.data()) * 2;
+	canvas->drawSimpleText(address.data(), len, SkTextEncoding::kUTF16,
+		rect.fLeft + paddingLeft, rect.fTop + 27.f, *fontText, paint);
 }
