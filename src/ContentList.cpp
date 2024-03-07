@@ -33,9 +33,8 @@ void ContentList::paint(SkCanvas* canvas)
 	auto fontText = App::GetFontText();
 	fontText->setSize(18.f);
 	canvas->save();
-	canvas->clipRect(rect);
-	
-	auto top = 0- (scrollerRight.fTop - rect.fTop) / (rect.height()-scrollerRight.height()) * totalHeight;
+	canvas->clipRect(rect);	
+	auto top = 0- (scrollerRight.fTop - rect.fTop);
 	SkPaint paint;
 	paint.setAntiAlias(true);
 	if (hoverIndex > -1) {
@@ -77,7 +76,7 @@ void ContentList::paint(SkCanvas* canvas)
 				}
 				canvas->drawSimpleText(text.data(), len, SkTextEncoding::kUTF16, x, y, *fontText, paint);
 			}
-			y += 48;
+			y += lineHieght;
 		}
 		canvas->restore();
 	}
@@ -126,8 +125,8 @@ void ContentList::mouseMove(const int& x, const int& y)
 	}
 	int index{ -1 };
 	if (rect.contains(x, y)) {		
-		auto top = (scrollerRight.fTop - rect.fTop) / rect.height() * totalHeight;
-		index = (y - rect.fTop + top) / 48;
+		auto top = scrollerRight.fTop - rect.fTop;
+		index = (y - rect.fTop + top) / lineHieght;
 		if (index >= files.size()) {
 			index = -1;
 		}
@@ -263,7 +262,7 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 		if (scrollerRight.fTop > rect.fTop) {
 			auto v = std::max(scrollerRight.fTop - span, rect.fTop);
 			scrollerRight.offsetTo(rect.fRight - 16, v);
-			auto top = (scrollerRight.fTop - rect.fTop) / rect.height() * totalHeight;
+			auto top = scrollerRight.fTop - rect.fTop;
 			hoverIndex = (y - rect.fTop + top) / 48;
 			repaint();
 		}
@@ -272,7 +271,7 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 		if (scrollerRight.fBottom < rect.fBottom) {
 			auto v = std::min(span, rect.fBottom - scrollerRight.fBottom);
 			scrollerRight.offsetTo(rect.fRight - 16, scrollerRight.fTop + v);
-			auto top = (scrollerRight.fTop - rect.fTop) / rect.height() * totalHeight;
+			auto top = scrollerRight.fTop - rect.fTop;
 			hoverIndex = (y - rect.fTop + top) / 48;
 			repaint();
 		}
@@ -331,7 +330,7 @@ void ContentList::getFiles(std::filesystem::path& path)
 
 	SHFILEINFO fileInfo{ 0 };
 	WIN32_FIND_DATA data;
-	HANDLE hFind = FindFirstFile(L"C:\\Windows\\System32\\*", &data);
+	HANDLE hFind = FindFirstFile((path.wstring() + L"\\*").data(), &data);// FindFirstFile(L"C:\\Windows\\System32\\*", &data);
 	if (hFind != INVALID_HANDLE_VALUE)
 	{
 		do
@@ -350,33 +349,11 @@ void ContentList::getFiles(std::filesystem::path& path)
 			SYSTEMTIME fileTime;
 			FileTimeToSystemTime(&fTime, &fileTime);
 			std::wstring  typeStr;
-
-
 			size_t dotPos = fileName.rfind(L'.');
 			if (dotPos != std::wstring::npos) {
 				typeStr = fileName.substr(dotPos + 1); //TXT
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(),toupper);
 			}
-
-
-
-			//auto entry = path;
-			//entry.append(fileName);		
-			//if (std::filesystem::is_directory(entry)) {
-			//	typeStr = L"文件夹";
-			//}
-			//else {
-			//	//此处可以顺手得到ICON和ICONINDEX
-			//	auto hr = SHGetFileInfo(entry.wstring().data(), 0, &fileInfo, sizeof(fileInfo), SHGFI_TYPENAME); 
-			//	if (hr)
-			//	{
-			//		typeStr = fileInfo.szTypeName;
-			//	}
-			//	else {
-			//		typeStr = L"";
-			//	}
-			//}
-
 			ULARGE_INTEGER fileSize;
 			fileSize.HighPart = data.nFileSizeHigh;
 			fileSize.LowPart = data.nFileSizeLow;
@@ -395,10 +372,12 @@ void ContentList::getFiles(std::filesystem::path& path)
 
 void ContentList::setRightScroller()
 {
-	totalHeight = 40 * files.size();
+	totalHeight = lineHieght * files.size();
 	if (totalHeight > rect.height()) {
-		auto h = rect.height() * (rect.height() / totalHeight);
-		if (h < 40.f) h = 40.f;
+		auto h = rect.height() - (totalHeight - rect.height());
+		if (h < 60.f) {
+			h = 60.f;
+		}
 		scrollerRight.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
 	}
 	else {

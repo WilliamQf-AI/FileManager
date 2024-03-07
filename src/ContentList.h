@@ -32,5 +32,6 @@ private:
     float downX{ 0.f };
     float downY{ 0.f };
     int hoverIndex{ -1 };
+    float lineHieght{ 48.f };
     std::chrono::system_clock::time_point mouseDownTime;
 };
