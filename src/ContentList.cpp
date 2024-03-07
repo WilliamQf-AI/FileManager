@@ -34,17 +34,16 @@ void ContentList::paint(SkCanvas* canvas)
 	fontText->setSize(18.f);
 	canvas->save();
 	canvas->clipRect(rect);	
-	auto top = 0- (scrollerRight.fTop - rect.fTop);
 	SkPaint paint;
 	paint.setAntiAlias(true);
 	if (hoverIndex > -1) {
-		auto y = top + rect.fTop + hoverIndex*48.f;
+		auto y = rect.fTop + hoverIndex*lineHieght - offsetTop;
 		paint.setColor(0x101677ff);
-		canvas->drawRect(SkRect::MakeLTRB(rect.fLeft, y, rect.fRight, y + 48.f), paint);
+		canvas->drawRect(SkRect::MakeLTRB(rect.fLeft, y, rect.fRight, y + lineHieght), paint);
 	}
 	for (size_t i = 0; i < columns.size(); i++)
 	{
-		auto y = top + rect.fTop + 32.f;
+		auto y = rect.fTop + 32.f - offsetTop;
 		auto x = root->contentPanel->contentHeader->scrollerLeft + columns[i].left + parent->contentHeader->padding;
 		canvas->save();
 		canvas->clipRect(SkRect::MakeLTRB(x, y - 20, 
@@ -124,9 +123,8 @@ void ContentList::mouseMove(const int& x, const int& y)
 		return;
 	}
 	int index{ -1 };
-	if (rect.contains(x, y)) {		
-		auto top = scrollerRight.fTop - rect.fTop;
-		index = (y - rect.fTop + top) / lineHieght;
+	if (rect.contains(x, y)) {
+		index = (y - rect.fTop + offsetTop) / lineHieght;;
 		if (index >= files.size()) {
 			index = -1;
 		}
@@ -246,6 +244,14 @@ void ContentList::resize(const int& w, const int& h)
 		parent->rect.fRight,
 		parent->contentBottom->rect.fTop
 	);
+	if (offsetTop>0) {
+		if (totalHeight <= rect.height()) {
+			offsetTop = 0;
+		}
+		else if(offsetTop + rect.height() > totalHeight) {
+			offsetTop = totalHeight - rect.height();
+		}		
+	}
 	if (!flag) {
 		setRightScroller();
 		setBottomScroller();
@@ -257,24 +263,55 @@ void ContentList::mouseWheel(const int& x, const int& y, const int& delta)
 	if (totalHeight <= rect.height() || !rect.contains(x, y) || root->titleBar->getCurTab()->path.empty()) {
 		return;
 	}
-	auto span = 16.f;
 	if (delta > 0) {
-		if (scrollerRight.fTop > rect.fTop) {
-			auto v = std::max(scrollerRight.fTop - span, rect.fTop);
-			scrollerRight.offsetTo(rect.fRight - 16, v);
-			auto top = scrollerRight.fTop - rect.fTop;
-			hoverIndex = (y - rect.fTop + top) / 48;
-			repaint();
+		if (offsetTop == 0) {
+			return;
+		}
+		offsetTop -= wheelSpan;
+		if (offsetTop < 0) {
+			offsetTop = 0;
 		}
 	}
 	else {
-		if (scrollerRight.fBottom < rect.fBottom) {
-			auto v = std::min(span, rect.fBottom - scrollerRight.fBottom);
-			scrollerRight.offsetTo(rect.fRight - 16, scrollerRight.fTop + v);
-			auto top = scrollerRight.fTop - rect.fTop;
-			hoverIndex = (y - rect.fTop + top) / 48;
-			repaint();
+		if (offsetTop + rect.height() == totalHeight) {
+			return;
 		}
+		offsetTop += wheelSpan;
+		if (offsetTop + rect.height() > totalHeight) {
+			offsetTop = totalHeight - rect.height();
+		}
+	}
+	auto scroolerRightTop = offsetTop / (totalHeight - rect.height()) * (rect.height() - scrollerRight.height());
+	scrollerRight.offsetTo(rect.fRight - 16, rect.fTop + scroolerRightTop);
+	hoverIndex = (y - rect.fTop + offsetTop) / lineHieght;
+	repaint();
+}
+
+
+void ContentList::setRightScroller()
+{
+	if (totalHeight > rect.height()) {
+		auto h = rect.height() * (rect.height() / totalHeight);
+		if (h < scrollerMiniSize) {
+			h = scrollerMiniSize;
+		}
+		scrollerRight.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
+	}
+	else {
+		scrollerRight.setXYWH(0, rect.fTop, 0, 0);
+	}
+}
+
+void ContentList::setBottomScroller()
+{
+	auto totalWidth = root->contentPanel->contentHeader->totalWidth;
+	if (totalWidth > rect.width()) {
+		auto w = rect.width() * (rect.width() / totalWidth);
+		if (w < 80.f) w = 80.f;
+		scrollerBottom.setXYWH(rect.fLeft, rect.fBottom - 16.f, w, 16);
+	}
+	else {
+		scrollerBottom.setXYWH(rect.fLeft, 0, 0, 0);
 	}
 }
 
@@ -366,34 +403,8 @@ void ContentList::getFiles(std::filesystem::path& path)
 		} while (FindNextFile(hFind, &data));
 	}
 	FindClose(hFind);
+	totalHeight = lineHieght * files.size();
 	setRightScroller();
 	setBottomScroller();
 }
 
-void ContentList::setRightScroller()
-{
-	totalHeight = lineHieght * files.size();
-	if (totalHeight > rect.height()) {
-		auto h = rect.height() - (totalHeight - rect.height());
-		if (h < 60.f) {
-			h = 60.f;
-		}
-		scrollerRight.setXYWH(rect.fRight - 16, rect.fTop, 16, h);
-	}
-	else {
-		scrollerRight.setXYWH(0, rect.fTop, 0, 0);
-	}
-}
-
-void ContentList::setBottomScroller()
-{
-	auto totalWidth = root->contentPanel->contentHeader->totalWidth;
-	if (totalWidth > rect.width()) {
-		auto w = rect.width() * (rect.width() / totalWidth);
-		if (w < 80.f) w = 80.f;
-		scrollerBottom.setXYWH(rect.fLeft, rect.fBottom-16.f, w, 16);
-	}
-	else {
-		scrollerBottom.setXYWH(rect.fLeft, 0, 0, 0);
-	}
-}

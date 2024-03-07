@@ -33,5 +33,8 @@ private:
     float downY{ 0.f };
     int hoverIndex{ -1 };
     float lineHieght{ 48.f };
+    float wheelSpan{ 16.f };
+    float scrollerMiniSize{ 60.f };
+    float offsetTop{ 0.f };
     std::chrono::system_clock::time_point mouseDownTime;
 };
