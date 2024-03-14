@@ -32,7 +32,7 @@ private:
     SkRect scrollerRight;
     SkRect scrollerBottom;
     float downX{ 0.f };
-    float downY{ 0.f };
+    float downYRightScrollerSpan{ 0.f };
     int hoverIndex{ -1 };
     float lineHieght{ 48.f };
     float scrollerMiniSize{ 60.f };
