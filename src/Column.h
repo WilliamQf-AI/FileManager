@@ -51,14 +51,14 @@ public:
 			if (val == 0) {
 				return std::wstring();
 			}
-			else if (val < 1024) {
-				return std::format(L"{} KB", val);
+			else if (val < 1048576) { //1M
+				return std::format(L"{} KB", val / 1024);
 			}
-			else if (val < 1048576) { //1G
-				return std::format(L"{} MB", val / 1024);
+			else if(val < 1073741824) { //1G
+				return std::format(L"{:.2f} MB", (float)val / 1048576);
 			}
 			else {
-				return std::format(L"{} GB", val / 1048576);
+				return std::format(L"{:.2f} GB", (float)val / 1073741824);
 			}
 		}
 		else if constexpr (std::is_same_v<T, SYSTEMTIME>) {
