@@ -258,7 +258,6 @@ void WindowMain::onSize(const int& w, const int& h)
 {
     this->w = w;
     this->h = h;
-    surface.reset();
     size_t bmpSize = sizeof(BITMAPINFOHEADER) + w * h * sizeof(uint32_t);
     surfaceMemory.reset(bmpSize);
     BITMAPINFO* bmpInfo = reinterpret_cast<BITMAPINFO*>(surfaceMemory.get());

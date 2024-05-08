@@ -44,7 +44,6 @@ protected:
 private:
     static LRESULT CALLBACK RouteWindowMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
     SkAutoMalloc surfaceMemory;
-    sk_sp<SkSurface> surface;
     int nctest(const int& x,const int& y);
     void mouseLeave();
     void mouseMove(const int& x, const int& y);
